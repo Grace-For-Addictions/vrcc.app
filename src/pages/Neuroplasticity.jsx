@@ -292,7 +292,12 @@ export default function Neuroplasticity() {
 
         {/* Brain Quiz */}
         <section className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Test Your Knowledge</h2>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Test Your Knowledge</h2>
+            <a href="/Quizzes" className="text-teal-600 hover:text-teal-700 text-sm font-medium flex items-center gap-1">
+              More Quizzes →
+            </a>
+          </div>
           <div className="max-w-2xl mx-auto">
             <BrainQuiz />
           </div>
