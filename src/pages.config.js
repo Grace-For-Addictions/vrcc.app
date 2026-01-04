@@ -24,6 +24,7 @@ import TeamChallenges from './pages/TeamChallenges';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
 import ProviderAnalytics from './pages/ProviderAnalytics';
+import AdminDashboard from './pages/AdminDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +55,7 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
     "ProviderAnalytics": ProviderAnalytics,
+    "AdminDashboard": AdminDashboard,
 }
 
 export const pagesConfig = {

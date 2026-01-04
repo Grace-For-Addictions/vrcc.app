@@ -27,6 +27,10 @@ const navItems = [
   { name: 'Assessment', href: 'Assessment', icon: Compass }
 ];
 
+const adminNavItems = [
+  { name: 'Admin Analytics', href: 'AdminDashboard', icon: Shield }
+];
+
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -84,6 +88,21 @@ export default function Layout({ children, currentPageName }) {
                 currentPageName === item.href ?
                 'bg-teal-50 text-teal-700' :
                 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`
+                }>
+
+                  <item.icon className="w-4 h-4" />
+                  {item.name}
+                </Link>
+              )}
+
+              {user?.role === 'admin' && adminNavItems.map((item) =>
+              <Link
+                key={item.name}
+                to={createPageUrl(item.href)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === item.href ?
+                'bg-red-50 text-red-700 border border-red-200' :
+                'text-red-600 hover:bg-red-50'}`
                 }>
 
                   <item.icon className="w-4 h-4" />

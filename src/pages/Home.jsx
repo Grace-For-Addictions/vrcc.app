@@ -16,6 +16,8 @@ import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
 import ProactiveOutreach from '@/components/ai/ProactiveOutreach';
 import GoalSettingAssistant from '@/components/ai/GoalSettingAssistant';
+import SessionAnalyzer from '@/components/ai/SessionAnalyzer';
+import GoalProgressNudges from '@/components/ai/GoalProgressNudges';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -219,6 +221,14 @@ export default function Home() {
       icon: BarChart3,
       href: 'ProviderAnalytics',
       color: 'indigo'
+    },
+    {
+      title: 'Admin Dashboard',
+      description: 'Real-time analytics and engagement insights',
+      icon: Shield,
+      href: 'AdminDashboard',
+      color: 'red',
+      adminOnly: true
     }
   ];
 
@@ -335,8 +345,10 @@ export default function Home() {
       {/* AI Grace Chat Widget */}
       <GraceChatWidget />
 
-      {/* Proactive AI Outreach */}
+      {/* AI Features */}
       <ProactiveOutreach user={user} profile={profile} />
+      <SessionAnalyzer user={user} profile={profile} />
+      <GoalProgressNudges user={user} profile={profile} />
     </div>
   );
 }

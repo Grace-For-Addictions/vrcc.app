@@ -13,6 +13,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import AIIcebreakers from '@/components/community/AIIcebreakers';
+import { createPageUrl } from '@/utils';
+import { Link } from 'react-router-dom';
 
 const roomIcons = {
   general: Users,
@@ -134,6 +137,9 @@ function ActiveChatRoom({ room, onLeave }) {
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+        {/* AI Icebreaker */}
+        <AIIcebreakers roomTheme={room.theme} />
+
         {messages.length === 0 && (
           <div className="text-center py-8 text-gray-500">
             <Sparkles className="w-8 h-8 mx-auto mb-2 text-teal-400" />
@@ -205,6 +211,27 @@ export default function Community() {
           subtitle="Safe chat rooms for connection, support, and fun. Every conversation helps rewire your brain for recovery."
           icon={Users}
         />
+
+        {/* Community Garden Link */}
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6"
+        >
+          <Link to={createPageUrl('RecoveryGarden')}>
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-6 text-white shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-xl font-bold mb-2">🌱 Your Community Garden</h3>
+                  <p className="text-green-100 text-sm">
+                    Every connection you make plants seeds of growth. Watch your recovery garden flourish!
+                  </p>
+                </div>
+                <ChevronRight className="w-8 h-8 text-white/80" />
+              </div>
+            </div>
+          </Link>
+        </motion.div>
 
         {activeRoom ? (
           <ActiveChatRoom room={activeRoom} onLeave={handleLeaveRoom} />

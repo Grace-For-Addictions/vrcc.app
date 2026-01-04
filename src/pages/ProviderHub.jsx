@@ -4,8 +4,9 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Building2, Users, Send, CheckCircle2, Clock,
-  TrendingUp, BarChart3, Eye, Plus, Search
+  TrendingUp, BarChart3, Eye, Plus, Search, UserPlus
 } from 'lucide-react';
+import ProviderRegistration from '@/components/provider/ProviderRegistration';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -116,6 +117,7 @@ function ReferralTracking({ referrals }) {
 
 export default function ProviderHub() {
   const [user, setUser] = useState(null);
+  const [showRegistration, setShowRegistration] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -162,11 +164,22 @@ export default function ProviderHub() {
             subtitle="Partner portal for warm handoffs, referral tracking, and collaboration"
             icon={Building2}
           />
-          <GraceCard className="text-center py-12">
-            <Building2 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-700">Provider Profile Not Found</h3>
-            <p className="text-gray-500 mt-2">Contact support to set up your provider account.</p>
-          </GraceCard>
+          
+          {!showRegistration ? (
+            <GraceCard className="text-center py-12">
+              <Building2 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+              <h3 className="text-lg font-medium text-gray-700 mb-2">Join Our Provider Network</h3>
+              <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                Partner with Grace For Addictions to receive warm handoffs and support individuals in recovery.
+              </p>
+              <Button onClick={() => setShowRegistration(true)} className="bg-blue-600">
+                <UserPlus className="w-4 h-4 mr-2" />
+                Register Your Organization
+              </Button>
+            </GraceCard>
+          ) : (
+            <ProviderRegistration onSuccess={() => queryClient.invalidateQueries(['provider'])} />
+          )}
         </div>
       </div>
     );
