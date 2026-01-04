@@ -19,7 +19,7 @@ const publicWifiLocations = [
   { name: 'Public Libraries', icon: '📚', description: 'Free WiFi and computer access at all Iowa public libraries' },
   { name: 'Community Centers', icon: '🏢', description: 'Many community centers offer free WiFi access' },
   { name: 'Coffee Shops', icon: '☕', description: 'Starbucks, Caribou, and local cafes often provide free WiFi' },
-  { name: 'Fast Food Restaurants', icon: '🍔', description: 'McDonald's, Subway, and others offer free WiFi' },
+  { name: 'Fast Food Restaurants', icon: '🍔', description: 'McDonalds, Subway, and others offer free WiFi' },
   { name: 'Recovery Centers', icon: '💚', description: 'Peer drop-in centers often have free WiFi and computers' }
 ];
 
