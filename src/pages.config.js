@@ -10,6 +10,7 @@ import PeerMatching from './pages/PeerMatching';
 import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
 import GrantWriter from './pages/GrantWriter';
+import Quizzes from './pages/Quizzes';
 import __Layout from './Layout.jsx';
 
 
@@ -26,6 +27,7 @@ export const PAGES = {
     "Residencies": Residencies,
     "Resources": Resources,
     "GrantWriter": GrantWriter,
+    "Quizzes": Quizzes,
 }
 
 export const pagesConfig = {
