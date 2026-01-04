@@ -4,8 +4,11 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Sprout, Flower2, Trees, Sparkles, 
-  Award, TrendingUp, Sun, Droplets
+  Award, TrendingUp, Sun, Droplets, Gift
 } from 'lucide-react';
+import AIPlantSuggestions from '@/components/garden/AIPlantSuggestions';
+import PlantGifting from '@/components/garden/PlantGifting';
+import CommunityGardenView from '@/components/garden/CommunityGardenView';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import GraceHeader from '@/components/common/GraceHeader';
@@ -105,6 +108,12 @@ export default function RecoveryGarden() {
     enabled: !!user
   });
 
+  const { data: allProfiles } = useQuery({
+    queryKey: ['allProfiles'],
+    queryFn: () => base44.entities.UserProfile.list('-points', 100),
+    initialData: []
+  });
+
   useEffect(() => {
     if (userProfile) setProfile(userProfile);
   }, [userProfile]);
@@ -135,6 +144,16 @@ export default function RecoveryGarden() {
           subtitle="Watch your garden grow as you engage, connect, and heal. Every action plants seeds of hope."
           icon={Flower2}
         />
+
+        {/* AI Plant Suggestions */}
+        {user && profile && (
+          <AIPlantSuggestions profile={profile} currentPoints={userPoints} />
+        )}
+
+        {/* Collective Community Garden */}
+        {allProfiles.length > 0 && (
+          <CommunityGardenView allProfiles={allProfiles} />
+        )}
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -219,6 +238,13 @@ export default function RecoveryGarden() {
                 <PlantCard key={idx} plant={milestone.plant} isLocked />
               ))}
             </div>
+          </div>
+        )}
+
+        {/* Plant Gifting */}
+        {user && profile && (
+          <div className="mb-8">
+            <PlantGifting currentUser={user} userPoints={userPoints} />
           </div>
         )}
 

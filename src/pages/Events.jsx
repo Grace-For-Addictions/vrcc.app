@@ -12,6 +12,7 @@ import { format, addDays, startOfWeek, isSameDay } from 'date-fns';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import AIEventRecommendations from '@/components/events/AIEventRecommendations';
 
 const eventTypeColors = {
   meeting: 'bg-blue-100 text-blue-700',
@@ -57,6 +58,21 @@ function EventCard({ event, onRSVP, isAttending }) {
           {event.description && (
             <p className="text-sm text-gray-600 mb-4 line-clamp-2">{event.description}</p>
           )}
+
+          {/* Neuroplasticity Benefit Badge */}
+          {event.event_type === 'workshop' || event.event_type === 'training' ? (
+            <div className="mb-3 p-2 bg-purple-50 border border-purple-200 rounded-lg">
+              <p className="text-xs text-purple-900">
+                🧠 <strong>Brain Benefit:</strong> Group learning creates new neural pathways and strengthens community resilience circuits
+              </p>
+            </div>
+          ) : event.event_type === 'social' || event.event_type === 'game_night' ? (
+            <div className="mb-3 p-2 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-xs text-blue-900">
+                🧠 <strong>Brain Benefit:</strong> Social connection releases oxytocin and rewires the brain for positive relationships
+              </p>
+            </div>
+          ) : null}
 
           <div className="space-y-2 text-sm text-gray-600">
             <div className="flex items-center gap-2">
@@ -176,6 +192,7 @@ function WeekCalendar({ events, selectedDate, onSelectDate }) {
 export default function Events() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -183,6 +200,9 @@ export default function Events() {
       try {
         const u = await base44.auth.me();
         setUser(u);
+        
+        const profiles = await base44.entities.UserProfile.filter({ created_by: u.email });
+        if (profiles[0]) setProfile(profiles[0]);
       } catch (e) {}
     };
     loadUser();
@@ -233,6 +253,11 @@ export default function Events() {
           subtitle="Virtual recovery meetings, workshops, game nights, and more. Connection is just one click away."
           icon={Calendar}
         />
+
+        {/* AI Event Recommendations */}
+        {user && profile && (
+          <AIEventRecommendations user={user} profile={profile} allEvents={events} />
+        )}
 
         <WeekCalendar 
           events={events} 

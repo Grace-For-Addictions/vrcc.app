@@ -7,6 +7,8 @@ import {
   TrendingUp, BarChart3, Eye, Plus, Search, UserPlus
 } from 'lucide-react';
 import ProviderRegistration from '@/components/provider/ProviderRegistration';
+import ProviderDashboard from '@/components/provider/ProviderDashboard';
+import ReferralManager from '@/components/provider/ReferralManager';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -252,18 +254,28 @@ export default function ProviderHub() {
           </GraceCard>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1">
+        <Tabs defaultValue="dashboard" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-3">
+            <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
+            <TabsTrigger value="referrals">Manage Referrals</TabsTrigger>
+            <TabsTrigger value="profile">My Profile</TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="dashboard">
+            <ProviderDashboard provider={provider} referrals={referrals} />
+          </TabsContent>
+
+          <TabsContent value="referrals">
+            <ReferralManager referrals={referrals} providerId={provider.id} />
+          </TabsContent>
+
+          <TabsContent value="profile">
             <ProviderProfile 
               provider={provider}
               onUpdate={(data) => updateProvider.mutate(data)}
             />
-          </div>
-
-          <div className="lg:col-span-2">
-            <ReferralTracking referrals={referrals} />
-          </div>
-        </div>
+          </TabsContent>
+        </Tabs>
       </div>
 
       <GraceChatWidget />
