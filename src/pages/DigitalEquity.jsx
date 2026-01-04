@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import { useMutation } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Wifi, MapPin, Phone, HelpCircle, 
@@ -34,6 +35,23 @@ export default function DigitalEquity() {
   const [zipCode, setZipCode] = useState('');
   const [lowBandwidthMode, setLowBandwidthMode] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [showAssistanceForm, setShowAssistanceForm] = useState(false);
+  const [assistanceData, setAssistanceData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    zip: '',
+    assistance_type: 'ACP',
+    description: ''
+  });
+
+  useEffect(() => {
+    const saved = localStorage.getItem('lowBandwidthMode');
+    if (saved === 'true') {
+      setLowBandwidthMode(true);
+      document.body.classList.add('low-bandwidth-mode');
+    }
+  }, []);
 
   const handleToggleLowBandwidth = (enabled) => {
     setLowBandwidthMode(enabled);
@@ -45,6 +63,32 @@ export default function DigitalEquity() {
       localStorage.setItem('lowBandwidthMode', 'false');
     }
   };
+
+  const submitAssistance = useMutation({
+    mutationFn: async (data) => {
+      return base44.integrations.Core.SendEmail({
+        to: 'support@graceforaddictions.org',
+        subject: `Digital Equity Assistance Request - ${data.assistance_type}`,
+        body: `
+New assistance request:
+
+Name: ${data.name}
+Email: ${data.email}
+Phone: ${data.phone}
+ZIP Code: ${data.zip}
+Assistance Type: ${data.assistance_type}
+
+Description:
+${data.description}
+        `
+      });
+    },
+    onSuccess: () => {
+      setShowAssistanceForm(false);
+      setAssistanceData({ name: '', email: '', phone: '', zip: '', assistance_type: 'ACP', description: '' });
+      alert('Request submitted! We will contact you within 48 hours.');
+    }
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
@@ -99,16 +143,82 @@ export default function DigitalEquity() {
         <GraceCard className="mb-8">
           <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <Phone className="w-6 h-6 text-purple-600" />
-            Need Internet Access?
+            Need Internet Access Help?
           </h3>
           <p className="text-gray-600 mb-6">
-            We can help you find resources for internet access, including subsidized programs and mobile hotspot assistance.
+            Request assistance with ACP/Lifeline applications or mobile hotspot access.
           </p>
-          <Button asChild className="bg-purple-600 hover:bg-purple-700">
-            <a href="/GraceChat">
-              Chat with Grace About Internet Access
-            </a>
-          </Button>
+          <div className="flex gap-3">
+            <Button 
+              onClick={() => setShowAssistanceForm(!showAssistanceForm)}
+              className="bg-purple-600 hover:bg-purple-700"
+            >
+              Request Assistance
+            </Button>
+            <Button asChild variant="outline">
+              <a href="/GraceChat">
+                Chat with Grace
+              </a>
+            </Button>
+          </div>
+
+          {showAssistanceForm && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="mt-6 p-4 bg-purple-50 border border-purple-200 rounded-lg"
+            >
+              <h4 className="font-semibold text-purple-900 mb-4">Assistance Request Form</h4>
+              <div className="space-y-3">
+                <Input
+                  placeholder="Your Name *"
+                  value={assistanceData.name}
+                  onChange={(e) => setAssistanceData({...assistanceData, name: e.target.value})}
+                />
+                <Input
+                  type="email"
+                  placeholder="Email *"
+                  value={assistanceData.email}
+                  onChange={(e) => setAssistanceData({...assistanceData, email: e.target.value})}
+                />
+                <Input
+                  type="tel"
+                  placeholder="Phone Number"
+                  value={assistanceData.phone}
+                  onChange={(e) => setAssistanceData({...assistanceData, phone: e.target.value})}
+                />
+                <Input
+                  placeholder="ZIP Code *"
+                  value={assistanceData.zip}
+                  onChange={(e) => setAssistanceData({...assistanceData, zip: e.target.value})}
+                />
+                <select
+                  value={assistanceData.assistance_type}
+                  onChange={(e) => setAssistanceData({...assistanceData, assistance_type: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                >
+                  <option value="ACP">ACP Application Help</option>
+                  <option value="Lifeline">Lifeline Program Help</option>
+                  <option value="Hotspot">Mobile Hotspot Request</option>
+                  <option value="Other">Other</option>
+                </select>
+                <textarea
+                  placeholder="Describe your needs..."
+                  value={assistanceData.description}
+                  onChange={(e) => setAssistanceData({...assistanceData, description: e.target.value})}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-200 rounded-lg"
+                />
+                <Button
+                  onClick={() => submitAssistance.mutate(assistanceData)}
+                  disabled={!assistanceData.name || !assistanceData.email || !assistanceData.zip || submitAssistance.isLoading}
+                  className="w-full bg-purple-600 hover:bg-purple-700"
+                >
+                  {submitAssistance.isLoading ? 'Submitting...' : 'Submit Request'}
+                </Button>
+              </div>
+            </motion.div>
+          )}
         </GraceCard>
 
         {/* Public WiFi Finder */}
@@ -118,16 +228,33 @@ export default function DigitalEquity() {
           <GraceCard className="mb-6">
             <div className="flex gap-4">
               <Input
-                placeholder="Enter your ZIP code..."
+                placeholder="Enter your ZIP code or city..."
                 value={zipCode}
                 onChange={(e) => setZipCode(e.target.value)}
                 className="flex-1"
               />
               <Button onClick={() => setShowResults(true)} disabled={!zipCode}>
                 <MapPin className="w-4 h-4 mr-2" />
-                Find Locations
+                Search Map
               </Button>
             </div>
+            {showResults && zipCode && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: 'auto' }}
+                className="mt-4"
+              >
+                <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                  <MapPin className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+                  <p className="text-gray-600">
+                    Interactive map coming soon for {zipCode}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Search results will show WiFi locations near you with directions
+                  </p>
+                </div>
+              </motion.div>
+            )}
           </GraceCard>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -13,6 +13,8 @@ import Quizzes from './pages/Quizzes';
 import RecoveryGarden from './pages/RecoveryGarden';
 import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
+import PeerCoachTraining from './pages/PeerCoachTraining';
+import TeamChallenges from './pages/TeamChallenges';
 import __Layout from './Layout.jsx';
 
 
@@ -32,6 +34,8 @@ export const PAGES = {
     "RecoveryGarden": RecoveryGarden,
     "Residencies": Residencies,
     "Resources": Resources,
+    "PeerCoachTraining": PeerCoachTraining,
+    "TeamChallenges": TeamChallenges,
 }
 
 export const pagesConfig = {

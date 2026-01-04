@@ -132,6 +132,22 @@ export default function Home() {
       icon: Sparkles,
       href: 'DigitalEquity',
       color: 'blue'
+    },
+    {
+      title: 'Team Challenges',
+      description: 'Join team-based community challenges and earn rewards together',
+      icon: Users,
+      href: 'TeamChallenges',
+      color: 'purple',
+      isNew: true
+    },
+    {
+      title: 'Peer Coach Training',
+      description: 'AI-powered training with VR scenarios and expert feedback',
+      icon: GraduationCap,
+      href: 'PeerCoachTraining',
+      color: 'indigo',
+      isNew: true
     }
   ];
 
