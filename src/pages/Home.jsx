@@ -103,19 +103,34 @@ export default function Home() {
       color: 'teal'
     },
     {
-      title: 'Peer Matching',
-      description: 'Find your recovery buddy through our Grace Match system',
-      icon: Sparkles,
-      href: 'PeerMatching',
+      title: 'Knowledge Quizzes',
+      description: 'Test your knowledge on recovery topics and earn points',
+      icon: Brain,
+      href: 'Quizzes',
       color: 'purple',
       isNew: true
     },
     {
-      title: 'Recovery Residencies',
-      description: 'Explore sober living options with virtual tours',
-      icon: HomeIcon,
-      href: 'Residencies',
-      color: 'orange'
+      title: 'Recovery Garden',
+      description: 'Watch your virtual garden grow as you engage and heal',
+      icon: Sparkles,
+      href: 'RecoveryGarden',
+      color: 'emerald',
+      isNew: true
+    },
+    {
+      title: 'Grant Writing',
+      description: 'AI-powered grant proposal development for organizations',
+      icon: Award,
+      href: 'GrantWriter',
+      color: 'purple'
+    },
+    {
+      title: 'Digital Equity',
+      description: 'Find free WiFi and internet assistance programs',
+      icon: Sparkles,
+      href: 'DigitalEquity',
+      color: 'blue'
     }
   ];
 

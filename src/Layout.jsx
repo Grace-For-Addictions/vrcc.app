@@ -18,13 +18,14 @@ import {
 "@/components/ui/dropdown-menu";
 
 const navItems = [
-{ name: 'Home', href: 'Home', icon: Home },
-{ name: 'Community', href: 'Community', icon: Users },
-{ name: 'Resources', href: 'Resources', icon: MapPin },
-{ name: 'Walls', href: 'CommunityWalls', icon: Heart },
-{ name: 'Events', href: 'Events', icon: Calendar },
-{ name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
-{ name: 'Assessment', href: 'Assessment', icon: Compass }];
+  { name: 'Home', href: 'Home', icon: Home },
+  { name: 'Community', href: 'Community', icon: Users },
+  { name: 'Resources', href: 'Resources', icon: MapPin },
+  { name: 'Walls', href: 'CommunityWalls', icon: Heart },
+  { name: 'Events', href: 'Events', icon: Calendar },
+  { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
+  { name: 'Assessment', href: 'Assessment', icon: Compass }
+];
 
 
 export default function Layout({ children, currentPageName }) {

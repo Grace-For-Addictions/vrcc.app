@@ -11,6 +11,8 @@ import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
 import GrantWriter from './pages/GrantWriter';
 import Quizzes from './pages/Quizzes';
+import RecoveryGarden from './pages/RecoveryGarden';
+import DigitalEquity from './pages/DigitalEquity';
 import __Layout from './Layout.jsx';
 
 
@@ -28,6 +30,8 @@ export const PAGES = {
     "Resources": Resources,
     "GrantWriter": GrantWriter,
     "Quizzes": Quizzes,
+    "RecoveryGarden": RecoveryGarden,
+    "DigitalEquity": DigitalEquity,
 }
 
 export const pagesConfig = {
