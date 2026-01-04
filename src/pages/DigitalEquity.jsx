@@ -5,7 +5,7 @@ import { motion } from 'framer-motion';
 import { 
   Wifi, MapPin, Phone, HelpCircle, 
   Smartphone, Laptop, Radio, Download,
-  Settings, Zap, CheckCircle2
+  Settings, Zap, CheckCircle2, Sparkles, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -36,6 +36,9 @@ export default function DigitalEquity() {
   const [lowBandwidthMode, setLowBandwidthMode] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [showAssistanceForm, setShowAssistanceForm] = useState(false);
+  const [selectedNeeds, setSelectedNeeds] = useState([]);
+  const [aiRecommendations, setAiRecommendations] = useState(null);
+  const [isGeneratingMatches, setIsGeneratingMatches] = useState(false);
   const [assistanceData, setAssistanceData] = useState({
     name: '',
     email: '',
@@ -64,8 +67,60 @@ export default function DigitalEquity() {
     }
   };
 
+  const generateResourceMatches = async () => {
+    if (!zipCode || selectedNeeds.length === 0) return;
+    
+    setIsGeneratingMatches(true);
+    try {
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt: `You are AI Grace powered by GPT-5.2 on Wix/Base44, helping find digital equity and community resources in Iowa.
+
+ZIP Code: ${zipCode}
+Needs: ${selectedNeeds.join(', ')}
+
+Provide specific Iowa resources for each need with: name, contact info, eligibility criteria, application link/process. Include ACP (Affordable Connectivity Program), Lifeline, local housing assistance, job training programs, reentry support.
+
+Return as JSON array of resources.`,
+        add_context_from_internet: true,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            resources: {
+              type: "array",
+              items: {
+                type: "object",
+                properties: {
+                  name: { type: "string" },
+                  description: { type: "string" },
+                  contact: { type: "string" },
+                  eligibility: { type: "string" },
+                  application_link: { type: "string" }
+                }
+              }
+            }
+          }
+        }
+      });
+
+      setAiRecommendations(response.resources || []);
+    } catch (error) {
+      alert('Error generating matches. Please try again.');
+    } finally {
+      setIsGeneratingMatches(false);
+    }
+  };
+
   const submitAssistance = useMutation({
     mutationFn: async (data) => {
+      // Save to database for tracking
+      await base44.entities.DigitalEquityRequest.create({
+        request_type: data.assistance_type.toLowerCase(),
+        full_name: data.name,
+        contact_email: data.email,
+        contact_phone: data.phone,
+        zip_code: data.zip
+      });
+
       return base44.integrations.Core.SendEmail({
         to: 'support@graceforaddictions.org',
         subject: `Digital Equity Assistance Request - ${data.assistance_type}`,
@@ -139,14 +194,100 @@ ${data.description}
           )}
         </GraceCard>
 
+        {/* AI Resource Matching */}
+        <GraceCard className="mb-8">
+          <h3 className="text-xl font-semibold text-gray-900 mb-4 flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-purple-600" />
+            AI Resource Matching (Powered by GPT-5.2)
+          </h3>
+          <p className="text-sm text-gray-600 mb-4">
+            Tell us your ZIP code and what you need - Grace will find relevant local and state resources with application info and eligibility.
+          </p>
+          
+          <div className="space-y-4">
+            <Input
+              placeholder="Enter ZIP code"
+              value={zipCode}
+              onChange={(e) => setZipCode(e.target.value)}
+            />
+
+            <div>
+              <p className="text-sm font-medium text-gray-700 mb-2">What do you need help with?</p>
+              <div className="flex flex-wrap gap-2">
+                {['ACP/Internet Subsidy', 'Lifeline Phone', 'Hotspot Device', 'Housing', 'Job Training', 'Food Assistance', 'Reentry Support'].map(need => (
+                  <button
+                    key={need}
+                    onClick={() => {
+                      setSelectedNeeds(prev => 
+                        prev.includes(need) ? prev.filter(n => n !== need) : [...prev, need]
+                      );
+                    }}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      selectedNeeds.includes(need)
+                        ? 'bg-teal-600 text-white'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    }`}
+                  >
+                    {need}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <Button 
+              onClick={generateResourceMatches}
+              disabled={!zipCode || selectedNeeds.length === 0 || isGeneratingMatches}
+              className="w-full bg-teal-600"
+            >
+              {isGeneratingMatches ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Finding resources...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Find My Resources
+                </>
+              )}
+            </Button>
+          </div>
+
+          {/* AI Recommendations */}
+          {aiRecommendations && aiRecommendations.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-6 space-y-4"
+            >
+              <h4 className="font-semibold text-gray-900">📍 Resources Found Near {zipCode}:</h4>
+              {aiRecommendations.map((resource, idx) => (
+                <div key={idx} className="p-4 bg-teal-50 border border-teal-200 rounded-lg">
+                  <h5 className="font-semibold text-teal-900">{resource.name}</h5>
+                  <p className="text-sm text-teal-800 mt-1">{resource.description}</p>
+                  <div className="mt-3 space-y-1 text-xs text-teal-700">
+                    <p><strong>Contact:</strong> {resource.contact}</p>
+                    <p><strong>Eligibility:</strong> {resource.eligibility}</p>
+                    {resource.application_link && (
+                      <a href={resource.application_link} target="_blank" rel="noopener noreferrer" className="text-teal-600 hover:underline block mt-2">
+                        → Apply Here
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          )}
+        </GraceCard>
+
         {/* Internet Assistance Request */}
         <GraceCard className="mb-8">
           <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <Phone className="w-6 h-6 text-purple-600" />
-            Need Internet Access Help?
+            Request Direct Assistance
           </h3>
           <p className="text-gray-600 mb-6">
-            Request assistance with ACP/Lifeline applications or mobile hotspot access.
+            Need help with ACP/Lifeline applications or mobile hotspot access? We're here to help.
           </p>
           <div className="flex gap-3">
             <Button 
@@ -221,41 +362,9 @@ ${data.description}
           )}
         </GraceCard>
 
-        {/* Public WiFi Finder */}
+        {/* Public WiFi Spots */}
         <div className="mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6">Find Free WiFi Near You</h3>
-          
-          <GraceCard className="mb-6">
-            <div className="flex gap-4">
-              <Input
-                placeholder="Enter your ZIP code or city..."
-                value={zipCode}
-                onChange={(e) => setZipCode(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={() => setShowResults(true)} disabled={!zipCode}>
-                <MapPin className="w-4 h-4 mr-2" />
-                Search Map
-              </Button>
-            </div>
-            {showResults && zipCode && (
-              <motion.div
-                initial={{ opacity: 0, height: 0 }}
-                animate={{ opacity: 1, height: 'auto' }}
-                className="mt-4"
-              >
-                <div className="bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
-                  <MapPin className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                  <p className="text-gray-600">
-                    Interactive map coming soon for {zipCode}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-2">
-                    Search results will show WiFi locations near you with directions
-                  </p>
-                </div>
-              </motion.div>
-            )}
-          </GraceCard>
+          <h3 className="text-2xl font-bold text-gray-900 mb-6">Common Free WiFi Spots</h3>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {publicWifiLocations.map((location, idx) => (
