@@ -1,29 +1,31 @@
-import Home from './pages/Home';
-import Community from './pages/Community';
-import Resources from './pages/Resources';
-import CommunityWalls from './pages/CommunityWalls';
 import Assessment from './pages/Assessment';
+import Community from './pages/Community';
+import CommunityWalls from './pages/CommunityWalls';
+import Crisis from './pages/Crisis';
 import Events from './pages/Events';
 import GraceChat from './pages/GraceChat';
-import Crisis from './pages/Crisis';
+import Home from './pages/Home';
 import Neuroplasticity from './pages/Neuroplasticity';
 import PeerMatching from './pages/PeerMatching';
 import Residencies from './pages/Residencies';
+import Resources from './pages/Resources';
+import GrantWriter from './pages/GrantWriter';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
-    "Home": Home,
-    "Community": Community,
-    "Resources": Resources,
-    "CommunityWalls": CommunityWalls,
     "Assessment": Assessment,
+    "Community": Community,
+    "CommunityWalls": CommunityWalls,
+    "Crisis": Crisis,
     "Events": Events,
     "GraceChat": GraceChat,
-    "Crisis": Crisis,
+    "Home": Home,
     "Neuroplasticity": Neuroplasticity,
     "PeerMatching": PeerMatching,
     "Residencies": Residencies,
+    "Resources": Resources,
+    "GrantWriter": GrantWriter,
 }
 
 export const pagesConfig = {
