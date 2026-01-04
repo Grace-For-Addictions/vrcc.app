@@ -119,11 +119,12 @@ export default function Home() {
       isNew: true
     },
     {
-      title: 'Grant Writing',
-      description: 'AI-powered grant proposal development for organizations',
+      title: 'Grant Writing Station',
+      description: 'Expert AI grant writer with strategic planning and 12+ grantmakers',
       icon: Award,
       href: 'GrantWriter',
-      color: 'purple'
+      color: 'purple',
+      isNew: true
     },
     {
       title: 'Digital Equity',
