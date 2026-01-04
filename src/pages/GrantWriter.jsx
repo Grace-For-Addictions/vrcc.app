@@ -6,7 +6,8 @@ import {
   FileText, Send, Loader2, Download, Save, 
   Sparkles, DollarSign, Users, Target, TrendingUp,
   BookOpen, CheckCircle2, Plus, Edit3, Eye, Search,
-  Filter, Calendar, MapPin, Award, Lightbulb, ChevronDown
+  Filter, Calendar, MapPin, Award, Lightbulb, ChevronDown,
+  Copy
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -512,8 +513,206 @@ function ProposalEditor({ proposal, onSave }) {
   const [editMode, setEditMode] = useState(false);
   const [content, setContent] = useState(proposal?.content || {});
   const [activeSection, setActiveSection] = useState('executive_summary');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [customPrompt, setCustomPrompt] = useState('');
 
   const currentSection = proposalSections.find(s => s.key === activeSection);
+
+  const generateSectionContent = async () => {
+    setIsGenerating(true);
+    try {
+      const sectionPrompts = {
+        executive_summary: `You are an EXPERT GRANT WRITER crafting an Executive Summary.
+
+ORGANIZATION: ${proposal.organization_info?.name || 'Organization'}
+MISSION: ${proposal.organization_info?.mission || 'Not provided'}
+TARGET POPULATION: ${proposal.organization_info?.target_population || 'Not provided'}
+FUNDER: ${proposal.funder}
+GRANT TYPE: ${proposal.grant_type}
+FUNDING REQUESTED: $${proposal.funding_amount_requested?.toLocaleString()}
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Lead with your STRONGEST statistic or data hook in the first sentence
+2. Align explicitly to funder priorities (${proposal.grant_type === 'federal' ? 'federal evidence-based practices' : 'community impact'})
+3. Be concise (300-400 words MAX)
+4. Include: problem statement, proposed solution, target outcomes, funding request
+5. Use compelling, action-oriented language
+6. End with impact statement
+
+Generate a professional Executive Summary following these requirements. Make it copy-paste ready.`,
+
+        statement_of_need: `You are an EXPERT GRANT WRITER crafting a Statement of Need.
+
+ORGANIZATION: ${proposal.organization_info?.name || 'Organization'}
+TARGET POPULATION: ${proposal.organization_info?.target_population || 'Not provided'}
+FUNDER: ${proposal.funder}
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Build data-driven narrative using Iowa/local statistics
+2. Identify specific service gaps in the community
+3. Problem-solve for evidence gaps (cite expert interviews, pilot data, or comparable communities)
+4. Use person-first language always
+5. Connect need to your organization's unique position to address it
+6. Include: prevalence data, current service gaps, barriers to access, consequences of unmet need
+7. Length: 500-700 words
+
+Generate a professional Statement of Need. Use specific Iowa statistics where possible. Make it copy-paste ready.`,
+
+        goals_objectives: `You are an EXPERT GRANT WRITER crafting Goals & Objectives.
+
+PROJECT FOCUS: Based on brainstorm notes below
+FUNDER: ${proposal.funder}
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Develop 3-5 SMART objectives (Specific, Measurable, Achievable, Relevant, Time-bound)
+2. Strategic alignment to funder outcomes (retention, ROI, population health)
+3. Use action verbs (increase, reduce, improve, establish, train, connect)
+4. Specify: target numbers, timeframes, measurable indicators
+5. Show logic model connection (inputs → activities → outputs → outcomes)
+6. Format: Goal 1: [statement], Objectives: 1.1, 1.2, etc.
+
+Generate professional Goals & Objectives. Make it copy-paste ready with clear numbering.`,
+
+        implementation_plan: `You are an EXPERT GRANT WRITER crafting an Implementation Plan.
+
+PROJECT: Based on brainstorm notes
+TIMELINE: ${proposal.project_duration_months || 12} months
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Outline phased timeline (startup, implementation, sustainability phases)
+2. Include risk mitigation strategies for each phase
+3. Show collaborative contingencies (what if staff leaves, enrollment is slow, etc.)
+4. Demonstrate realistic planning with milestones
+5. Specify: activities, responsible parties, timelines, deliverables
+6. Include staffing plan and key partnerships
+7. Format as timeline or phase breakdown
+
+Generate a professional Implementation Plan showing you have a realistic, well-thought-out approach. Make it copy-paste ready.`,
+
+        evaluation_plan: `You are an EXPERT GRANT WRITER crafting an Evaluation Plan.
+
+PROJECT: Based on brainstorm notes
+FUNDER: ${proposal.funder}
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Design metrics/tools (BARC-10 for recovery capital, GPRA for SAMHSA grants, retention rates)
+2. Specify: WHO collects data, WHAT tools are used, WHEN/HOW OFTEN data is collected
+3. Problem-solve data collection challenges (low literacy? use interviews; retention? use incentives)
+4. Include process AND outcome evaluation
+5. Show data will inform continuous improvement
+6. Specify analysis plan and reporting schedule
+7. Length: 400-500 words
+
+Generate a professional Evaluation Plan with specific tools and protocols. Make it copy-paste ready.`,
+
+        budget_narrative: `You are an EXPERT GRANT WRITER crafting a Budget Narrative.
+
+TOTAL BUDGET: $${proposal.funding_amount_requested?.toLocaleString()}
+PROJECT: Based on brainstorm notes
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Justify each major cost category with efficiency strategies
+2. Show value-for-money analysis (e.g., "peer coach salary $45K serves 75 participants = $600/participant")
+3. Calculate and highlight cost per participant/outcome
+4. Explain any unusual or large expenses
+5. Show matching funds or cost-sharing if applicable
+6. Categories typically: Personnel, Fringe, Travel, Equipment, Supplies, Contractual, Other
+7. Be specific about FTE percentages and hourly rates
+
+Generate a professional Budget Narrative that justifies costs strategically. Make it copy-paste ready.`,
+
+        organizational_capacity: `You are an EXPERT GRANT WRITER crafting Organizational Capacity section.
+
+ORGANIZATION: ${proposal.organization_info?.name || 'Organization'}
+MISSION: ${proposal.organization_info?.mission || 'Not provided'}
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Highlight past successes with specific metrics (e.g., "served 500 participants with 85% retention")
+2. Show organizational track record and credibility
+3. Describe staff qualifications (lived experience, certifications, years in field)
+4. Include goal-oriented capacity-building plans (e.g., "will hire evaluation coordinator in Month 2")
+5. Demonstrate cultural competence and community connections
+6. Show financial stability and governance structure
+7. Length: 400-500 words
+
+Generate a professional Organizational Capacity section that builds funder confidence. Make it copy-paste ready.`,
+
+        sustainability_plan: `You are an EXPERT GRANT WRITER crafting a Sustainability Plan.
+
+PROJECT: Based on brainstorm notes
+CURRENT FUNDING: Grant request for $${proposal.funding_amount_requested?.toLocaleString()}
+
+BRAINSTORM NOTES:
+${proposal.ai_brainstorm_notes || 'No brainstorm notes available'}
+
+CUSTOM INSTRUCTIONS: ${customPrompt || 'None'}
+
+REQUIREMENTS:
+1. Create diversified funding roadmap (list 3-5 specific future funders)
+2. Show long-term viability strategies (fee-for-service, partnerships, cost reduction)
+3. Demonstrate this is NOT one-time funding
+4. Include: timeline for pursuing additional funding, plans to institutionalize successful practices
+5. Show how pilot/program will be integrated into ongoing operations
+6. Specify which components will continue and how
+7. Length: 300-400 words
+
+Generate a professional Sustainability Plan that shows long-term thinking. Make it copy-paste ready.`
+      };
+
+      const prompt = sectionPrompts[activeSection];
+      if (!prompt) {
+        alert('No prompt defined for this section yet.');
+        return;
+      }
+
+      const response = await base44.integrations.Core.InvokeLLM({
+        prompt,
+        add_context_from_internet: false
+      });
+
+      setContent({...content, [activeSection]: response});
+      setCustomPrompt('');
+    } catch (error) {
+      alert('Error generating content. Please try again.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -564,16 +763,54 @@ function ProposalEditor({ proposal, onSave }) {
               </CardHeader>
               <CardContent>
                 {editMode ? (
-                  <Textarea
-                    value={content[section.key] || ''}
-                    onChange={(e) => setContent({...content, [section.key]: e.target.value})}
-                    rows={15}
-                    className="font-mono text-sm"
-                    placeholder={`Enter ${section.label} content here...`}
-                  />
+                  <div className="space-y-4">
+                    {/* AI Generation Section */}
+                    <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+                      <div className="flex items-center gap-2 mb-3">
+                        <Sparkles className="w-5 h-5 text-purple-600" />
+                        <h5 className="font-semibold text-purple-900">Generate with AI</h5>
+                      </div>
+                      <p className="text-sm text-purple-800 mb-3">
+                        AI Grace will generate professional, copy-paste ready content following best practices for this section.
+                      </p>
+                      <textarea
+                        placeholder="Optional: Add custom instructions or specific details you want included..."
+                        value={activeSection === section.key ? customPrompt : ''}
+                        onChange={(e) => setCustomPrompt(e.target.value)}
+                        rows={2}
+                        className="w-full px-3 py-2 border border-purple-200 rounded-lg text-sm mb-3"
+                      />
+                      <Button
+                        onClick={generateSectionContent}
+                        disabled={isGenerating}
+                        className="w-full bg-purple-600 hover:bg-purple-700"
+                      >
+                        {isGenerating ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Generating professional content...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 mr-2" />
+                            Generate {section.label}
+                          </>
+                        )}
+                      </Button>
+                    </div>
+
+                    {/* Content Editor */}
+                    <Textarea
+                      value={content[section.key] || ''}
+                      onChange={(e) => setContent({...content, [section.key]: e.target.value})}
+                      rows={15}
+                      className="font-mono text-sm"
+                      placeholder={`Generated content will appear here. You can edit it before saving.`}
+                    />
+                  </div>
                 ) : (
                   <div className="prose max-w-none whitespace-pre-wrap">
-                    {content[section.key] || `No content yet. Click Edit to add ${section.label} content.`}
+                    {content[section.key] || `No content yet. Click Edit to generate or add ${section.label} content.`}
                   </div>
                 )}
               </CardContent>
