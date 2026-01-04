@@ -5,7 +5,8 @@ import { motion } from 'framer-motion';
 import { 
   Compass, Heart, Users, Brain, MapPin, Calendar, 
   Award, MessageCircle, BookOpen, Shield, Home as HomeIcon,
-  Sparkles, ArrowRight
+  Sparkles, ArrowRight, GraduationCap, BarChart3, Building2,
+  Video, Coffee, Briefcase
 } from 'lucide-react';
 
 import WelcomeHero from '@/components/dashboard/WelcomeHero';
