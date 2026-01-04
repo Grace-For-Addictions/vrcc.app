@@ -8,15 +8,21 @@ import GraceChat from './pages/GraceChat';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
 import Neuroplasticity from './pages/Neuroplasticity';
+import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
+import PeerCoachTraining from './pages/PeerCoachTraining';
 import PeerMatching from './pages/PeerMatching';
+import ProviderHub from './pages/ProviderHub';
 import Quizzes from './pages/Quizzes';
 import RecoveryGarden from './pages/RecoveryGarden';
 import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
-import PeerCoachTraining from './pages/PeerCoachTraining';
 import TeamChallenges from './pages/TeamChallenges';
-import ProviderHub from './pages/ProviderHub';
-import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
+import VideoLibrary from './pages/VideoLibrary';
+import NarcanTracker from './pages/NarcanTracker';
+import RecoveryCapitalCafe from './pages/RecoveryCapitalCafe';
+import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import SchoolPrevention from './pages/SchoolPrevention';
+import MeetingsHub from './pages/MeetingsHub';
 import __Layout from './Layout.jsx';
 
 
@@ -31,15 +37,21 @@ export const PAGES = {
     "GrantWriter": GrantWriter,
     "Home": Home,
     "Neuroplasticity": Neuroplasticity,
+    "PeerCoachAnalytics": PeerCoachAnalytics,
+    "PeerCoachTraining": PeerCoachTraining,
     "PeerMatching": PeerMatching,
+    "ProviderHub": ProviderHub,
     "Quizzes": Quizzes,
     "RecoveryGarden": RecoveryGarden,
     "Residencies": Residencies,
     "Resources": Resources,
-    "PeerCoachTraining": PeerCoachTraining,
     "TeamChallenges": TeamChallenges,
-    "ProviderHub": ProviderHub,
-    "PeerCoachAnalytics": PeerCoachAnalytics,
+    "VideoLibrary": VideoLibrary,
+    "NarcanTracker": NarcanTracker,
+    "RecoveryCapitalCafe": RecoveryCapitalCafe,
+    "WorkforceDevelopment": WorkforceDevelopment,
+    "SchoolPrevention": SchoolPrevention,
+    "MeetingsHub": MeetingsHub,
 }
 
 export const pagesConfig = {
