@@ -14,6 +14,8 @@ import DailyChallenge from '@/components/dashboard/DailyChallenge';
 import LighthouseBeacon from '@/components/dashboard/LighthouseBeacon';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import ProactiveOutreach from '@/components/ai/ProactiveOutreach';
+import GoalSettingAssistant from '@/components/ai/GoalSettingAssistant';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -310,6 +312,9 @@ export default function Home() {
 
       {/* AI Grace Chat Widget */}
       <GraceChatWidget />
+
+      {/* Proactive AI Outreach */}
+      <ProactiveOutreach user={user} profile={profile} />
     </div>
   );
 }
