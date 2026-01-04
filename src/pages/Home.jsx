@@ -162,6 +162,54 @@ export default function Home() {
       icon: Building2,
       href: 'ProviderHub',
       color: 'blue'
+    },
+    {
+      title: 'Video Library',
+      description: 'Coach workshops, meditations, and skills - AI safety screened',
+      icon: Video,
+      href: 'VideoLibrary',
+      color: 'purple',
+      isNew: true
+    },
+    {
+      title: 'Recovery Café ☕',
+      description: 'Your virtual third place - drop in anytime for connection',
+      icon: Coffee,
+      href: 'RecoveryCapitalCafe',
+      color: 'amber',
+      isNew: true
+    },
+    {
+      title: 'Narcan Tracker',
+      description: 'Track distribution, training, reversals - GPRA ready',
+      icon: Shield,
+      href: 'NarcanTracker',
+      color: 'orange',
+      isNew: true
+    },
+    {
+      title: 'Workforce Center',
+      description: 'AI resume builder, interview practice, job matching',
+      icon: Briefcase,
+      href: 'WorkforceDevelopment',
+      color: 'blue',
+      isNew: true
+    },
+    {
+      title: 'School Prevention',
+      description: 'Youth neuroplasticity education and campaigns',
+      icon: GraduationCap,
+      href: 'SchoolPrevention',
+      color: 'green',
+      isNew: true
+    },
+    {
+      title: 'Meetings Hub',
+      description: 'Virtual meetings with AI summaries and insights',
+      icon: Video,
+      href: 'MeetingsHub',
+      color: 'indigo',
+      isNew: true
     }
   ];
 

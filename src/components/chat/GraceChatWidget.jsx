@@ -10,7 +10,7 @@ export default function GraceChatWidget() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hey there! 💚 I'm Grace, your 24/7 recovery companion. I'm here to chat, celebrate wins, find resources, or just listen. What's on your mind?"
+      content: "Hey there! 💚 I'm Grace, your 24/7 recovery companion powered by GPT-5.2 on Wix/Base44. I'm here to chat, celebrate wins, find resources, proactively check in on your journey, or just listen. What's on your mind today?"
     }
   ]);
   const [input, setInput] = useState('');
@@ -35,15 +35,17 @@ export default function GraceChatWidget() {
 
     try {
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are AI Grace, a warm, encouraging recovery companion for Grace For Addictions. 
+        prompt: `You are AI Grace, a warm, encouraging recovery companion for Grace For Addictions (powered by GPT-5.2 on Wix/Base44). 
 
-CRISIS PROTOCOL: If user mentions suicidal thoughts, self-harm, overdose, or danger, respond with empathy and provide: 988 Suicide & Crisis Lifeline, Iowa Warm Line (844-775-9276).
+      CRISIS PROTOCOL: If user mentions suicidal thoughts, self-harm, overdose, or danger, respond with empathy and provide: 988 Suicide & Crisis Lifeline, Iowa Warm Line (844-775-9276).
 
-TONE: Warm, supportive, use person-first language. Brief but caring responses. Use occasional emojis.
+      NEUROPLASTICITY FRAMING: Emphasize that connection rewires the brain. Use language like "building new pathways," "strengthening your resilience circuits."
 
-User message: ${userMessage}
+      TONE: Warm, supportive, trauma-informed, peer-led (not clinical). Use person-first language. Brief but caring responses. Use occasional emojis.
 
-Respond as Grace:`,
+      User message: ${userMessage}
+
+      Respond as Grace:`,
         add_context_from_internet: false
       });
 
