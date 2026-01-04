@@ -7,7 +7,7 @@ import {
   Sparkles, DollarSign, Users, Target, TrendingUp,
   BookOpen, CheckCircle2, Plus, Edit3, Eye, Search,
   Filter, Calendar, MapPin, Award, Lightbulb, ChevronDown,
-  Copy
+  Copy, Upload, Paperclip, X
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -509,18 +509,31 @@ Format as markdown with clear headers. Be strategic and data-focused.`;
   );
 }
 
-function ProposalEditor({ proposal, onSave }) {
+function ProposalEditor({ proposal, onSave, uploadedDocs }) {
   const [editMode, setEditMode] = useState(false);
   const [content, setContent] = useState(proposal?.content || {});
   const [activeSection, setActiveSection] = useState('executive_summary');
   const [isGenerating, setIsGenerating] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('');
+  const [showDocuments, setShowDocuments] = useState(false);
 
   const currentSection = proposalSections.find(s => s.key === activeSection);
 
   const generateSectionContent = async () => {
     setIsGenerating(true);
     try {
+      // Build context from uploaded documents
+      const docContext = uploadedDocs?.length > 0 ? `
+
+REFERENCE DOCUMENTS AVAILABLE:
+${uploadedDocs.map(doc => `
+- ${doc.title} (${doc.document_type})
+  Key Statistics: ${doc.key_statistics?.join(', ') || 'None extracted'}
+  Content Summary: ${doc.extracted_content?.substring(0, 200) || 'Not available'}...
+`).join('\n')}
+
+USE THESE DOCUMENTS to pull specific statistics, success metrics, and evidence for your narrative.` : '';
+
       const sectionPrompts = {
         executive_summary: `You are an EXPERT GRANT WRITER crafting an Executive Summary.
 
@@ -716,26 +729,64 @@ Generate a professional Sustainability Plan that shows long-term thinking. Make 
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-900">{proposal?.title}</h2>
-          <div className="flex items-center gap-3 mt-2">
-            <Badge className="bg-purple-100 text-purple-700">{proposal?.grant_type}</Badge>
-            <Badge variant="outline">{proposal?.status}</Badge>
-            <span className="text-sm text-gray-500">Version {proposal?.version || 1}</span>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" onClick={() => setEditMode(!editMode)}>
-            {editMode ? <Eye className="w-4 h-4 mr-2" /> : <Edit3 className="w-4 h-4 mr-2" />}
-            {editMode ? 'Preview' : 'Edit'}
-          </Button>
-          <Button onClick={() => onSave(content)} className="bg-teal-600">
-            <Save className="w-4 h-4 mr-2" />
-            Save Draft
-          </Button>
+    <div className="flex items-center justify-between">
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900">{proposal?.title}</h2>
+        <div className="flex items-center gap-3 mt-2">
+          <Badge className="bg-purple-100 text-purple-700">{proposal?.grant_type}</Badge>
+          <Badge variant="outline">{proposal?.status}</Badge>
+          <span className="text-sm text-gray-500">Version {proposal?.version || 1}</span>
         </div>
       </div>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={() => setShowDocuments(!showDocuments)}>
+          <Paperclip className="w-4 h-4 mr-2" />
+          Documents ({uploadedDocs?.length || 0})
+        </Button>
+        <Button variant="outline" onClick={() => setEditMode(!editMode)}>
+          {editMode ? <Eye className="w-4 h-4 mr-2" /> : <Edit3 className="w-4 h-4 mr-2" />}
+          {editMode ? 'Preview' : 'Edit'}
+        </Button>
+        <Button onClick={() => onSave(content)} className="bg-teal-600">
+          <Save className="w-4 h-4 mr-2" />
+          Save Draft
+        </Button>
+      </div>
+    </div>
+
+    {/* Referenced Documents Panel */}
+    {showDocuments && (
+      <GraceCard>
+        <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
+          <Paperclip className="w-5 h-5 text-purple-600" />
+          Referenced Documents
+        </h4>
+        {uploadedDocs?.length > 0 ? (
+          <div className="space-y-2">
+            {uploadedDocs.map((doc) => (
+              <div key={doc.id} className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex items-start justify-between">
+                  <div>
+                    <h5 className="font-medium text-gray-900">{doc.title}</h5>
+                    <Badge variant="outline" className="mt-1 text-xs">{doc.document_type}</Badge>
+                    {doc.key_statistics?.length > 0 && (
+                      <p className="text-xs text-gray-600 mt-2">
+                        <strong>Key Stats:</strong> {doc.key_statistics.slice(0, 2).join(', ')}
+                      </p>
+                    )}
+                  </div>
+                  <a href={doc.file_url} target="_blank" rel="noopener noreferrer">
+                    <Button variant="ghost" size="sm">View</Button>
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500">No documents uploaded yet. Add documents to reference in your grant.</p>
+        )}
+      </GraceCard>
+    )}
 
       <Tabs value={activeSection} onValueChange={setActiveSection}>
         <TabsList className="grid grid-cols-4 lg:grid-cols-8 w-full">
@@ -828,6 +879,8 @@ export default function GrantWriter() {
   const [selectedGrantmaker, setSelectedGrantmaker] = useState(null);
   const [grantWritingMode, setGrantWritingMode] = useState(false);
   const [user, setUser] = useState(null);
+  const [showUploadDialog, setShowUploadDialog] = useState(false);
+  const [uploadingDoc, setUploadingDoc] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -848,6 +901,46 @@ export default function GrantWriter() {
     },
     enabled: !!user,
     initialData: []
+  });
+
+  const { data: uploadedDocs } = useQuery({
+    queryKey: ['uploadedDocuments'],
+    queryFn: async () => {
+      if (!user) return [];
+      return base44.entities.UploadedDocument.filter({ created_by: user.email }, '-created_date', 50);
+    },
+    enabled: !!user,
+    initialData: []
+  });
+
+  const uploadDocument = useMutation({
+    mutationFn: async (file) => {
+      const { file_url } = await base44.integrations.Core.UploadFile({ file });
+      
+      // Optionally extract key content using LLM
+      const extractedData = await base44.integrations.Core.InvokeLLM({
+        prompt: `Extract key statistics, success metrics, and important data points from this document title: "${file.name}". Return as JSON.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            key_statistics: { type: "array", items: { type: "string" } },
+            extracted_content: { type: "string" }
+          }
+        }
+      });
+
+      return base44.entities.UploadedDocument.create({
+        title: file.name,
+        document_type: 'organizational_report',
+        file_url,
+        extracted_content: extractedData.extracted_content,
+        key_statistics: extractedData.key_statistics
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['uploadedDocuments']);
+      setShowUploadDialog(false);
+    }
   });
 
   const createProposal = useMutation({
@@ -1019,15 +1112,66 @@ export default function GrantWriter() {
 
         {mode === 'edit' && selectedProposal && (
           <div>
-            <Button variant="ghost" onClick={() => setMode('browse')} className="mb-4">
-              ← Back to Proposals
-            </Button>
+            <div className="flex items-center justify-between mb-4">
+              <Button variant="ghost" onClick={() => setMode('browse')}>
+                ← Back to Proposals
+              </Button>
+              <Button onClick={() => setShowUploadDialog(true)} variant="outline">
+                <Upload className="w-4 h-4 mr-2" />
+                Upload Reference Document
+              </Button>
+            </div>
             <ProposalEditor 
               proposal={selectedProposal}
+              uploadedDocs={uploadedDocs}
               onSave={(content) => {
                 base44.entities.GrantProposal.update(selectedProposal.id, { content });
               }}
             />
+          </div>
+        )}
+
+        {/* Upload Dialog */}
+        {showUploadDialog && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              className="bg-white rounded-xl p-6 max-w-md w-full mx-4"
+            >
+              <h3 className="text-xl font-bold text-gray-900 mb-4">Upload Reference Document</h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Upload reports, assessments, or past grants. AI Grace will extract key statistics and reference them when generating content.
+              </p>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx,.txt"
+                onChange={(e) => {
+                  if (e.target.files[0]) {
+                    setUploadingDoc(true);
+                    uploadDocument.mutate(e.target.files[0]);
+                  }
+                }}
+                className="w-full mb-4"
+                disabled={uploadingDoc}
+              />
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  onClick={() => setShowUploadDialog(false)}
+                  className="flex-1"
+                  disabled={uploadingDoc}
+                >
+                  Cancel
+                </Button>
+              </div>
+              {uploadingDoc && (
+                <p className="text-sm text-gray-600 mt-2 flex items-center gap-2">
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Uploading and extracting key data...
+                </p>
+              )}
+            </motion.div>
           </div>
         )}
       </div>

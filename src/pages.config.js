@@ -15,6 +15,8 @@ import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
 import PeerCoachTraining from './pages/PeerCoachTraining';
 import TeamChallenges from './pages/TeamChallenges';
+import ProviderHub from './pages/ProviderHub';
+import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
 import __Layout from './Layout.jsx';
 
 
@@ -36,6 +38,8 @@ export const PAGES = {
     "Resources": Resources,
     "PeerCoachTraining": PeerCoachTraining,
     "TeamChallenges": TeamChallenges,
+    "ProviderHub": ProviderHub,
+    "PeerCoachAnalytics": PeerCoachAnalytics,
 }
 
 export const pagesConfig = {
