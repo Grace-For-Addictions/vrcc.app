@@ -3,29 +3,29 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  Home, Users, MapPin, Heart, Calendar, Brain, 
-  Compass, MessageCircle, Sparkles, Menu, X, 
-  Phone, LogOut, User, ChevronDown, Shield, Award
-} from 'lucide-react';
+import {
+  Home, Users, MapPin, Heart, Calendar, Brain,
+  Compass, MessageCircle, Sparkles, Menu, X,
+  Phone, LogOut, User, ChevronDown, Shield, Award } from
+'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger } from
+"@/components/ui/dropdown-menu";
 
 const navItems = [
-  { name: 'Home', href: 'Home', icon: Home },
-  { name: 'Community', href: 'Community', icon: Users },
-  { name: 'Resources', href: 'Resources', icon: MapPin },
-  { name: 'Walls', href: 'CommunityWalls', icon: Heart },
-  { name: 'Events', href: 'Events', icon: Calendar },
-  { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
-  { name: 'Assessment', href: 'Assessment', icon: Compass }
-];
+{ name: 'Home', href: 'Home', icon: Home },
+{ name: 'Community', href: 'Community', icon: Users },
+{ name: 'Resources', href: 'Resources', icon: MapPin },
+{ name: 'Walls', href: 'CommunityWalls', icon: Heart },
+{ name: 'Events', href: 'Events', icon: Calendar },
+{ name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
+{ name: 'Assessment', href: 'Assessment', icon: Compass }];
+
 
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
@@ -37,10 +37,10 @@ export default function Layout({ children, currentPageName }) {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
       } catch (e) {
+
+
         // Not logged in
-      }
-    };
-    loadUser();
+      }};loadUser();
   }, []);
 
   const handleLogout = async () => {
@@ -68,27 +68,27 @@ export default function Layout({ children, currentPageName }) {
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
               <div className="hidden sm:block">
-                <div className="font-bold text-gray-900">Grace For Addictions</div>
-                <div className="text-xs text-teal-600">Virtual Recovery Community</div>
+                <div className="text-gray-900 mt-12 font-bold rounded">Grace For Addictions</div>
+                <div className="text-teal-600 pt-5 text-xs">Virtual Recovery Community</div>
               </div>
             </Link>
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.name}
-                  to={createPageUrl(item.href)}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                    currentPageName === item.href
-                      ? 'bg-teal-50 text-teal-700'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                  }`}
-                >
+              {navItems.map((item) =>
+              <Link
+                key={item.name}
+                to={createPageUrl(item.href)}
+                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                currentPageName === item.href ?
+                'bg-teal-50 text-teal-700' :
+                'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`
+                }>
+
                   <item.icon className="w-4 h-4" />
                   {item.name}
                 </Link>
-              ))}
+              )}
             </nav>
 
             {/* Right Side */}
@@ -110,8 +110,8 @@ export default function Layout({ children, currentPageName }) {
               </Link>
 
               {/* User Menu */}
-              {user ? (
-                <DropdownMenu>
+              {user ?
+              <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="flex items-center gap-2">
                       <div className="w-8 h-8 rounded-full bg-teal-100 flex items-center justify-center">
@@ -140,24 +140,24 @@ export default function Layout({ children, currentPageName }) {
                       Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => base44.auth.redirectToLogin()}
-                >
+                </DropdownMenu> :
+
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => base44.auth.redirectToLogin()}>
+
                   Sign In
                 </Button>
-              )}
+              }
 
               {/* Mobile Menu Toggle */}
               <Button
                 variant="ghost"
                 size="icon"
                 className="lg:hidden"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
+
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
               </Button>
             </div>
@@ -166,29 +166,29 @@ export default function Layout({ children, currentPageName }) {
 
         {/* Mobile Navigation */}
         <AnimatePresence>
-          {mobileMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="lg:hidden border-t border-gray-100 bg-white"
-            >
+          {mobileMenuOpen &&
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="lg:hidden border-t border-gray-100 bg-white">
+
               <nav className="px-4 py-4 space-y-1">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.name}
-                    to={createPageUrl(item.href)}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                      currentPageName === item.href
-                        ? 'bg-teal-50 text-teal-700'
-                        : 'text-gray-600 hover:bg-gray-50'
-                    }`}
-                  >
+                {navItems.map((item) =>
+              <Link
+                key={item.name}
+                to={createPageUrl(item.href)}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                currentPageName === item.href ?
+                'bg-teal-50 text-teal-700' :
+                'text-gray-600 hover:bg-gray-50'}`
+                }>
+
                     <item.icon className="w-5 h-5" />
                     {item.name}
                   </Link>
-                ))}
+              )}
                 <div className="pt-4 space-y-2">
                   <Link to={createPageUrl('Crisis')} onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="outline" className="w-full text-orange-600 border-orange-200">
@@ -205,7 +205,7 @@ export default function Layout({ children, currentPageName }) {
                 </div>
               </nav>
             </motion.div>
-          )}
+          }
         </AnimatePresence>
       </header>
 
@@ -285,6 +285,6 @@ export default function Layout({ children, currentPageName }) {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>);
+
 }
