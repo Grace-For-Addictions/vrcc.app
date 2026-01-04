@@ -212,6 +212,13 @@ export default function Home() {
       href: 'MeetingsHub',
       color: 'indigo',
       isNew: true
+    },
+    {
+      title: 'Provider Analytics',
+      description: 'Anonymized aggregate data and referral trends',
+      icon: BarChart3,
+      href: 'ProviderAnalytics',
+      color: 'indigo'
     }
   ];
 
@@ -235,6 +242,21 @@ export default function Home() {
               challenge={todayChallenge} 
               progress={0}
               onComplete={() => {}}
+            />
+          </section>
+        )}
+
+        {/* Goal Setting Assistant */}
+        {user && profile && (
+          <section>
+            <GoalSettingAssistant 
+              profile={profile}
+              onGoalSet={(goal) => {
+                // Save goal to profile or separate entity
+                base44.auth.updateMe({ 
+                  current_goal: goal.goal_statement 
+                });
+              }}
             />
           </section>
         )}
