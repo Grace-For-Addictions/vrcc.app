@@ -148,6 +148,20 @@ export default function Home() {
       href: 'PeerCoachTraining',
       color: 'indigo',
       isNew: true
+    },
+    {
+      title: 'Coach Analytics',
+      description: 'Track your performance and get personalized recommendations',
+      icon: BarChart3,
+      href: 'PeerCoachAnalytics',
+      color: 'purple'
+    },
+    {
+      title: 'Provider Hub',
+      description: 'Partner portal for warm handoffs and referral tracking',
+      icon: Building2,
+      href: 'ProviderHub',
+      color: 'blue'
     }
   ];
 

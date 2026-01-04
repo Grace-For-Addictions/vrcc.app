@@ -134,7 +134,7 @@ Focus on: empathy, motivational interviewing techniques (OARS), appropriate boun
       });
 
       setFeedback(response);
-      onComplete(response.score);
+      onComplete(response.score, response);
     } catch (error) {
       setFeedback({ 
         score: 0, 
@@ -349,11 +349,29 @@ export default function PeerCoachTraining() {
   const [selectedScenario, setSelectedScenario] = useState(null);
   const [completedScenarios, setCompletedScenarios] = useState({});
 
-  const handleComplete = (scenarioId, score) => {
+  const handleComplete = async (scenarioId, score, feedback) => {
     setCompletedScenarios({
       ...completedScenarios,
       [scenarioId]: score
     });
+
+    // Save session to database for analytics
+    const scenario = trainingScenarios.find(s => s.id === scenarioId);
+    try {
+      await base44.entities.CoachingSession.create({
+        scenario_id: scenarioId,
+        scenario_title: scenario.title,
+        difficulty: scenario.difficulty,
+        score,
+        empathy_score: feedback.empathy_score,
+        mi_skills_score: feedback.mi_skills_score,
+        resource_accuracy: feedback.resource_accuracy,
+        strengths: feedback.strengths || [],
+        improvements: feedback.improvements || []
+      });
+    } catch (e) {
+      console.error('Failed to save session:', e);
+    }
   };
 
   const avgScore = Object.values(completedScenarios).length > 0
@@ -508,7 +526,7 @@ export default function PeerCoachTraining() {
 
             <ScenarioSimulator 
               scenario={selectedScenario}
-              onComplete={(score) => handleComplete(selectedScenario.id, score)}
+              onComplete={(score, feedback) => handleComplete(selectedScenario.id, score, feedback)}
             />
           </div>
         )}
