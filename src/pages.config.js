@@ -27,6 +27,7 @@ import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
 import IBHRSReporting from './pages/IBHRSReporting';
 import VRCheckoutHub from './pages/VRCheckoutHub';
+import CommunityGardenHub from './pages/CommunityGardenHub';
 import __Layout from './Layout.jsx';
 
 
@@ -60,6 +61,7 @@ export const PAGES = {
     "WorkforceDevelopment": WorkforceDevelopment,
     "IBHRSReporting": IBHRSReporting,
     "VRCheckoutHub": VRCheckoutHub,
+    "CommunityGardenHub": CommunityGardenHub,
 }
 
 export const pagesConfig = {
