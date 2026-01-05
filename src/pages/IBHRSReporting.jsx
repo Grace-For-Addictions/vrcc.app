@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
+import IBHRSOutcomeSuggester from '@/components/ai/IBHRSOutcomeSuggester';
 
 export default function IBHRSReporting() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());

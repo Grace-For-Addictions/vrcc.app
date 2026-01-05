@@ -96,10 +96,22 @@ export default function AdminDashboard() {
   };
 
   const dropoffPoints = [
-    { stage: 'Registration → Assessment', rate: (1 - engagementFunnel.completedAssessment / engagementFunnel.registered) * 100 },
-    { stage: 'Assessment → Set Why', rate: (1 - engagementFunnel.setWhy / engagementFunnel.completedAssessment) * 100 },
-    { stage: 'Set Why → Join Chat', rate: (1 - engagementFunnel.joinedChat / engagementFunnel.setWhy) * 100 },
-    { stage: 'Chat → Weekly Active', rate: (1 - engagementFunnel.weeklyActive / engagementFunnel.joinedChat) * 100 }
+    { 
+      stage: 'Registration → Assessment', 
+      rate: engagementFunnel.registered > 0 ? (1 - engagementFunnel.completedAssessment / engagementFunnel.registered) * 100 : 0 
+    },
+    { 
+      stage: 'Assessment → Set Why', 
+      rate: engagementFunnel.completedAssessment > 0 ? (1 - engagementFunnel.setWhy / engagementFunnel.completedAssessment) * 100 : 0 
+    },
+    { 
+      stage: 'Set Why → Join Chat', 
+      rate: engagementFunnel.setWhy > 0 ? (1 - engagementFunnel.joinedChat / engagementFunnel.setWhy) * 100 : 0 
+    },
+    { 
+      stage: 'Chat → Weekly Active', 
+      rate: engagementFunnel.joinedChat > 0 ? (1 - engagementFunnel.weeklyActive / engagementFunnel.joinedChat) * 100 : 0 
+    }
   ].sort((a, b) => b.rate - a.rate);
 
   // AI Outreach effectiveness
