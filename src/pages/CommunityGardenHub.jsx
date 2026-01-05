@@ -15,6 +15,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import CommunityGardenView from '@/components/garden/CommunityGardenView';
+import GardenLeaderboards from '@/components/garden/GardenLeaderboards';
+import UnlockableDecorations from '@/components/garden/UnlockableDecorations';
 
 const giftOptions = [
   { id: 'hope_seed', name: '🌱 Seed of Hope', points: 10, emoji: '🌱' },
@@ -276,6 +278,15 @@ export default function CommunityGardenHub() {
             </Dialog>
           </GraceCard>
         </div>
+
+        {/* Leaderboards */}
+        <GardenLeaderboards />
+
+        {/* Unlockable Decorations */}
+        <UnlockableDecorations 
+          totalGifts={totalGifts} 
+          totalCommunityPoints={totalCommunityPoints} 
+        />
 
         {/* Kudos Feed */}
         <GraceCard>

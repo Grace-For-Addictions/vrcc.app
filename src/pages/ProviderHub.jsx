@@ -9,6 +9,8 @@ import {
 import ProviderRegistration from '@/components/provider/ProviderRegistration';
 import ProviderDashboard from '@/components/provider/ProviderDashboard';
 import ReferralManager from '@/components/provider/ReferralManager';
+import ProviderNotifications from '@/components/provider/ProviderNotifications';
+import ProviderReporting from '@/components/provider/ProviderReporting';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -254,10 +256,16 @@ export default function ProviderHub() {
           </GraceCard>
         </div>
 
+        <div className="flex items-center justify-between mb-6">
+          <h2 className="text-2xl font-bold text-gray-900">Provider Portal</h2>
+          <ProviderNotifications providerId={provider.id} />
+        </div>
+
         <Tabs defaultValue="dashboard" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="dashboard">Dashboard</TabsTrigger>
             <TabsTrigger value="referrals">Manage Referrals</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="profile">My Profile</TabsTrigger>
           </TabsList>
 
@@ -267,6 +275,10 @@ export default function ProviderHub() {
 
           <TabsContent value="referrals">
             <ReferralManager referrals={referrals} providerId={provider.id} />
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <ProviderReporting provider={provider} referrals={referrals} />
           </TabsContent>
 
           <TabsContent value="profile">

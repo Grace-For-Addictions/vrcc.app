@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import MultiUserVRSimulator from '@/components/vr/MultiUserVRSimulator';
 
 const trainingScenarios = [
   {
@@ -348,6 +349,17 @@ Focus on: empathy, motivational interviewing techniques (OARS), appropriate boun
 export default function PeerCoachTraining() {
   const [selectedScenario, setSelectedScenario] = useState(null);
   const [completedScenarios, setCompletedScenarios] = useState({});
+  const [user, setUser] = useState(null);
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const u = await base44.auth.me();
+        setUser(u);
+      } catch (e) {}
+    };
+    loadUser();
+  }, []);
 
   const handleComplete = async (scenarioId, score, feedback) => {
     setCompletedScenarios({
@@ -453,6 +465,13 @@ export default function PeerCoachTraining() {
             </div>
           </GraceCard>
         </div>
+
+        {/* Multi-User AI Simulator */}
+        {user && (
+          <div className="mb-8">
+            <MultiUserVRSimulator user={user} />
+          </div>
+        )}
 
         {!selectedScenario ? (
           <div>
