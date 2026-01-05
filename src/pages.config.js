@@ -1,3 +1,4 @@
+import AdminDashboard from './pages/AdminDashboard';
 import Assessment from './pages/Assessment';
 import Community from './pages/Community';
 import CommunityWalls from './pages/CommunityWalls';
@@ -13,6 +14,7 @@ import Neuroplasticity from './pages/Neuroplasticity';
 import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
 import PeerCoachTraining from './pages/PeerCoachTraining';
 import PeerMatching from './pages/PeerMatching';
+import ProviderAnalytics from './pages/ProviderAnalytics';
 import ProviderHub from './pages/ProviderHub';
 import Quizzes from './pages/Quizzes';
 import RecoveryCapitalCafe from './pages/RecoveryCapitalCafe';
@@ -23,12 +25,12 @@ import SchoolPrevention from './pages/SchoolPrevention';
 import TeamChallenges from './pages/TeamChallenges';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import ProviderAnalytics from './pages/ProviderAnalytics';
-import AdminDashboard from './pages/AdminDashboard';
+import IBHRSReporting from './pages/IBHRSReporting';
 import __Layout from './Layout.jsx';
 
 
 export const PAGES = {
+    "AdminDashboard": AdminDashboard,
     "Assessment": Assessment,
     "Community": Community,
     "CommunityWalls": CommunityWalls,
@@ -44,6 +46,7 @@ export const PAGES = {
     "PeerCoachAnalytics": PeerCoachAnalytics,
     "PeerCoachTraining": PeerCoachTraining,
     "PeerMatching": PeerMatching,
+    "ProviderAnalytics": ProviderAnalytics,
     "ProviderHub": ProviderHub,
     "Quizzes": Quizzes,
     "RecoveryCapitalCafe": RecoveryCapitalCafe,
@@ -54,8 +57,7 @@ export const PAGES = {
     "TeamChallenges": TeamChallenges,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "ProviderAnalytics": ProviderAnalytics,
-    "AdminDashboard": AdminDashboard,
+    "IBHRSReporting": IBHRSReporting,
 }
 
 export const pagesConfig = {
