@@ -6,7 +6,7 @@ import {
   Compass, Heart, Users, Brain, MapPin, Calendar, 
   Award, MessageCircle, BookOpen, Shield, Home as HomeIcon,
   Sparkles, ArrowRight, GraduationCap, BarChart3, Building2,
-  Video, Coffee, Briefcase
+  Video, Coffee, Briefcase, Headphones, Database
 } from 'lucide-react';
 
 import WelcomeHero from '@/components/dashboard/WelcomeHero';
@@ -222,6 +222,22 @@ export default function Home() {
       icon: BarChart3,
       href: 'ProviderAnalytics',
       color: 'indigo'
+    },
+    {
+      title: 'VR Checkout Hub',
+      description: 'VR headset checkout for youth prevention and recovery',
+      icon: Headphones,
+      href: 'VRCheckoutHub',
+      color: 'purple',
+      isNew: true
+    },
+    {
+      title: 'IBHRS Reporting',
+      description: 'Iowa Behavioral Health Reporting System compliance',
+      icon: Database,
+      href: 'IBHRSReporting',
+      color: 'blue',
+      adminOnly: true
     },
     {
       title: 'Admin Dashboard',

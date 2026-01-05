@@ -26,6 +26,7 @@ import TeamChallenges from './pages/TeamChallenges';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
 import IBHRSReporting from './pages/IBHRSReporting';
+import VRCheckoutHub from './pages/VRCheckoutHub';
 import __Layout from './Layout.jsx';
 
 
@@ -58,6 +59,7 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
     "IBHRSReporting": IBHRSReporting,
+    "VRCheckoutHub": VRCheckoutHub,
 }
 
 export const pagesConfig = {

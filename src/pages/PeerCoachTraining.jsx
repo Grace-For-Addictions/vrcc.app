@@ -358,6 +358,9 @@ export default function PeerCoachTraining() {
     // Save session to database for analytics
     const scenario = trainingScenarios.find(s => s.id === scenarioId);
     try {
+      const user = await base44.auth.me();
+      
+      // Save coaching session
       await base44.entities.CoachingSession.create({
         scenario_id: scenarioId,
         scenario_title: scenario.title,
@@ -368,6 +371,27 @@ export default function PeerCoachTraining() {
         resource_accuracy: feedback.resource_accuracy,
         strengths: feedback.strengths || [],
         improvements: feedback.improvements || []
+      });
+
+      // Log to IBHRS as VR training service event
+      await base44.entities.IBHRSServiceEvent.create({
+        participant_id: user.id,
+        service_type: 'vr_training',
+        service_date: new Date().toISOString().split('T')[0],
+        duration_minutes: 15,
+        setting: 'vr_immersive',
+        county: 'Dallas',
+        provider_credential: 'CPS',
+        outcome_measure: {
+          functional_improvement: score >= 70,
+          recovery_capital_increase: Math.round(score / 10)
+        },
+        vr_session_data: {
+          scenario_id: scenarioId,
+          completion_rate: 100,
+          skills_practiced: scenario.focusAreas,
+          cue_exposure_success: score >= 80
+        }
       });
     } catch (e) {
       console.error('Failed to save session:', e);
