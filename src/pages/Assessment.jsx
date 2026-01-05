@@ -240,6 +240,19 @@ export default function Assessment() {
         ai_insights: aiInsights
       });
 
+      // Log to IBHRS
+      try {
+        const user = await base44.auth.me();
+        const { IBHRSLogger } = await import('../components/ibhrs/IBHRSLogger');
+        await IBHRSLogger.logAssessment({
+          userId: user.id,
+          county: 'Dallas',
+          assessmentScore: totalScore
+        });
+      } catch (e) {
+        console.error('IBHRS logging failed', e);
+      }
+
       return assessment;
     },
     onSuccess: (assessment) => {
