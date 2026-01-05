@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Database, Download, FileText, TrendingUp, 
@@ -17,6 +17,8 @@ export default function IBHRSReporting() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   const [exporting, setExporting] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const queryClient = useQueryClient();
 
   const { data: serviceEvents } = useQuery({
     queryKey: ['ibhrs-events', selectedMonth, selectedYear],
@@ -101,6 +103,23 @@ export default function IBHRSReporting() {
           subtitle="Iowa Behavioral Health Reporting System compliance dashboard"
           icon={Database}
         />
+
+        {/* AI Outcome Suggester */}
+        {selectedEvent && (
+          <div className="mb-8">
+            <IBHRSOutcomeSuggester 
+              serviceEvent={selectedEvent} 
+              onApply={(outcomes) => {
+                base44.entities.IBHRSServiceEvent.update(selectedEvent.id, {
+                  outcome_measure: outcomes
+                }).then(() => {
+                  queryClient.invalidateQueries(['ibhrs-events']);
+                  setSelectedEvent(null);
+                });
+              }}
+            />
+          </div>
+        )}
 
         {/* Export Controls */}
         <GraceCard className="mb-8">
@@ -188,6 +207,24 @@ export default function IBHRSReporting() {
             </div>
           </GraceCard>
         </div>
+
+        {/* Recent Service Events */}
+        <GraceCard className="mb-8">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">Recent Service Events</h3>
+          <div className="space-y-2">
+            {serviceEvents.slice(0, 5).map((event) => (
+              <div key={event.id} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div>
+                  <p className="font-medium text-gray-900">{event.service_type}</p>
+                  <p className="text-sm text-gray-600">{event.county} • {event.service_date}</p>
+                </div>
+                <Button size="sm" variant="outline" onClick={() => setSelectedEvent(event)}>
+                  AI Outcome Suggest
+                </Button>
+              </div>
+            ))}
+          </div>
+        </GraceCard>
 
         {/* County Reach */}
         <GraceCard className="mb-8">

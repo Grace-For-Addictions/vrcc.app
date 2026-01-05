@@ -19,6 +19,7 @@ import ProactiveOutreach from '@/components/ai/ProactiveOutreach';
 import GoalSettingAssistant from '@/components/ai/GoalSettingAssistant';
 import SessionAnalyzer from '@/components/ai/SessionAnalyzer';
 import GoalProgressNudges from '@/components/ai/GoalProgressNudges';
+import AIRecoveryJourney from '@/components/ai/AIRecoveryJourney';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -278,6 +279,13 @@ export default function Home() {
               progress={0}
               onComplete={() => {}}
             />
+          </section>
+        )}
+
+        {/* AI Personalized Journey */}
+        {user && (
+          <section>
+            <AIRecoveryJourney user={user} />
           </section>
         )}
 
