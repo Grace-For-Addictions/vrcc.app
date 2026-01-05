@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Video, Play, Upload, Search, Filter, 
-  Heart, Eye, Clock, CheckCircle2, AlertTriangle
+  Heart, Eye, Clock, CheckCircle2, AlertTriangle, X
 } from 'lucide-react';
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -20,6 +21,7 @@ export default function VideoLibrary() {
   const [category, setCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [uploadMode, setUploadMode] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState(null);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -41,12 +43,38 @@ export default function VideoLibrary() {
     initialData: []
   });
 
+  const likeVideo = useMutation({
+    mutationFn: (videoId) => {
+      const video = videos.find(v => v.id === videoId);
+      return base44.entities.VideoContent.update(videoId, {
+        likes: (video.likes || 0) + 1,
+        view_count: (video.view_count || 0) + 1
+      });
+    },
+    onSuccess: () => queryClient.invalidateQueries(['videos'])
+  });
+
   const uploadVideo = useMutation({
     mutationFn: async (formData) => {
       // Upload video file
       const { file_url } = await base44.integrations.Core.UploadFile({ file: formData.file });
       
-      // AI safety screening + transcript generation
+      // Generate thumbnail (using first frame or AI)
+      const thumbnailPrompt = `Generate a description for a video thumbnail image for this video:
+Title: ${formData.title}
+Category: ${formData.category}
+
+Describe a fitting thumbnail that represents ${formData.category} content with neuroplasticity themes.`;
+      
+      const thumbnailDesc = await base44.integrations.Core.InvokeLLM({
+        prompt: thumbnailPrompt
+      });
+
+      const { url: thumbnail_url } = await base44.integrations.Core.GenerateImage({
+        prompt: thumbnailDesc
+      });
+      
+      // AI safety screening
       const aiAnalysis = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this video title and description for safety concerns. Check for: stigmatizing language, punitive language, triggers, misinformation.
         
@@ -70,6 +98,7 @@ Return JSON with: safety_score (0-100), flagged_content (array), neuroplasticity
         title: formData.title,
         description: formData.description,
         video_url: file_url,
+        thumbnail_url: thumbnail_url,
         category: formData.category,
         coach_name: user?.full_name || 'Anonymous',
         ai_safety_score: aiAnalysis.safety_score,
@@ -171,12 +200,26 @@ Return JSON with: safety_score (0-100), flagged_content (array), neuroplasticity
         {/* Video Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredVideos.map((video) => (
-            <GraceCard key={video.id}>
-              <div className="relative pb-[56.25%] bg-gray-200 rounded-lg mb-4">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Play className="w-12 h-12 text-white opacity-80" />
+            <GraceCard key={video.id} hover>
+              {/* Thumbnail */}
+              <div className="relative pb-[56.25%] bg-gradient-to-br from-purple-100 to-pink-100 rounded-lg mb-4 overflow-hidden cursor-pointer"
+                   onClick={() => setSelectedVideo(video)}>
+                {video.thumbnail_url ? (
+                  <img 
+                    src={video.thumbnail_url} 
+                    alt={video.title}
+                    className="absolute inset-0 w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-purple-400 to-pink-400">
+                    <Video className="w-16 h-16 text-white opacity-60" />
+                  </div>
+                )}
+                <div className="absolute inset-0 flex items-center justify-center bg-black/20 hover:bg-black/40 transition-all">
+                  <Play className="w-16 h-16 text-white opacity-90" />
                 </div>
               </div>
+
               <h4 className="font-semibold text-gray-900 mb-2">{video.title}</h4>
               <p className="text-sm text-gray-600 mb-3 line-clamp-2">{video.description}</p>
               
@@ -189,20 +232,52 @@ Return JSON with: safety_score (0-100), flagged_content (array), neuroplasticity
 
               <div className="flex items-center justify-between text-sm text-gray-500">
                 <span className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" /> {video.view_count}
+                  <Eye className="w-4 h-4" /> {video.view_count || 0}
                 </span>
-                <span className="flex items-center gap-1">
-                  <Heart className="w-4 h-4" /> {video.likes}
-                </span>
+                <button 
+                  onClick={() => likeVideo.mutate(video.id)}
+                  className="flex items-center gap-1 hover:text-pink-600 transition-colors"
+                >
+                  <Heart className="w-4 h-4" /> {video.likes || 0}
+                </button>
               </div>
-
-              <Button className="w-full mt-4 bg-purple-600">
-                <Play className="w-4 h-4 mr-2" />
-                Watch Video
-              </Button>
             </GraceCard>
           ))}
         </div>
+
+        {/* Video Player Modal */}
+        <Dialog open={!!selectedVideo} onOpenChange={() => setSelectedVideo(null)}>
+          <DialogContent className="max-w-4xl">
+            {selectedVideo && (
+              <div>
+                <div className="relative pb-[56.25%] bg-black rounded-lg mb-4">
+                  <video 
+                    src={selectedVideo.video_url} 
+                    controls 
+                    autoPlay
+                    className="absolute inset-0 w-full h-full"
+                  />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">{selectedVideo.title}</h3>
+                <p className="text-gray-600 mb-4">{selectedVideo.description}</p>
+                
+                <div className="flex flex-wrap gap-2 mb-4">
+                  <Badge className="bg-purple-100 text-purple-700">{selectedVideo.category}</Badge>
+                  {selectedVideo.neuroplasticity_tags?.map(tag => (
+                    <Badge key={tag} variant="outline">{tag}</Badge>
+                  ))}
+                </div>
+
+                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                  <p className="text-sm text-purple-900">
+                    <strong>🧠 Neuroplasticity Connection:</strong> This content supports brain rewiring through 
+                    {selectedVideo.neuroplasticity_tags?.[0] ? ` ${selectedVideo.neuroplasticity_tags[0]}` : ' evidence-based practices'}.
+                  </p>
+                </div>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
       </div>
 
       <GraceChatWidget />

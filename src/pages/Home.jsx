@@ -6,7 +6,7 @@ import {
   Compass, Heart, Users, Brain, MapPin, Calendar, 
   Award, MessageCircle, BookOpen, Shield, Home as HomeIcon,
   Sparkles, ArrowRight, GraduationCap, BarChart3, Building2,
-  Video, Coffee, Briefcase, Headphones, Database
+  Video, Coffee, Briefcase, Headphones, Database, Flower2
 } from 'lucide-react';
 
 import WelcomeHero from '@/components/dashboard/WelcomeHero';
@@ -121,6 +121,14 @@ export default function Home() {
       icon: Sparkles,
       href: 'RecoveryGarden',
       color: 'emerald',
+      isNew: true
+    },
+    {
+      title: 'Community Garden Hub',
+      description: 'Gift seeds, celebrate growth, and view collective milestones',
+      icon: Flower2,
+      href: 'CommunityGardenHub',
+      color: 'green',
       isNew: true
     },
     {

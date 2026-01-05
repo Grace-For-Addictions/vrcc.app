@@ -14,7 +14,27 @@ export default function ReferralManager({ referrals, providerId }) {
   const queryClient = useQueryClient();
 
   const updateReferral = useMutation({
-    mutationFn: ({ id, data }) => base44.entities.Referral.update(id, data),
+    mutationFn: async ({ id, data }) => {
+      const result = await base44.entities.Referral.update(id, data);
+      
+      // Log warm handoff to IBHRS if status changed to accepted
+      if (data.status === 'accepted') {
+        try {
+          const { IBHRSLogger } = await import('../ibhrs/IBHRSLogger');
+          const referral = referrals.find(r => r.id === id);
+          await IBHRSLogger.logWarmHandoff({
+            userId: referral.created_by,
+            county: 'Dallas',
+            providerId: providerId,
+            serviceNeeded: referral.service_needed
+          });
+        } catch (e) {
+          console.error('IBHRS logging failed', e);
+        }
+      }
+      
+      return result;
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['referrals']);
       setSelectedReferral(null);
