@@ -68,6 +68,27 @@ export default function AdminDashboard() {
     initialData: []
   });
 
+  const { data: allCoachingSessions } = useQuery({
+    queryKey: ['allCoachingSessions'],
+    queryFn: () => base44.entities.CoachingSession.list('-created_date', 500),
+    enabled: !!user,
+    initialData: []
+  });
+
+  const { data: allAssessments } = useQuery({
+    queryKey: ['allAssessments'],
+    queryFn: () => base44.entities.Assessment.list('-created_date', 500),
+    enabled: !!user,
+    initialData: []
+  });
+
+  const { data: allMeetings } = useQuery({
+    queryKey: ['allMeetings'],
+    queryFn: () => base44.entities.MeetingSummary.list('-created_date', 200),
+    enabled: !!user,
+    initialData: []
+  });
+
   if (!user) return null;
 
   // Analytics calculations
@@ -83,7 +104,34 @@ export default function AdminDashboard() {
     checkInsLastWeek: allCheckIns.filter(c => new Date(c.created_date) > sevenDaysAgo).length,
     messagesLastWeek: allMessages.filter(m => new Date(m.created_date) > sevenDaysAgo).length,
     eventsAttendance: allEvents.reduce((sum, e) => sum + (e.attendee_count || 0), 0),
-    quizCompletions: allQuizResults.length
+    quizCompletions: allQuizResults.length,
+    coachingSessionsLastWeek: allCoachingSessions.filter(s => new Date(s.created_date) > sevenDaysAgo).length,
+    totalCoachingSessions: allCoachingSessions.length,
+    gfarcMeetingAttendance: allMeetings.reduce((sum, m) => sum + (m.participants?.length || 0), 0),
+    resourcesNavigated: allProfiles.reduce((sum, p) => sum + (p.resources_accessed?.length || 0), 0),
+    avgRCCScore: allAssessments.length > 0 ? 
+      (allAssessments.reduce((sum, a) => sum + (a.total_score || 0), 0) / allAssessments.length).toFixed(1) : 0,
+    totalRCCAssessments: allAssessments.length,
+    rccImprovementRate: (() => {
+      const usersWithMultipleAssessments = {};
+      allAssessments.forEach(a => {
+        if (!usersWithMultipleAssessments[a.created_by]) {
+          usersWithMultipleAssessments[a.created_by] = [];
+        }
+        usersWithMultipleAssessments[a.created_by].push(a);
+      });
+      let improved = 0;
+      Object.values(usersWithMultipleAssessments).forEach(assessments => {
+        if (assessments.length >= 2) {
+          const sorted = assessments.sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+          const first = sorted[0].total_score || 0;
+          const last = sorted[sorted.length - 1].total_score || 0;
+          if (last > first) improved++;
+        }
+      });
+      const total = Object.keys(usersWithMultipleAssessments).length;
+      return total > 0 ? ((improved / total) * 100).toFixed(0) : 0;
+    })()
   };
 
   // Engagement funnel analysis
@@ -225,6 +273,51 @@ export default function AdminDashboard() {
                       <Badge>{stats.quizCompletions}</Badge>
                     </div>
                     <Progress value={(stats.quizCompletions / stats.totalUsers) * 100} />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">GFARC Meeting Attendance</span>
+                      <Badge>{stats.gfarcMeetingAttendance}</Badge>
+                    </div>
+                    <Progress value={(stats.gfarcMeetingAttendance / stats.totalUsers) * 100} />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">One-on-One Coaching Sessions</span>
+                      <Badge>{stats.coachingSessionsLastWeek}</Badge>
+                    </div>
+                    <Progress value={(stats.coachingSessionsLastWeek / stats.totalUsers) * 100} />
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Resources Successfully Navigated</span>
+                      <Badge>{stats.resourcesNavigated}</Badge>
+                    </div>
+                    <Progress value={Math.min((stats.resourcesNavigated / (stats.totalUsers * 3)) * 100, 100)} />
+                  </div>
+
+                  <div className="pt-3 border-t border-gray-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Avg User Self-ID RCC Rating</span>
+                      <Badge variant="outline" className="text-lg font-bold">{stats.avgRCCScore}/50</Badge>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Based on {stats.totalRCCAssessments} BARC-10 assessments
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">RCC Improvement Rate</span>
+                      <Badge className="bg-green-100 text-green-700">{stats.rccImprovementRate}%</Badge>
+                    </div>
+                    <Progress value={stats.rccImprovementRate} className="bg-green-100" />
+                    <div className="text-xs text-gray-500 mt-1">
+                      Users showing improved recovery capital over time
+                    </div>
                   </div>
                 </div>
               </GraceCard>
@@ -383,6 +476,79 @@ export default function AdminDashboard() {
             </GraceCard>
           </TabsContent>
         </Tabs>
+
+        {/* Stakeholder Insights */}
+        <GraceCard className="mt-8">
+          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Award className="w-6 h-6 text-purple-600" />
+            Key Outcomes for Stakeholders
+          </h3>
+          <p className="text-sm text-gray-600 mb-6">
+            Critical metrics for grant makers, legislators, state/federal officials, and community partners
+          </p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+              <h4 className="font-semibold text-blue-900 mb-2">Community Reach</h4>
+              <p className="text-3xl font-bold text-blue-700">{stats.totalUsers}</p>
+              <p className="text-sm text-blue-600 mt-1">Unique participants served</p>
+            </div>
+
+            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+              <h4 className="font-semibold text-green-900 mb-2">Sustained Engagement</h4>
+              <p className="text-3xl font-bold text-green-700">{stats.avgStreak} days</p>
+              <p className="text-sm text-green-600 mt-1">Average user retention streak</p>
+            </div>
+
+            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+              <h4 className="font-semibold text-purple-900 mb-2">Recovery Capital Growth</h4>
+              <p className="text-3xl font-bold text-purple-700">{stats.rccImprovementRate}%</p>
+              <p className="text-sm text-purple-600 mt-1">Users showing RCC improvement</p>
+            </div>
+
+            <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+              <h4 className="font-semibold text-teal-900 mb-2">Peer Support Delivered</h4>
+              <p className="text-3xl font-bold text-teal-700">{stats.totalCoachingSessions}</p>
+              <p className="text-sm text-teal-600 mt-1">One-on-one coaching sessions</p>
+            </div>
+
+            <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+              <h4 className="font-semibold text-amber-900 mb-2">Crisis Prevention</h4>
+              <p className="text-3xl font-bold text-amber-700">24/7</p>
+              <p className="text-sm text-amber-600 mt-1">AI Grace availability + peer network</p>
+            </div>
+
+            <div className="p-4 bg-rose-50 rounded-lg border border-rose-200">
+              <h4 className="font-semibold text-rose-900 mb-2">Resource Navigation</h4>
+              <p className="text-3xl font-bold text-rose-700">{stats.resourcesNavigated}</p>
+              <p className="text-sm text-rose-600 mt-1">Resources accessed across Iowa</p>
+            </div>
+
+            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+              <h4 className="font-semibold text-indigo-900 mb-2">Community Building</h4>
+              <p className="text-3xl font-bold text-indigo-700">{stats.messagesLastWeek}</p>
+              <p className="text-sm text-indigo-600 mt-1">Peer connections in last 7 days</p>
+            </div>
+
+            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <h4 className="font-semibold text-emerald-900 mb-2">Virtual Meeting Reach</h4>
+              <p className="text-3xl font-bold text-emerald-700">{stats.gfarcMeetingAttendance}</p>
+              <p className="text-sm text-emerald-600 mt-1">Total GFARC participants</p>
+            </div>
+
+            <div className="p-4 bg-violet-50 rounded-lg border border-violet-200">
+              <h4 className="font-semibold text-violet-900 mb-2">Cost Effectiveness</h4>
+              <p className="text-3xl font-bold text-violet-700">$0</p>
+              <p className="text-sm text-violet-600 mt-1">Participant fees - 100% free</p>
+            </div>
+          </div>
+
+          <div className="mt-6 p-4 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-lg">
+            <p className="text-sm text-gray-800">
+              <strong>Platform Impact:</strong> Grace For Addictions provides statewide, 24/7 peer-led recovery support with zero barriers to access. Powered by AI and neuroplasticity-informed design, the platform demonstrates measurable improvements in recovery capital, sustained engagement, and community connection across all 99 Iowa counties.
+            </p>
+          </div>
+        </GraceCard>
 
         {/* A/B Testing Section */}
         <GraceCard className="mt-8">
