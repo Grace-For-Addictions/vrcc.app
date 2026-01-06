@@ -21,9 +21,14 @@ import SessionAnalyzer from '@/components/ai/SessionAnalyzer';
 import GoalProgressNudges from '@/components/ai/GoalProgressNudges';
 import AIRecoveryJourney from '@/components/ai/AIRecoveryJourney';
 import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
+import WelcomeCard from '@/components/onboarding/WelcomeCard';
+import CelebrationCard from '@/components/onboarding/CelebrationCard';
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const [user, setUser] = useState(null);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const loadUser = async () => {
@@ -45,6 +50,20 @@ export default function Home() {
       return profiles[0] || null;
     },
     enabled: !!user
+  });
+
+  const { data: hasJourneyData } = useQuery({
+    queryKey: ['hasJourneyData', user?.email],
+    queryFn: async () => {
+      if (!user) return true;
+      const [checkIns, assessments] = await Promise.all([
+        base44.entities.DailyCheckIn.filter({ created_by: user.email }, '-created_date', 1),
+        base44.entities.Assessment.filter({ created_by: user.email }, '-created_date', 1)
+      ]);
+      return checkIns.length > 0 || assessments.length > 0;
+    },
+    enabled: !!user,
+    initialData: true
   });
 
   const { data: todayChallenge } = useQuery({
@@ -265,6 +284,27 @@ export default function Home() {
         
         {/* Welcome Hero */}
         <WelcomeHero profile={profile} />
+
+        {/* Onboarding Welcome Card */}
+        {user && !hasJourneyData && !showCelebration && (
+          <WelcomeCard
+            onStartCheckIn={() => {
+              // Trigger check-in modal by simulating click on check-in card when it appears
+              document.querySelector('[data-checkin-trigger]')?.click();
+            }}
+            onStartAssessment={() => navigate(createPageUrl('Assessment'))}
+            onDismiss={() => {
+              // Store dismissal count and schedule reminder
+              const dismissals = parseInt(localStorage.getItem('welcomeCardDismissals') || '0');
+              localStorage.setItem('welcomeCardDismissals', String(dismissals + 1));
+            }}
+          />
+        )}
+
+        {/* Celebration Card */}
+        {showCelebration && (
+          <CelebrationCard onClose={() => setShowCelebration(false)} />
+        )}
 
         {/* Daily Grace Check-In */}
         {user && <DailyGraceCheckIn user={user} profile={profile} />}
