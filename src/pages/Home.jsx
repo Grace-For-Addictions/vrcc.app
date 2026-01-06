@@ -287,18 +287,37 @@ export default function Home() {
         {/* Welcome Hero */}
         <WelcomeHero profile={profile} />
 
-        {/* Onboarding Welcome Card */}
-        {user && !hasJourneyData && !showCelebration && (
+        {/* Onboarding Welcome Card - Only show if no journey data AND not recently dismissed */}
+        {user && !hasJourneyData && !showCelebration && (() => {
+          const dismissed = localStorage.getItem('welcomeCardDismissed');
+          if (dismissed) {
+            const dismissTime = new Date(dismissed);
+            const hoursSince = (new Date() - dismissTime) / (1000 * 60 * 60);
+            if (hoursSince < 48) return false;
+          }
+          return true;
+        })() && (
           <WelcomeCard
             onStartCheckIn={() => {
-              // Trigger check-in modal by simulating click on check-in card when it appears
-              document.querySelector('[data-checkin-trigger]')?.click();
+              // Scroll to and expand the Daily Grace Check-In
+              setTimeout(() => {
+                const checkInCard = document.querySelector('[data-checkin-card]');
+                if (checkInCard) {
+                  checkInCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  checkInCard.querySelector('button')?.click();
+                }
+              }, 100);
             }}
-            onStartAssessment={() => navigate(createPageUrl('Assessment'))}
+            onStartAssessment={() => {
+              setShowCelebration(false);
+              navigate(createPageUrl('Assessment'));
+            }}
             onDismiss={() => {
-              // Store dismissal count and schedule reminder
-              const dismissals = parseInt(localStorage.getItem('welcomeCardDismissals') || '0');
-              localStorage.setItem('welcomeCardDismissals', String(dismissals + 1));
+              // Show gentle reminder toast after dismissal
+              setTimeout(() => {
+                // This would typically use a toast library
+                console.log('Grace reminder: No pressure, whenever you\'re ready for a check-in or BARC-10, I\'m waiting with kindness.');
+              }, 1000);
             }}
           />
         )}
@@ -309,7 +328,21 @@ export default function Home() {
         )}
 
         {/* Daily Grace Check-In */}
-        {user && <DailyGraceCheckIn user={user} profile={profile} />}
+        {user && (
+          <div data-checkin-card>
+            <DailyGraceCheckIn 
+              user={user} 
+              profile={profile}
+              onComplete={() => {
+                // Show celebration on first completion
+                if (!hasJourneyData) {
+                  setShowCelebration(true);
+                  queryClient.invalidateQueries(['hasJourneyData']);
+                }
+              }}
+            />
+          </div>
+        )}
 
         {/* Quick Actions */}
         <section>
@@ -328,8 +361,8 @@ export default function Home() {
           </section>
         )}
 
-        {/* AI Personalized Journey */}
-        {user && (
+        {/* AI Personalized Journey - Only show if user has journey data */}
+        {user && hasJourneyData && (
           <section>
             <AIRecoveryJourney user={user} />
           </section>

@@ -9,6 +9,10 @@ export default function WelcomeCard({ onStartCheckIn, onStartAssessment, onDismi
 
   const handleDismiss = () => {
     setIsVisible(false);
+    // Store dismissal timestamp for 48-hour reminder logic
+    localStorage.setItem('welcomeCardDismissed', new Date().toISOString());
+    const dismissCount = parseInt(localStorage.getItem('welcomeCardDismissCount') || '0');
+    localStorage.setItem('welcomeCardDismissCount', String(dismissCount + 1));
     onDismiss?.();
   };
 
@@ -64,21 +68,21 @@ export default function WelcomeCard({ onStartCheckIn, onStartAssessment, onDismi
               className="flex-1 bg-teal-600 hover:bg-teal-700"
             >
               <Heart className="w-4 h-4 mr-2" />
-              Start with Today's Check-In
+              Start Today's Check-In
             </Button>
             <Button
               onClick={onStartAssessment}
-              variant="outline"
-              className="flex-1 border-teal-600 text-teal-700 hover:bg-teal-50"
+              className="flex-1 bg-purple-600 hover:bg-purple-700"
             >
+              <Sparkles className="w-4 h-4 mr-2" />
               Take BARC-10 Assessment
             </Button>
             <Button
               onClick={handleDismiss}
-              variant="ghost"
+              variant="outline"
               className="text-gray-600"
             >
-              Remind Me Later
+              Explore for Now
             </Button>
           </div>
         </GraceCard>

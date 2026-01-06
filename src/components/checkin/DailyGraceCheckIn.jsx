@@ -13,7 +13,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import GraceCard from '@/components/common/GraceCard';
 
-export default function DailyGraceCheckIn({ user, profile }) {
+export default function DailyGraceCheckIn({ user, profile, onComplete }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
   const [generating, setGenerating] = useState(false);
@@ -171,6 +171,7 @@ export default function DailyGraceCheckIn({ user, profile }) {
     onSuccess: () => {
       queryClient.invalidateQueries(['today-checkin']);
       queryClient.invalidateQueries(['recent-checkins']);
+      onComplete?.();
     }
   });
 
