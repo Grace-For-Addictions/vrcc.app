@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { 
   Building2, Users, Send, CheckCircle2, Clock,
-  TrendingUp, BarChart3, Eye, Plus, Search, UserPlus
+  TrendingUp, BarChart3, Eye, Plus, Search, UserPlus, Sparkles
 } from 'lucide-react';
 import ProviderRegistration from '@/components/provider/ProviderRegistration';
 import ProviderDashboard from '@/components/provider/ProviderDashboard';
@@ -144,6 +144,13 @@ export default function ProviderHub() {
     enabled: !!user
   });
 
+  const { data: allProviders } = useQuery({
+    queryKey: ['allProviders'],
+    queryFn: () => base44.entities.Provider.list('-created_date', 100),
+    enabled: !!user,
+    initialData: []
+  });
+
   const { data: referrals } = useQuery({
     queryKey: ['referrals'],
     queryFn: async () => {
@@ -170,17 +177,67 @@ export default function ProviderHub() {
           />
           
           {!showRegistration ? (
-            <GraceCard className="text-center py-12">
-              <Building2 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-700 mb-2">Join Our Provider Network</h3>
-              <p className="text-gray-500 mb-6 max-w-md mx-auto">
-                Partner with Grace For Addictions to receive warm handoffs and support individuals in recovery.
-              </p>
-              <Button onClick={() => setShowRegistration(true)} className="bg-blue-600">
-                <UserPlus className="w-4 h-4 mr-2" />
-                Register Your Organization
-              </Button>
-            </GraceCard>
+            <>
+              <GraceCard className="text-center py-12 mb-8">
+                <Building2 className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-medium text-gray-700 mb-2">Join Our Provider Network</h3>
+                <p className="text-gray-500 mb-6 max-w-md mx-auto">
+                  Partner with Grace For Addictions to receive warm handoffs and support individuals in recovery.
+                </p>
+                <Button onClick={() => setShowRegistration(true)} className="bg-blue-600">
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Register Your Organization
+                </Button>
+              </GraceCard>
+
+              <GraceCard>
+                <h3 className="text-xl font-bold text-gray-900 mb-6">Provider Network Partners</h3>
+                <div className="space-y-4">
+                  {/* Grace For Addictions - Featured */}
+                  <div className="p-6 bg-gradient-to-br from-teal-50 to-teal-100 border-2 border-teal-300 rounded-xl">
+                    <div className="flex items-start gap-4">
+                      <div className="w-16 h-16 rounded-xl bg-teal-600 flex items-center justify-center shadow-lg">
+                        <Sparkles className="w-8 h-8 text-white" />
+                      </div>
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <h4 className="text-xl font-bold text-teal-900">Grace For Addictions</h4>
+                          <Badge className="bg-teal-600 text-white">Lead Partner</Badge>
+                        </div>
+                        <p className="text-teal-800 mb-3">
+                          Virtual Recovery Community Center serving all 99 Iowa counties. Peer-led support for mental health, substance use, and justice challenges.
+                        </p>
+                        <div className="flex flex-wrap gap-2 mb-3">
+                          <Badge variant="outline" className="bg-white">Peer Support</Badge>
+                          <Badge variant="outline" className="bg-white">24/7 Virtual</Badge>
+                          <Badge variant="outline" className="bg-white">AI Grace Companion</Badge>
+                          <Badge variant="outline" className="bg-white">VR Training</Badge>
+                        </div>
+                        <div className="text-sm text-teal-700">
+                          <strong>Services:</strong> Daily check-ins, BARC-10 assessments, community spaces, resource hub, events, neuroplasticity education
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Other Providers */}
+                  {allProviders.filter(p => p.organization_name !== 'Grace For Addictions').map(p => (
+                    <div key={p.id} className="p-4 bg-white border border-gray-200 rounded-lg hover:border-blue-300 transition-colors">
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-gray-900">{p.organization_name}</h4>
+                          <Badge variant="outline" className="mt-1">{p.organization_type}</Badge>
+                          <p className="text-sm text-gray-600 mt-2">{p.profile_data?.description}</p>
+                        </div>
+                        {p.accepts_warm_handoffs && (
+                          <Badge className="bg-green-100 text-green-800">Warm Handoffs</Badge>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </GraceCard>
+            </>
           ) : (
             <ProviderRegistration onSuccess={() => queryClient.invalidateQueries(['provider'])} />
           )}
