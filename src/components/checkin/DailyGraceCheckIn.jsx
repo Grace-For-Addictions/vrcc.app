@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Sparkles, Heart, Users, Target, 
-  ChevronDown, ChevronUp, X, Smile, Meh, Frown,
-  TrendingUp, Moon, Sun, MessageCircle, Loader2
+  Sparkles, Target, X, Smile, Meh, Frown,
+  Moon, Sun, MessageCircle, Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
@@ -17,13 +16,11 @@ import GraceCard from '@/components/common/GraceCard';
 export default function DailyGraceCheckIn({ user, profile }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isDismissed, setIsDismissed] = useState(false);
-  const [isDeepMode, setIsDeepMode] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [aiResponse, setAiResponse] = useState(null);
   
   const queryClient = useQueryClient();
 
-  // Check if already checked in today
   const { data: todayCheckIn } = useQuery({
     queryKey: ['today-checkin', user?.email],
     queryFn: async () => {
@@ -39,7 +36,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
     enabled: !!user
   });
 
-  // Get streak info
   const { data: recentCheckIns } = useQuery({
     queryKey: ['recent-checkins', user?.email],
     queryFn: async () => {
@@ -72,7 +68,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
 
   const streak = calculateStreak();
 
-  // Time-aware mode
   const getTimeMode = () => {
     const hour = new Date().getHours();
     return hour >= 4 && hour < 17 ? 'morning' : 'evening';
@@ -80,7 +75,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
 
   const timeMode = getTimeMode();
 
-  // Form state
   const [formData, setFormData] = useState({
     mood_score: 3,
     mood_note: '',
@@ -112,7 +106,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
     mutationFn: async () => {
       setGenerating(true);
 
-      // Generate AI affirmation and intention
       const aiPrompt = timeMode === 'morning' 
         ? `Generate a morning affirmation and daily intention for someone with:
           Mood: ${formData.mood_score}/5
@@ -153,7 +146,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
 
       setAiResponse(ai);
 
-      // Save check-in
       await base44.entities.DailyCheckIn.create({
         time_mode: timeMode,
         mood_score: formData.mood_score,
@@ -192,8 +184,7 @@ export default function DailyGraceCheckIn({ user, profile }) {
         exit={{ opacity: 0, y: -20 }}
         className="w-full"
       >
-        <GraceCard className="relative overflow-hidden bg-gradient-to-br from-teal-50 via-white to-coral-50 border-2 border-teal-200">
-          {/* Dismiss Button */}
+        <GraceCard className="relative overflow-hidden bg-gradient-to-br from-teal-50 via-white to-orange-50 border-2 border-teal-200">
           <button
             onClick={() => setIsDismissed(true)}
             className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -201,7 +192,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
             <X className="w-5 h-5" />
           </button>
 
-          {/* Header */}
           <div className="flex items-start gap-4 mb-4">
             <motion.div
               animate={{ rotate: [0, 5, -5, 0] }}
@@ -234,7 +224,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
             </div>
           </div>
 
-          {/* Collapsed View */}
           {!isOpen && !aiResponse && (
             <motion.div layout>
               <Button 
@@ -247,14 +236,12 @@ export default function DailyGraceCheckIn({ user, profile }) {
             </motion.div>
           )}
 
-          {/* Expanded Form */}
           {isOpen && !aiResponse && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="space-y-6 mt-6"
             >
-              {/* Mood & Energy */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
                   How are you feeling right now?
@@ -287,7 +274,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 />
               </div>
 
-              {/* Cravings/Triggers */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
                   Any cravings today? How intense? (0 = None, 10 = Very Strong)
@@ -315,7 +301,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 )}
               </div>
 
-              {/* Support & Safety */}
               <div>
                 <label className="block text-sm font-semibold text-gray-900 mb-3">
                   Do you feel supported and safe in this moment?
@@ -337,56 +322,53 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 </div>
               </div>
 
-              {/* BARC-10 Snapshot (Morning Only) */}
               {timeMode === 'morning' && (
-                <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
-                  <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
-                    🧠 Quick Recovery Capital Check
-                  </h4>
-                  <p className="text-xs text-purple-700 mb-4">
-                    Strong connections help rewire your brain for resilience
-                  </p>
-                  
-                  {['self_worth', 'social_connections', 'meaningful_activities'].map((domain) => (
-                    <div key={domain} className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
-                        {domain.replace('_', ' ')}
-                      </label>
-                      <Slider
-                        value={[formData.barc_snapshot[domain]]}
-                        onValueChange={(v) => setFormData({
-                          ...formData,
-                          barc_snapshot: { ...formData.barc_snapshot, [domain]: v[0] }
-                        })}
-                        max={6}
-                        step={1}
-                      />
-                      <div className="flex justify-between text-xs text-gray-500 mt-1">
-                        <span>1 - Low</span>
-                        <span className="font-bold text-purple-600">{formData.barc_snapshot[domain]}</span>
-                        <span>6 - High</span>
+                <>
+                  <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
+                    <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
+                      🧠 Quick Recovery Capital Check
+                    </h4>
+                    <p className="text-xs text-purple-700 mb-4">
+                      Strong connections help rewire your brain for resilience
+                    </p>
+                    
+                    {['self_worth', 'social_connections', 'meaningful_activities'].map((domain) => (
+                      <div key={domain} className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700 mb-2 capitalize">
+                          {domain.replace(/_/g, ' ')}
+                        </label>
+                        <Slider
+                          value={[formData.barc_snapshot[domain]]}
+                          onValueChange={(v) => setFormData({
+                            ...formData,
+                            barc_snapshot: { ...formData.barc_snapshot, [domain]: v[0] }
+                          })}
+                          max={6}
+                          step={1}
+                        />
+                        <div className="flex justify-between text-xs text-gray-500 mt-1">
+                          <span>1 - Low</span>
+                          <span className="font-bold text-purple-600">{formData.barc_snapshot[domain]}</span>
+                          <span>6 - High</span>
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
+                    ))}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                      💚 What small thing connects to your deeper "why" today?
+                    </label>
+                    <Textarea
+                      value={formData.your_why_touchpoint}
+                      onChange={(e) => setFormData({ ...formData, your_why_touchpoint: e.target.value })}
+                      placeholder="A person, activity, or goal that matters to you..."
+                      rows={3}
+                    />
+                  </div>
+                </>
               )}
 
-              {/* Your Why Touchpoint (Morning) */}
-              {timeMode === 'morning' && (
-                <div>
-                  <label className="block text-sm font-semibold text-gray-900 mb-2">
-                    💚 What small thing connects to your deeper "why" today?
-                  </label>
-                  <Textarea
-                    value={formData.your_why_touchpoint}
-                    onChange={(e) => setFormData({ ...formData, your_why_touchpoint: e.target.value })}
-                    placeholder="A person, activity, or goal that matters to you..."
-                    rows={3}
-                  />
-                </div>
-              )}
-
-              {/* Evening Sections */}
               {timeMode === 'evening' && (
                 <>
                   <div>
@@ -427,7 +409,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 </>
               )}
 
-              {/* Submit */}
               <div className="flex gap-3 pt-4">
                 <Button
                   onClick={() => submitCheckIn.mutate()}
@@ -460,14 +441,12 @@ export default function DailyGraceCheckIn({ user, profile }) {
             </motion.div>
           )}
 
-          {/* AI Response View */}
           {aiResponse && (
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-6 mt-6"
             >
-              {/* Affirmation */}
               <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border-2 border-purple-200">
                 <h4 className="font-bold text-purple-900 mb-3 flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
@@ -478,7 +457,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 </p>
               </div>
 
-              {/* Daily Intention */}
               <div className="p-4 bg-teal-50 rounded-xl border border-teal-200">
                 <h4 className="font-semibold text-teal-900 mb-2 flex items-center gap-2">
                   <Target className="w-5 h-5" />
@@ -487,7 +465,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 <p className="text-teal-800 italic">"{aiResponse.daily_intention}"</p>
               </div>
 
-              {/* Personalized Suggestions */}
               {aiResponse.suggestions?.length > 0 && (
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-3 flex items-center gap-2">
@@ -505,7 +482,6 @@ export default function DailyGraceCheckIn({ user, profile }) {
                 </div>
               )}
 
-              {/* Progress Visualization */}
               <div className="p-4 bg-green-50 rounded-xl border border-green-200">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm font-medium text-green-900">
