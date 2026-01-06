@@ -23,7 +23,9 @@ import AIRecoveryJourney from '@/components/ai/AIRecoveryJourney';
 import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
+import CommunityGardenVisual from '@/components/community/CommunityGardenVisual';
 import { useNavigate } from 'react-router-dom';
+import { createPageUrl } from '@/utils';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -330,6 +332,13 @@ export default function Home() {
         {user && (
           <section>
             <AIRecoveryJourney user={user} />
+          </section>
+        )}
+
+        {/* Community Garden Visual */}
+        {user && profile && (
+          <section>
+            <CommunityGardenVisual profile={profile} />
           </section>
         )}
 
