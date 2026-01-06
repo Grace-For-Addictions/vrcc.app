@@ -139,12 +139,73 @@ Be specific, warm, and neuroplasticity-focused. Use person-first language.`,
     }
   }, [user]);
 
+  const { data: hasData } = useQuery({
+    queryKey: ['user-has-data', user.email],
+    queryFn: async () => {
+      const [checkIns, assessments] = await Promise.all([
+        base44.entities.DailyCheckIn.filter({ created_by: user.email }, '-created_date', 1),
+        base44.entities.Assessment.filter({ created_by: user.email }, '-created_date', 1)
+      ]);
+      return checkIns.length > 0 || assessments.length > 0;
+    },
+    enabled: !!user,
+    initialData: false
+  });
+
   if (!journey && generating) {
     return (
       <GraceCard className="text-center py-8">
         <Loader2 className="w-12 h-12 mx-auto text-teal-600 animate-spin mb-4" />
         <h3 className="text-lg font-semibold text-gray-900 mb-2">Personalizing Your Journey...</h3>
         <p className="text-gray-600">Grace is analyzing your recovery capital and creating custom recommendations</p>
+      </GraceCard>
+    );
+  }
+
+  if (!journey && !generating && hasData) {
+    return (
+      <GraceCard className="text-center py-8">
+        <Sparkles className="w-12 h-12 mx-auto text-teal-600 mb-4" />
+        <h3 className="text-lg font-semibold text-gray-900 mb-2">Ready to Personalize Your Journey?</h3>
+        <p className="text-gray-600 mb-6">Let Grace analyze your progress and create custom recommendations</p>
+        <Button onClick={() => generateJourney.mutate()} className="bg-teal-600 hover:bg-teal-700">
+          <Sparkles className="w-4 h-4 mr-2" />
+          Generate My Journey
+        </Button>
+      </GraceCard>
+    );
+  }
+
+  if (!journey && !generating && !hasData) {
+    return (
+      <GraceCard className="text-center py-8">
+        <div className="max-w-md mx-auto">
+          <Target className="w-12 h-12 mx-auto text-purple-600 mb-4" />
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Let's Start Your Journey Together</h3>
+          <p className="text-gray-600 mb-6">
+            Complete a quick check-in or assessment so Grace can begin personalizing your experience
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link to={createPageUrl('Assessment')}>
+              <Button className="bg-purple-600 hover:bg-purple-700">
+                <Sparkles className="w-4 h-4 mr-2" />
+                Take BARC-10
+              </Button>
+            </Link>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                const checkInCard = document.querySelector('[data-checkin-card]');
+                if (checkInCard) {
+                  checkInCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  checkInCard.querySelector('button')?.click();
+                }
+              }}
+            >
+              Start Check-In
+            </Button>
+          </div>
+        </div>
       </GraceCard>
     );
   }
