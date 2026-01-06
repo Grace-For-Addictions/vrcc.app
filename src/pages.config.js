@@ -1,6 +1,7 @@
 import AdminDashboard from './pages/AdminDashboard';
 import Assessment from './pages/Assessment';
 import Community from './pages/Community';
+import CommunityGardenHub from './pages/CommunityGardenHub';
 import CommunityWalls from './pages/CommunityWalls';
 import Crisis from './pages/Crisis';
 import DigitalEquity from './pages/DigitalEquity';
@@ -8,6 +9,7 @@ import Events from './pages/Events';
 import GraceChat from './pages/GraceChat';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
+import IBHRSReporting from './pages/IBHRSReporting';
 import MeetingsHub from './pages/MeetingsHub';
 import NarcanTracker from './pages/NarcanTracker';
 import Neuroplasticity from './pages/Neuroplasticity';
@@ -23,11 +25,9 @@ import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
 import SchoolPrevention from './pages/SchoolPrevention';
 import TeamChallenges from './pages/TeamChallenges';
+import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import IBHRSReporting from './pages/IBHRSReporting';
-import VRCheckoutHub from './pages/VRCheckoutHub';
-import CommunityGardenHub from './pages/CommunityGardenHub';
 import __Layout from './Layout.jsx';
 
 
@@ -35,6 +35,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "Assessment": Assessment,
     "Community": Community,
+    "CommunityGardenHub": CommunityGardenHub,
     "CommunityWalls": CommunityWalls,
     "Crisis": Crisis,
     "DigitalEquity": DigitalEquity,
@@ -42,6 +43,7 @@ export const PAGES = {
     "GraceChat": GraceChat,
     "GrantWriter": GrantWriter,
     "Home": Home,
+    "IBHRSReporting": IBHRSReporting,
     "MeetingsHub": MeetingsHub,
     "NarcanTracker": NarcanTracker,
     "Neuroplasticity": Neuroplasticity,
@@ -57,11 +59,9 @@ export const PAGES = {
     "Resources": Resources,
     "SchoolPrevention": SchoolPrevention,
     "TeamChallenges": TeamChallenges,
+    "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "IBHRSReporting": IBHRSReporting,
-    "VRCheckoutHub": VRCheckoutHub,
-    "CommunityGardenHub": CommunityGardenHub,
 }
 
 export const pagesConfig = {

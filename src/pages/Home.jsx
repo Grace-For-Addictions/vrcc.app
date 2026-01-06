@@ -20,6 +20,7 @@ import GoalSettingAssistant from '@/components/ai/GoalSettingAssistant';
 import SessionAnalyzer from '@/components/ai/SessionAnalyzer';
 import GoalProgressNudges from '@/components/ai/GoalProgressNudges';
 import AIRecoveryJourney from '@/components/ai/AIRecoveryJourney';
+import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -264,6 +265,9 @@ export default function Home() {
         
         {/* Welcome Hero */}
         <WelcomeHero profile={profile} />
+
+        {/* Daily Grace Check-In */}
+        {user && <DailyGraceCheckIn user={user} profile={profile} />}
 
         {/* Quick Actions */}
         <section>
