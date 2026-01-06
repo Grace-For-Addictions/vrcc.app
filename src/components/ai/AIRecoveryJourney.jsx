@@ -133,11 +133,7 @@ Be specific, warm, and neuroplasticity-focused. Use person-first language.`,
     }
   });
 
-  useEffect(() => {
-    if (!journey && user) {
-      generateJourney.mutate();
-    }
-  }, [user]);
+  // Remove auto-generation on mount - let user trigger it manually
 
   const { data: hasData } = useQuery({
     queryKey: ['user-has-data', user.email],
