@@ -12,11 +12,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
-import ProgressDashboard from '@/components/residency/ProgressDashboard';
-import EventLogger from '@/components/residency/EventLogger';
-import ResidentMessaging from '@/components/residency/ResidentMessaging';
-import PaymentsBilling from '@/components/residency/PaymentsBilling';
-import ResidentForms from '@/components/residency/ResidentForms';
+import ProgressDashboard from '@/components/residency/ProgressDashboard.jsx';
+import EventLogger from '@/components/residency/EventLogger.jsx';
+import ResidentMessaging from '@/components/residency/ResidentMessaging.jsx';
+import PaymentsBilling from '@/components/residency/PaymentsBilling.jsx';
+import ResidentForms from '@/components/residency/ResidentForms.jsx';
 
 export default function Residencies() {
   const [user, setUser] = useState(null);
