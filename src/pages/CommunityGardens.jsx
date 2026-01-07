@@ -116,10 +116,7 @@ export default function CommunityGardens() {
           </TabsContent>
 
           <TabsContent value="biomes">
-            <div className="space-y-6">
-              <CommunalBiomesView user={user} />
-              <BiomeLeaderboard />
-            </div>
+            <CommunalBiomesView user={user} />
           </TabsContent>
 
           <TabsContent value="practices">

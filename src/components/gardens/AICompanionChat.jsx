@@ -14,6 +14,14 @@ export default function AICompanionChat({ user, garden, sessions }) {
 
   useEffect(() => {
     const generateProactiveMessage = async () => {
+      if (sessions.length === 0) {
+        setConversation([{
+          role: 'companion',
+          content: `Hello! 🌱 I'm your Grace Garden companion. I've noticed you've completed ${sessions.length} practices and grown ${garden.plants_grown?.length || 0} plants. How can I support your journey today?`
+        }]);
+        return;
+      }
+
       const recentMoods = sessions.slice(0, 5).map(s => s.emotional_state_after).filter(Boolean);
       const lastPractice = sessions[0];
       
@@ -48,15 +56,8 @@ Keep it 2-3 sentences, warm, and actionable.`,
       }]);
     };
 
-    if (sessions.length > 0) {
-      generateProactiveMessage();
-    } else {
-      setConversation([{
-        role: 'companion',
-        content: `Hello! 🌱 I'm your Grace Garden companion. I've noticed you've completed ${sessions.length} practices and grown ${garden.plants_grown?.length || 0} plants. How can I support your journey today?`
-      }]);
-    }
-  }, []);
+    generateProactiveMessage();
+  }, [sessions.length]);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
