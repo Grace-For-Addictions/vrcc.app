@@ -30,19 +30,29 @@ export default function ResidentMessaging({ residentProfile, house, user }) {
 
   const sendMessage = useMutation({
     mutationFn: async (content) => {
-      // AI moderation check
+      // Enhanced AI moderation with proactive resources
       const moderationCheck = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze this message for triggering content related to relapse, self-harm, or drug use. Return true if flagged, false if safe. Message: "${content}"`,
+        prompt: `Analyze this message from a recovery housing resident for triggering content and suggest interventions:
+        
+"${content}"
+
+Check for: substance use mentions, self-harm language, crisis indicators, threats, or triggering content.
+
+If flagged, suggest appropriate resources or proactive interventions (e.g., "Suggest crisis line", "Connect with peer supporter", "Offer grounding exercise").
+
+Return flagged status, reason, suggested resource, and a brief staff summary.`,
         response_json_schema: {
           type: "object",
           properties: {
             flagged: { type: "boolean" },
-            reason: { type: "string" }
+            reason: { type: "string" },
+            suggested_resource: { type: "string" },
+            staff_summary: { type: "string" }
           }
         }
       });
 
-      return base44.entities.ResidentMessage.create({
+      const message = await base44.entities.ResidentMessage.create({
         house_id: house.id,
         sender_email: user.email,
         sender_name: user.full_name,
@@ -50,8 +60,14 @@ export default function ResidentMessaging({ residentProfile, house, user }) {
         is_group_message: activeTab === 'group',
         message_content: content,
         ai_flagged: moderationCheck.flagged,
-        flag_reason: moderationCheck.reason
+        flag_reason: moderationCheck.flagged ? `${moderationCheck.reason} | Resource: ${moderationCheck.suggested_resource} | Summary: ${moderationCheck.staff_summary}` : null
       });
+
+      if (moderationCheck.flagged && moderationCheck.suggested_resource) {
+        alert(`⚠️ Message sent, but flagged for review.\n\nSuggested support: ${moderationCheck.suggested_resource}\n\nIf you need immediate help, call 988 or reach out to house staff.`);
+      }
+
+      return message;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['groupMessages']);
