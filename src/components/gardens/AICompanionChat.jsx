@@ -9,12 +9,54 @@ import GraceCard from '@/components/common/GraceCard';
 
 export default function AICompanionChat({ user, garden, sessions }) {
   const [message, setMessage] = useState('');
-  const [conversation, setConversation] = useState([
-    {
-      role: 'companion',
-      content: `Hello! 🌱 I'm your Grace Garden companion. I've noticed you've completed ${sessions.length} practices and grown ${garden.plants_grown?.length || 0} plants. How can I support your journey today?`
+  const [conversation, setConversation] = useState([]);
+  const [dailyMessage, setDailyMessage] = useState(null);
+
+  useEffect(() => {
+    const generateProactiveMessage = async () => {
+      const recentMoods = sessions.slice(0, 5).map(s => s.emotional_state_after).filter(Boolean);
+      const lastPractice = sessions[0];
+      
+      const message = await base44.integrations.Core.InvokeLLM({
+        prompt: `Generate a personalized daily message for a Grace Garden user. Consider:
+- Streak: ${garden.current_streak_days} days
+- Plants: ${garden.plants_grown?.length || 0}
+- Recent practices: ${sessions.length}
+- Recent moods: ${recentMoods.join(', ') || 'Not yet tracked'}
+- Last practice notes: ${lastPractice?.practice_notes || 'None'}
+
+Provide:
+1. A warm greeting with personalized affirmation
+2. Practice suggestion based on their patterns
+3. Focus for today
+
+Keep it 2-3 sentences, warm, and actionable.`,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            greeting: { type: "string" },
+            practice_suggestion: { type: "string" },
+            focus: { type: "string" }
+          }
+        }
+      });
+
+      setDailyMessage(message);
+      setConversation([{
+        role: 'companion',
+        content: `${message.greeting}\n\n💡 ${message.practice_suggestion}\n\n🎯 Today's Focus: ${message.focus}`
+      }]);
+    };
+
+    if (sessions.length > 0) {
+      generateProactiveMessage();
+    } else {
+      setConversation([{
+        role: 'companion',
+        content: `Hello! 🌱 I'm your Grace Garden companion. I've noticed you've completed ${sessions.length} practices and grown ${garden.plants_grown?.length || 0} plants. How can I support your journey today?`
+      }]);
     }
-  ]);
+  }, []);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -29,6 +71,12 @@ export default function AICompanionChat({ user, garden, sessions }) {
         ? Math.round(sessions.length / Math.max(1, (new Date() - new Date(garden.created_date)) / (1000 * 60 * 60 * 24)))
         : 0;
 
+      // Check for recovery challenges in notes
+      const recentNotes = sessions.slice(0, 5).map(s => s.practice_notes).filter(Boolean);
+      const challengeContext = recentNotes.length > 0 
+        ? `Recent practice notes suggest: ${recentNotes.join('; ')}` 
+        : '';
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are a compassionate AI companion for Grace Community Gardens, supporting recovery through neuroplasticity-informed guidance. 
 
@@ -37,15 +85,17 @@ User context:
 - Recent emotional states: ${recentMoods.join(', ') || 'Not yet recorded'}
 - Practice frequency: ${avgPracticeFrequency} times per week
 - Total practices: ${sessions.length}
+${challengeContext ? `- Challenge indicators: ${challengeContext}` : ''}
 
 User message: "${userMessage}"
 
-Respond warmly and supportively. If concerning patterns emerge (mentions of harm, crisis, substance use triggers), gently escalate by suggesting they reach out to a peer supporter or call 988. Otherwise, offer:
-1. Pattern recognition (what you notice)
-2. Gentle reframing or resource suggestion
-3. Encouragement
+Analyze for common recovery challenges (isolation, cravings, anxiety, motivation) and provide:
+1. Empathetic acknowledgment
+2. Brief actionable advice specific to the challenge
+3. Practice or resource suggestion
+4. If concerning patterns emerge (harm, crisis, substance triggers), escalate by suggesting peer support or 988
 
-Keep responses brief (3-4 sentences), person-first, and trauma-aware.`,
+Keep responses 3-4 sentences, person-first, trauma-aware, and actionable.`,
         add_context_from_internet: false,
         response_json_schema: {
           type: "object",

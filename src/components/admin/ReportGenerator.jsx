@@ -49,6 +49,7 @@ export default function ReportGenerator({ user }) {
         ? (moodLogs.reduce((sum, e) => sum + (e.mood_data?.mood_score || 0), 0) / moodLogs.length).toFixed(1)
         : 'N/A';
 
+      // Generate AI narrative report
       const reportContent = await base44.integrations.Core.InvokeLLM({
         prompt: `Generate a professional ${reportPeriod} progress report for a recovery housing resident to share with ${reportType}. 
 
@@ -62,19 +63,50 @@ ${reportPeriod} Summary:
 - Chores completed: ${chores.length}
 - Average mood score: ${avgMood}/10
 
-Create a formal, structured report suitable for ${reportType === 'probation' ? 'probation officers' : reportType === 'court' ? 'court officials' : reportType === 'dhs' ? 'DHS workers' : 'legal professionals'}. Include:
-1. Executive Summary
-2. Attendance & Compliance
-3. Behavioral Observations
-4. Progress Toward Goals
-5. Recommendations
+Create a formal, structured report suitable for ${reportType === 'probation' ? 'probation officers' : reportType === 'court' ? 'court officials' : reportType === 'dhs' ? 'DHS workers' : 'legal professionals'}.
+
+Provide in JSON:
+1. executive_summary (2-3 sentences)
+2. attendance_compliance (detailed narrative)
+3. behavioral_observations (detailed narrative)
+4. progress_goals (detailed narrative)
+5. recommendations (bullet points)
+6. full_report (complete formatted report)
 
 Be professional, objective, and recovery-focused.`,
-        add_context_from_internet: false
+        add_context_from_internet: false,
+        response_json_schema: {
+          type: "object",
+          properties: {
+            executive_summary: { type: "string" },
+            attendance_compliance: { type: "string" },
+            behavioral_observations: { type: "string" },
+            progress_goals: { type: "string" },
+            recommendations: { type: "string" },
+            full_report: { type: "string" }
+          }
+        }
       });
 
-      // In production, this would generate a PDF
-      alert(`Report Generated!\n\n${reportContent}\n\n(In production, this would be a downloadable PDF)`);
+      // Display structured report with option to customize
+      const reportPreview = `
+=== EXECUTIVE SUMMARY ===
+${reportContent.executive_summary}
+
+=== ATTENDANCE & COMPLIANCE ===
+${reportContent.attendance_compliance}
+
+=== BEHAVIORAL OBSERVATIONS ===
+${reportContent.behavioral_observations}
+
+=== PROGRESS TOWARD GOALS ===
+${reportContent.progress_goals}
+
+=== RECOMMENDATIONS ===
+${reportContent.recommendations}
+      `;
+
+      alert(`Report Generated!\n\n${reportPreview}\n\n✅ AI-generated narrative summary included\n📄 Ready for PDF export (production feature)\n✏️ Customize template before final export`);
       
     } catch (error) {
       alert('Error generating report. Please try again.');

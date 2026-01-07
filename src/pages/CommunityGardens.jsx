@@ -11,6 +11,8 @@ import CommunalBiomesView from '@/components/gardens/CommunalBiomesView';
 import AICompanionChat from '@/components/gardens/AICompanionChat';
 import PracticeLibrary from '@/components/gardens/PracticeLibrary';
 import GrowthJournal from '@/components/gardens/GrowthJournal';
+import ARGardenView from '@/components/gardens/ARGardenView';
+import BiomeLeaderboard from '@/components/gardens/BiomeLeaderboard';
 
 export default function CommunityGardens() {
   const [user, setUser] = useState(null);
@@ -96,8 +98,9 @@ export default function CommunityGardens() {
         </div>
 
         <Tabs defaultValue="garden" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="garden">My Garden</TabsTrigger>
+            <TabsTrigger value="ar">AR Mode</TabsTrigger>
             <TabsTrigger value="biomes">Biomes</TabsTrigger>
             <TabsTrigger value="practices">Practices</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
@@ -108,8 +111,15 @@ export default function CommunityGardens() {
             <PersonalGardenView garden={garden} user={user} />
           </TabsContent>
 
+          <TabsContent value="ar">
+            <ARGardenView garden={garden} user={user} />
+          </TabsContent>
+
           <TabsContent value="biomes">
-            <CommunalBiomesView user={user} />
+            <div className="space-y-6">
+              <CommunalBiomesView user={user} />
+              <BiomeLeaderboard />
+            </div>
           </TabsContent>
 
           <TabsContent value="practices">

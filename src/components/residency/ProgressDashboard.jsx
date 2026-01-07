@@ -9,6 +9,7 @@ import {
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import GraceCard from '@/components/common/GraceCard';
+import ResidentGoals from './ResidentGoals';
 
 function AIInsights({ events, avgMoodScore, weeklyMeetings, daysInRecovery, residentProfile }) {
   const [insights, setInsights] = useState(null);
@@ -316,6 +317,13 @@ export default function ProgressDashboard({ residentProfile, house, user }) {
       <DailyAffirmation 
         events={events}
         residentProfile={residentProfile}
+      />
+
+      {/* Resident Goals */}
+      <ResidentGoals 
+        residentEmail={residentProfile.user_email}
+        houseId={residentProfile.house_id}
+        events={events}
       />
 
       {/* Recent Activity */}
