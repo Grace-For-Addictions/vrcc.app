@@ -9,7 +9,7 @@ import {
 } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
+import { Badge } from "@/components/ui/badge";
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 
