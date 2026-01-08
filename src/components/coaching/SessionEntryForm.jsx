@@ -31,7 +31,9 @@ export default function SessionEntryForm({ user }) {
     personal_goal: '',
     personal_affirmation: '',
     days_in_recovery: '',
-    coach_name: user.full_name
+    coach_name: user.full_name,
+    strengths: [],
+    areas_for_improvement: []
   });
 
   const [aiProcessing, setAiProcessing] = useState(false);
@@ -64,22 +66,31 @@ export default function SessionEntryForm({ user }) {
     setAiProcessing(true);
     try {
       const aiSummary = await base44.integrations.Core.InvokeLLM({
-        prompt: `Generate a concise, professional session summary for a recovery coaching session. Original notes:
+        prompt: `Analyze this peer recovery coaching session with trauma-informed, person-first language. Session notes:
 
 "${formData.activity_notes}"
 
-Provide:
-1. Brief session overview (2-3 sentences)
-2. Key discussion points
-3. Action items or next steps
-4. Any concerns or highlights
+Participant: ${formData.contact_name}
+Days in Recovery: ${formData.days_in_recovery || 'Not specified'}
 
-Keep it professional, recovery-focused, and suitable for documentation.`,
+Provide comprehensive analysis:
+1. Session overview (2-3 sentences)
+2. Key themes and discussion points
+3. Identified strengths (be specific and empowering)
+4. Areas for growth (gentle, strength-based framing)
+5. Personalized affirmation based on their journey
+6. Specific action items for next steps
+7. Any crisis indicators or concerns requiring follow-up
+
+Use person-first, stigma-free language. Be warm and encouraging.`,
         response_json_schema: {
           type: "object",
           properties: {
             summary: { type: "string" },
-            key_points: { type: "array", items: { type: "string" } },
+            key_themes: { type: "array", items: { type: "string" } },
+            strengths: { type: "array", items: { type: "string" } },
+            growth_areas: { type: "array", items: { type: "string" } },
+            affirmation: { type: "string" },
             action_items: { type: "array", items: { type: "string" } },
             concerns: { type: "string" }
           }
@@ -89,17 +100,32 @@ Keep it professional, recovery-focused, and suitable for documentation.`,
       const formattedSummary = `
 SUMMARY: ${aiSummary.summary}
 
-KEY POINTS:
-${aiSummary.key_points.map((p, i) => `${i + 1}. ${p}`).join('\n')}
+KEY THEMES:
+${aiSummary.key_themes.map((t, i) => `${i + 1}. ${t}`).join('\n')}
+
+STRENGTHS IDENTIFIED:
+${aiSummary.strengths.map((s, i) => `${i + 1}. ${s}`).join('\n')}
+
+AREAS FOR GROWTH:
+${aiSummary.growth_areas.map((g, i) => `${i + 1}. ${g}`).join('\n')}
+
+PERSONALIZED AFFIRMATION:
+"${aiSummary.affirmation}"
 
 ACTION ITEMS:
 ${aiSummary.action_items.map((a, i) => `${i + 1}. ${a}`).join('\n')}
 
-${aiSummary.concerns ? `CONCERNS: ${aiSummary.concerns}` : ''}
+${aiSummary.concerns ? `FOLLOW-UP NEEDED: ${aiSummary.concerns}` : ''}
       `.trim();
 
-      setFormData({ ...formData, ai_generated_summary: formattedSummary });
-      toast.success('AI summary generated!');
+      setFormData({ 
+        ...formData, 
+        ai_generated_summary: formattedSummary,
+        personal_affirmation: aiSummary.affirmation,
+        strengths: aiSummary.strengths,
+        areas_for_improvement: aiSummary.growth_areas
+      });
+      toast.success('AI analysis complete!');
     } catch (error) {
       toast.error('Failed to generate summary');
     } finally {
@@ -116,35 +142,48 @@ ${aiSummary.concerns ? `CONCERNS: ${aiSummary.concerns}` : ''}
     setAiProcessing(true);
     try {
       const suggestions = await base44.integrations.Core.InvokeLLM({
-        prompt: `Based on this coaching session notes, suggest appropriate referral types:
+        prompt: `Analyze this coaching session and provide comprehensive resource suggestions:
 
-"${formData.activity_notes}"
+Session Notes: "${formData.activity_notes}"
 
-Consider participant needs and suggest 1-3 most relevant referral types from: Housing Assistance, Shelter Placement, Detox Admission, Mental Health Counseling, Employment Services, Legal Aid, etc.
+Provide:
+1. Top 3 referral types based on identified needs
+2. For each, suggest specific Iowa-based resources with rationale
+3. Identify recurring themes or patterns
+4. Suggest follow-up action items
 
-Provide brief rationale for each suggestion.`,
+Consider housing, employment, mental health, legal, family, healthcare, benefits, transportation needs.`,
         response_json_schema: {
           type: "object",
           properties: {
-            suggestions: {
+            referral_suggestions: {
               type: "array",
               items: {
                 type: "object",
                 properties: {
                   referral_type: { type: "string" },
+                  specific_resource: { type: "string" },
                   rationale: { type: "string" }
                 }
               }
-            }
+            },
+            recurring_themes: { type: "array", items: { type: "string" } },
+            action_items: { type: "array", items: { type: "string" } }
           }
         }
       });
 
-      const message = suggestions.suggestions
-        .map((s, i) => `${i + 1}. ${s.referral_type}\n   → ${s.rationale}`)
-        .join('\n\n');
+      const message = `🔍 AI Resource Analysis:\n\n` +
+        `SUGGESTED REFERRALS:\n` +
+        suggestions.referral_suggestions.map((s, i) => 
+          `${i + 1}. ${s.referral_type}\n   Resource: ${s.specific_resource}\n   Why: ${s.rationale}`
+        ).join('\n\n') +
+        `\n\nRECURRING THEMES:\n` +
+        suggestions.recurring_themes.map((t, i) => `• ${t}`).join('\n') +
+        `\n\nACTION ITEMS:\n` +
+        suggestions.action_items.map((a, i) => `${i + 1}. ${a}`).join('\n');
 
-      alert(`AI Referral Suggestions:\n\n${message}`);
+      alert(message);
     } catch (error) {
       toast.error('Failed to generate suggestions');
     } finally {

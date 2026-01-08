@@ -13,6 +13,8 @@ import PracticeLibrary from '@/components/gardens/PracticeLibrary';
 import GrowthJournal from '@/components/gardens/GrowthJournal';
 import ARGardenView from '@/components/gardens/ARGardenView';
 import BiomeLeaderboard from '@/components/gardens/BiomeLeaderboard';
+import GrowingGroups from '@/components/gardens/GrowingGroups';
+import PointsBadgesSystem from '@/components/gardens/PointsBadgesSystem';
 
 export default function CommunityGardens() {
   const [user, setUser] = useState(null);
@@ -51,6 +53,15 @@ export default function CommunityGardens() {
     queryFn: () => base44.entities.PracticeSession.filter({ user_email: user.email }, '-created_date', 10),
     enabled: !!user,
     initialData: []
+  });
+
+  const { data: userProfile } = useQuery({
+    queryKey: ['userProfile', user?.email],
+    queryFn: async () => {
+      const profiles = await base44.entities.UserProfile.filter({ created_by: user.email });
+      return profiles[0] || null;
+    },
+    enabled: !!user
   });
 
   if (!user || !garden) {
@@ -98,13 +109,15 @@ export default function CommunityGardens() {
         </div>
 
         <Tabs defaultValue="garden" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
             <TabsTrigger value="garden">My Garden</TabsTrigger>
             <TabsTrigger value="ar">AR Mode</TabsTrigger>
             <TabsTrigger value="biomes">Biomes</TabsTrigger>
             <TabsTrigger value="practices">Practices</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="companion">AI Guide</TabsTrigger>
+            <TabsTrigger value="groups">Groups</TabsTrigger>
+            <TabsTrigger value="rewards">Rewards</TabsTrigger>
           </TabsList>
 
           <TabsContent value="garden">
@@ -129,6 +142,14 @@ export default function CommunityGardens() {
 
           <TabsContent value="companion">
             <AICompanionChat user={user} garden={garden} sessions={recentSessions} />
+          </TabsContent>
+
+          <TabsContent value="groups">
+            <GrowingGroups user={user} biomeId={null} />
+          </TabsContent>
+
+          <TabsContent value="rewards">
+            <PointsBadgesSystem user={user} profile={userProfile} />
           </TabsContent>
         </Tabs>
       </div>

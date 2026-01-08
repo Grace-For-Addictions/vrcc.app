@@ -23,28 +23,41 @@ function AIInsights({ events, avgMoodScore, weeklyMeetings, daysInRecovery, resi
         const meetingPatterns = events.filter(e => e.event_type === 'meeting').slice(0, 10);
         
         const response = await base44.integrations.Core.InvokeLLM({
-          prompt: `You are an AI recovery coach analyzing a resident's progress in GFA recovery housing. Generate personalized, actionable insights based on:
+                  prompt: `You are an AI recovery coach analyzing a resident's progress in GFA recovery housing. Deep analysis required:
 
-Days in recovery: ${daysInRecovery}
-Average mood (7 days): ${avgMoodScore}/10
-Weekly meetings: ${weeklyMeetings}
-Recent mood trend: ${moodLogs.map(m => m.mood_data?.mood_score || 'N/A').join(', ')}
-Meeting attendance pattern: ${meetingPatterns.length} meetings in 2 weeks
+        QUANTITATIVE DATA:
+        - Days in recovery: ${daysInRecovery}
+        - Average mood (7 days): ${avgMoodScore}/10
+        - Weekly meetings: ${weeklyMeetings}
+        - Recent mood scores: ${moodLogs.map(m => m.mood_data?.mood_score || 'N/A').join(', ')}
+        - Meeting attendance: ${meetingPatterns.length} in last 14 days
+        - Chores completed: ${events.filter(e => e.event_type === 'chore' && e.chore_data?.completed).length}
 
-Provide:
-1. A warm, encouraging observation about their progress
-2. One predictive insight (potential challenge or opportunity in next 7 days)
-3. One specific actionable recommendation
-4. A neuroplasticity connection
+        TREND ANALYSIS:
+        - Mood trend direction (improving/declining/stable)
+        - Meeting consistency (regular/sporadic/declining)
+        - Overall engagement level
 
-Keep it brief, warm, and person-first. Use emojis sparingly.`,
+        Provide comprehensive insights:
+        1. Progress observation (acknowledge specific wins, be detailed)
+        2. Mood trend analysis (what the numbers tell us)
+        3. Predictive insight (likelihood of next week challenges/opportunities based on patterns)
+        4. Specific actionable recommendation (tied to their data)
+        5. Early warning if any concerning patterns (low mood, declining attendance, etc.)
+        6. Neuroplasticity connection (how their actions are rewiring their brain)
+        7. Encouragement tied to "Your Why" concept
+
+        Be warm, trauma-informed, person-first. Acknowledge both struggles and strengths.`,
           response_json_schema: {
             type: "object",
             properties: {
               observation: { type: "string" },
+              mood_analysis: { type: "string" },
               prediction: { type: "string" },
               recommendation: { type: "string" },
-              brain_connection: { type: "string" }
+              early_warning: { type: "string" },
+              brain_connection: { type: "string" },
+              encouragement: { type: "string" }
             }
           }
         });
@@ -60,10 +73,10 @@ Keep it brief, warm, and person-first. Use emojis sparingly.`,
       } finally {
         setLoading(false);
       }
-    };
+      };
 
-    generateInsights();
-  }, [events, avgMoodScore, weeklyMeetings, daysInRecovery]);
+      generateInsights();
+      }, [events, avgMoodScore, weeklyMeetings, daysInRecovery, residentProfile]);
 
   if (loading) {
     return (
@@ -91,15 +104,28 @@ Keep it brief, warm, and person-first. Use emojis sparingly.`,
           <p className="text-gray-700">{insights.observation}</p>
         </div>
         <div>
+          <p className="font-medium text-blue-700 mb-1">Mood Analysis:</p>
+          <p className="text-gray-700">{insights.mood_analysis}</p>
+        </div>
+        <div>
           <p className="font-medium text-purple-700 mb-1">Next Week Prediction:</p>
           <p className="text-gray-700">{insights.prediction}</p>
         </div>
         <div>
-          <p className="font-medium text-blue-700 mb-1">Recommendation:</p>
+          <p className="font-medium text-green-700 mb-1">Recommendation:</p>
           <p className="text-gray-700">{insights.recommendation}</p>
         </div>
+        {insights.early_warning && (
+          <div className="p-3 bg-orange-50 border border-orange-200 rounded-lg">
+            <p className="font-medium text-orange-800 mb-1">⚠️ Early Warning:</p>
+            <p className="text-orange-700">{insights.early_warning}</p>
+          </div>
+        )}
         <div className="pt-2 border-t border-gray-200">
           <p className="text-xs text-gray-600 italic">🧠 {insights.brain_connection}</p>
+        </div>
+        <div className="pt-2 border-t border-gray-200">
+          <p className="text-sm text-teal-700 font-medium">💚 {insights.encouragement}</p>
         </div>
       </div>
     </GraceCard>

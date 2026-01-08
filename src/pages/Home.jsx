@@ -24,12 +24,14 @@ import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
 import CommunityGardenVisual from '@/components/community/CommunityGardenVisual';
+import IntakeModal from '@/components/intake/IntakeModal';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 export default function Home() {
   const [user, setUser] = useState(null);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [showIntakeModal, setShowIntakeModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,6 +39,11 @@ export default function Home() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check if intake completed
+        if (!currentUser.intake_completed) {
+          setShowIntakeModal(true);
+        }
       } catch (e) {
         // User not logged in
       }
@@ -281,8 +288,20 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
+    <>
+      {/* Mandatory Intake Modal */}
+      {showIntakeModal && user && (
+        <IntakeModal
+          user={user}
+          onComplete={() => {
+            setShowIntakeModal(false);
+            setUser({ ...user, intake_completed: true });
+          }}
+        />
+      )}
+
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
         
         {/* Welcome Hero */}
         <WelcomeHero profile={profile} />
@@ -461,13 +480,14 @@ export default function Home() {
         </motion.div>
       </div>
 
-      {/* AI Grace Chat Widget */}
-      <GraceChatWidget />
+        {/* AI Grace Chat Widget */}
+        <GraceChatWidget />
 
-      {/* AI Features */}
-      <ProactiveOutreach user={user} profile={profile} />
-      <SessionAnalyzer user={user} profile={profile} />
-      <GoalProgressNudges user={user} profile={profile} />
-    </div>
+        {/* AI Features */}
+        <ProactiveOutreach user={user} profile={profile} />
+        <SessionAnalyzer user={user} profile={profile} />
+        <GoalProgressNudges user={user} profile={profile} />
+      </div>
+    </>
   );
 }

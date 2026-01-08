@@ -1,6 +1,7 @@
 import AdminDashboard from './pages/AdminDashboard';
 import AdminPortal from './pages/AdminPortal';
 import Assessment from './pages/Assessment';
+import CoachingLogger from './pages/CoachingLogger';
 import Community from './pages/Community';
 import CommunityGardenHub from './pages/CommunityGardenHub';
 import CommunityGardens from './pages/CommunityGardens';
@@ -30,7 +31,6 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import CoachingLogger from './pages/CoachingLogger';
 import __Layout from './Layout.jsx';
 
 
@@ -38,6 +38,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AdminPortal": AdminPortal,
     "Assessment": Assessment,
+    "CoachingLogger": CoachingLogger,
     "Community": Community,
     "CommunityGardenHub": CommunityGardenHub,
     "CommunityGardens": CommunityGardens,
@@ -67,7 +68,6 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "CoachingLogger": CoachingLogger,
 }
 
 export const pagesConfig = {
