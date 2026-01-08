@@ -9,6 +9,8 @@ import GraceCard from '@/components/common/GraceCard';
 import SessionEntryForm from '@/components/coaching/SessionEntryForm';
 import SessionHistory from '@/components/coaching/SessionHistory';
 import CoachingAnalytics from '@/components/coaching/CoachingAnalytics';
+import EnhancedCoachingAnalytics from '@/components/coaching/EnhancedCoachingAnalytics';
+import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
 
 export default function CoachingLogger() {
   const [user, setUser] = useState(null);
@@ -97,10 +99,11 @@ export default function CoachingLogger() {
         </div>
 
         <Tabs defaultValue="log" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-4">
             <TabsTrigger value="log">Log Session</TabsTrigger>
-            <TabsTrigger value="history">Session History</TabsTrigger>
+            <TabsTrigger value="history">History</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
+            <TabsTrigger value="resources">AI Resources</TabsTrigger>
           </TabsList>
 
           <TabsContent value="log">
@@ -112,7 +115,16 @@ export default function CoachingLogger() {
           </TabsContent>
 
           <TabsContent value="analytics">
-            <CoachingAnalytics sessions={recentSessions} user={user} />
+            <EnhancedCoachingAnalytics sessions={recentSessions} user={user} />
+          </TabsContent>
+
+          <TabsContent value="resources">
+            <AIResourceNavigator 
+              user={user} 
+              context={{
+                sessionNotes: recentSessions.slice(0, 5).map(s => s.activity_notes).join('\n\n')
+              }}
+            />
           </TabsContent>
         </Tabs>
       </div>

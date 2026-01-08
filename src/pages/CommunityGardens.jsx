@@ -15,6 +15,9 @@ import ARGardenView from '@/components/gardens/ARGardenView';
 import BiomeLeaderboard from '@/components/gardens/BiomeLeaderboard';
 import GrowingGroups from '@/components/gardens/GrowingGroups';
 import PointsBadgesSystem from '@/components/gardens/PointsBadgesSystem';
+import CommunityForum from '@/components/community/CommunityForum';
+import VirtualGifting from '@/components/gardens/VirtualGifting';
+import CommunityChallenges from '@/components/community/CommunityChallenges';
 
 export default function CommunityGardens() {
   const [user, setUser] = useState(null);
@@ -109,15 +112,18 @@ export default function CommunityGardens() {
         </div>
 
         <Tabs defaultValue="garden" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 md:grid-cols-8">
-            <TabsTrigger value="garden">My Garden</TabsTrigger>
-            <TabsTrigger value="ar">AR Mode</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-5 lg:grid-cols-11 gap-1">
+            <TabsTrigger value="garden">Garden</TabsTrigger>
+            <TabsTrigger value="ar">AR</TabsTrigger>
             <TabsTrigger value="biomes">Biomes</TabsTrigger>
             <TabsTrigger value="practices">Practices</TabsTrigger>
             <TabsTrigger value="journal">Journal</TabsTrigger>
             <TabsTrigger value="companion">AI Guide</TabsTrigger>
             <TabsTrigger value="groups">Groups</TabsTrigger>
             <TabsTrigger value="rewards">Rewards</TabsTrigger>
+            <TabsTrigger value="forum">Forum</TabsTrigger>
+            <TabsTrigger value="gifts">Gifts</TabsTrigger>
+            <TabsTrigger value="challenges">Challenges</TabsTrigger>
           </TabsList>
 
           <TabsContent value="garden">
@@ -150,6 +156,18 @@ export default function CommunityGardens() {
 
           <TabsContent value="rewards">
             <PointsBadgesSystem user={user} profile={userProfile} />
+          </TabsContent>
+
+          <TabsContent value="forum">
+            <CommunityForum user={user} biomeType="community_gardens" />
+          </TabsContent>
+
+          <TabsContent value="gifts">
+            <VirtualGifting user={user} profile={userProfile} />
+          </TabsContent>
+
+          <TabsContent value="challenges">
+            <CommunityChallenges user={user} />
           </TabsContent>
         </Tabs>
       </div>
