@@ -12,6 +12,8 @@ import BeepurpleSync from '@/components/govdash/BeepurpleSync';
 import ComplianceMonitor from '@/components/govdash/ComplianceMonitor';
 import FundingPipeline from '@/components/govdash/FundingPipeline';
 import RealTimeAnalytics from '@/components/govdash/RealTimeAnalytics';
+import PredictiveAnalytics from '@/components/govdash/PredictiveAnalytics';
+import ClientProgressionDashboard from '@/components/govdash/ClientProgressionDashboard';
 
 export default function GovDashPortal() {
   const [user, setUser] = useState(null);
@@ -141,13 +143,15 @@ export default function GovDashPortal() {
         <RealTimeAnalytics />
 
         <Tabs defaultValue="outcomes" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6 bg-white">
+          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-white">
             <TabsTrigger value="outcomes">Outcomes</TabsTrigger>
-            <TabsTrigger value="grants">Grant Writer</TabsTrigger>
-            <TabsTrigger value="policy">Policy Tracker</TabsTrigger>
-            <TabsTrigger value="beepurple">Beepurple Sync</TabsTrigger>
+            <TabsTrigger value="grants">Grants</TabsTrigger>
+            <TabsTrigger value="predictive">Predictive</TabsTrigger>
+            <TabsTrigger value="progression">Progression</TabsTrigger>
+            <TabsTrigger value="policy">Policy</TabsTrigger>
+            <TabsTrigger value="beepurple">5CRM Sync</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
-            <TabsTrigger value="funding">Funding Pipeline</TabsTrigger>
+            <TabsTrigger value="funding">Pipeline</TabsTrigger>
           </TabsList>
 
           <TabsContent value="outcomes">
@@ -156,6 +160,14 @@ export default function GovDashPortal() {
 
           <TabsContent value="grants">
             <GrantProposalGenerator user={user} sessions={sessions} outcomes={outcomes} />
+          </TabsContent>
+
+          <TabsContent value="predictive">
+            <PredictiveAnalytics sessions={sessions} outcomes={outcomes} grants={grants} />
+          </TabsContent>
+
+          <TabsContent value="progression">
+            <ClientProgressionDashboard />
           </TabsContent>
 
           <TabsContent value="policy">
