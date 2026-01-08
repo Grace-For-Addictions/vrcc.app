@@ -2,15 +2,34 @@ import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Trophy, Users, Target, Calendar, Zap, CheckCircle } from 'lucide-react';
+import { Trophy, Users, Target, Calendar, Zap, CheckCircle, Gift, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import GraceCard from '@/components/common/GraceCard';
 import { toast } from 'sonner';
 
+const GIFT_TYPES = [
+  { type: 'seed', icon: '🌱', name: 'Hope Seed' },
+  { type: 'flower', icon: '🌸', name: 'Gratitude Flower' }
+];
+
 export default function CommunityChallenges({ user }) {
   const queryClient = useQueryClient();
+
+  const { data: receivedGifts } = useQuery({
+    queryKey: ['receivedGifts', user.email],
+    queryFn: () => base44.entities.GardenGift.filter({ recipient_email: user.email }, '-sent_date', 5),
+    enabled: !!user,
+    initialData: []
+  });
+
+  const { data: sentGifts } = useQuery({
+    queryKey: ['sentGifts', user.email],
+    queryFn: () => base44.entities.GardenGift.filter({ sender_email: user.email }, '-sent_date', 100),
+    enabled: !!user,
+    initialData: []
+  });
 
   const { data: activeChallenges } = useQuery({
     queryKey: ['communityChallenges'],

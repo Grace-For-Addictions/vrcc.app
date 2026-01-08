@@ -2,7 +2,7 @@ import React from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';
-import { Trophy, Award, Star, Flame, Heart, Zap, Target, Gift } from 'lucide-react';
+import { Trophy, Award, Star, Flame, Heart, Zap, Target, Gift, Users, Sparkles } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import GraceCard from '@/components/common/GraceCard';
