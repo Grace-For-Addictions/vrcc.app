@@ -18,6 +18,9 @@ import AISessionSummarizer from '@/components/govdash/AISessionSummarizer';
 import GrantReportGenerator from '@/components/govdash/GrantReportGenerator';
 import RecoveryConAssistant from '@/components/govdash/RecoveryConAssistant';
 import AutomatedOutreach from '@/components/govdash/AutomatedOutreach';
+import BudgetingVRModule from '@/components/vr/BudgetingVRModule';
+import RelationshipBuildingVR from '@/components/vr/RelationshipBuildingVR';
+import SocialServicesNavigationVR from '@/components/vr/SocialServicesNavigationVR';
 
 export default function GovDashPortal() {
   const [user, setUser] = useState(null);
@@ -210,20 +213,75 @@ export default function GovDashPortal() {
 
           <TabsContent value="vr">
             <div className="space-y-6">
-              <GraceCard gradient>
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">VR Recovery Skills Modules</h3>
-                <p className="text-gray-700 mb-4">
-                  AI-powered VR training with adaptive difficulty, realistic role-playing, and personalized feedback.
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-6 text-white"
+              >
+                <h3 className="text-2xl font-bold mb-2">VR Recovery Skills Training Modules</h3>
+                <p className="text-purple-100 mb-4">
+                  AI-powered VR simulations with adaptive difficulty, realistic role-playing, and personalized coaching feedback. 
+                  Each module uses AI to generate scenarios, analyze responses, and provide evidence-based guidance.
                 </p>
-              </GraceCard>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-3">💰 Financial Management</h4>
-                  {React.createElement(require('@/components/vr/BudgetingVRModule').default, { user })}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
+                  <div className="flex items-center gap-2">
+                    <Shield className="w-4 h-4" />
+                    <span>Adaptive AI</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="w-4 h-4" />
+                    <span>Progress Tracking</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Users className="w-4 h-4" />
+                    <span>Role-Playing</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Award className="w-4 h-4" />
+                    <span>Skill Badges</span>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 mb-3">❤️ Relationship Building</h4>
-                  {React.createElement(require('@/components/vr/RelationshipBuildingVR').default, { user })}
+              </motion.div>
+
+              {/* VR Module Grid */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                    <DollarSign className="w-5 h-5 text-green-600" />
+                    Budgeting & Financial Management
+                  </h4>
+                  <BudgetingVRModule user={user} />
+                </div>
+                
+                <div className="space-y-4">
+                  <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                    💕 Healthy Relationship Building
+                  </h4>
+                  <RelationshipBuildingVR user={user} />
+                </div>
+
+                <div className="space-y-4">
+                  <h4 className="font-bold text-gray-900 flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-blue-600" />
+                    Navigating Social Services
+                  </h4>
+                  <SocialServicesNavigationVR user={user} />
+                </div>
+
+                <div className="space-y-4">
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center"
+                  >
+                    <p className="text-gray-500 font-semibold mb-2">More modules coming soon:</p>
+                    <ul className="text-sm text-gray-600 space-y-1">
+                      <li>• Job Interview Practice (AI Hiring Manager)</li>
+                      <li>• Conflict Resolution at Work/Home</li>
+                      <li>• Parenting Skills for Recovery</li>
+                      <li>• Healthcare System Navigation</li>
+                    </ul>
+                  </motion.div>
                 </div>
               </div>
             </div>
@@ -254,6 +312,9 @@ export default function GovDashPortal() {
           </TabsContent>
         </Tabs>
       </div>
+
+      {/* RecoveryCon AI Assistant */}
+      <RecoveryConAssistant user={user} profile={sessions[0]} />
     </div>
   );
 }
