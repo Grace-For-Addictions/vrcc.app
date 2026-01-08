@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sprout, Flower, TreePine, Cloud, Sun, Droplets } from 'lucide-react';
+import { Sprout, Flower, TreePine, Cloud, Sun, Droplets, Sparkles } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { base44 } from '@/api/base44Client';
