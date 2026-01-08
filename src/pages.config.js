@@ -9,6 +9,7 @@ import CommunityWalls from './pages/CommunityWalls';
 import Crisis from './pages/Crisis';
 import DigitalEquity from './pages/DigitalEquity';
 import Events from './pages/Events';
+import GovDashPortal from './pages/GovDashPortal';
 import GraceChat from './pages/GraceChat';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
@@ -31,7 +32,6 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import GovDashPortal from './pages/GovDashPortal';
 import __Layout from './Layout.jsx';
 
 
@@ -47,6 +47,7 @@ export const PAGES = {
     "Crisis": Crisis,
     "DigitalEquity": DigitalEquity,
     "Events": Events,
+    "GovDashPortal": GovDashPortal,
     "GraceChat": GraceChat,
     "GrantWriter": GrantWriter,
     "Home": Home,
@@ -69,7 +70,6 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "GovDashPortal": GovDashPortal,
 }
 
 export const pagesConfig = {

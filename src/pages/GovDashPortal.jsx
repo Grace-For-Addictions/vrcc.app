@@ -14,6 +14,8 @@ import FundingPipeline from '@/components/govdash/FundingPipeline';
 import RealTimeAnalytics from '@/components/govdash/RealTimeAnalytics';
 import PredictiveAnalytics from '@/components/govdash/PredictiveAnalytics';
 import ClientProgressionDashboard from '@/components/govdash/ClientProgressionDashboard';
+import AISessionSummarizer from '@/components/govdash/AISessionSummarizer';
+import GrantReportGenerator from '@/components/govdash/GrantReportGenerator';
 
 export default function GovDashPortal() {
   const [user, setUser] = useState(null);
@@ -66,10 +68,36 @@ export default function GovDashPortal() {
     <div className="min-h-screen bg-gradient-to-b from-slate-50 to-white">
       <div className="max-w-[1600px] mx-auto px-4 py-8">
         <GraceHeader
-          title="JUST GRACE Data & Policy Portal"
-          subtitle="Advanced AI-Driven Analytics, Grant Writing & Outcome Tracking System"
+          title="GFA RecoveryCon Portal"
+          subtitle="AI-Powered Recovery Service Management • Win Grants • Track Outcomes • Prove Impact"
           icon={Shield}
         />
+        
+        <div className="mb-8 p-6 bg-gradient-to-r from-teal-600 to-blue-600 rounded-2xl text-white">
+          <h2 className="text-2xl font-bold mb-2">Built by Recovery Professionals, For Recovery Organizations</h2>
+          <p className="text-teal-100 mb-4">
+            Purpose-built for peer recovery services, behavioral health providers, and recovery community organizations. 
+            Streamline proposals, track outcomes, automate reporting, and win more funding—all in one platform.
+          </p>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+            <div className="flex items-center gap-2">
+              <Shield className="w-5 h-5" />
+              <span>HIPAA-Aligned</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Database className="w-5 h-5" />
+              <span>5CRM Integrated</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <TrendingUp className="w-5 h-5" />
+              <span>Real-Time Analytics</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Award className="w-5 h-5" />
+              <span>AI Grant Writer</span>
+            </div>
+          </div>
+        </div>
 
         {/* Key Metrics Dashboard */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
@@ -143,13 +171,15 @@ export default function GovDashPortal() {
         <RealTimeAnalytics />
 
         <Tabs defaultValue="outcomes" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8 bg-white">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-10 bg-white text-xs">
             <TabsTrigger value="outcomes">Outcomes</TabsTrigger>
             <TabsTrigger value="grants">Grants</TabsTrigger>
+            <TabsTrigger value="reports">Reports</TabsTrigger>
+            <TabsTrigger value="sessions">Sessions AI</TabsTrigger>
             <TabsTrigger value="predictive">Predictive</TabsTrigger>
-            <TabsTrigger value="progression">Progression</TabsTrigger>
+            <TabsTrigger value="progression">Clients</TabsTrigger>
             <TabsTrigger value="policy">Policy</TabsTrigger>
-            <TabsTrigger value="beepurple">5CRM Sync</TabsTrigger>
+            <TabsTrigger value="beepurple">5CRM</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
             <TabsTrigger value="funding">Pipeline</TabsTrigger>
           </TabsList>
@@ -160,6 +190,14 @@ export default function GovDashPortal() {
 
           <TabsContent value="grants">
             <GrantProposalGenerator user={user} sessions={sessions} outcomes={outcomes} />
+          </TabsContent>
+
+          <TabsContent value="reports">
+            <GrantReportGenerator />
+          </TabsContent>
+
+          <TabsContent value="sessions">
+            <AISessionSummarizer />
           </TabsContent>
 
           <TabsContent value="predictive">
