@@ -168,10 +168,23 @@ function ResourceDetail({ resource, onClose }) {
 }
 
 export default function Resources() {
+  const [user, setUser] = useState(null);
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('all');
   const [county, setCounty] = useState('all');
   const [selectedResource, setSelectedResource] = useState(null);
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (e) {
+        // Not logged in
+      }
+    };
+    loadUser();
+  }, []);
 
   const { data: resources, isLoading } = useQuery({
     queryKey: ['resources'],
@@ -199,83 +212,99 @@ export default function Resources() {
           icon={MapPin}
         />
 
-        {/* Search & Filters */}
-        <GraceCard className="mb-8">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <Input
-                placeholder="Search resources..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 rounded-full"
-              />
+        <Tabs defaultValue="browse" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="browse">Browse Resources</TabsTrigger>
+            <TabsTrigger value="ai">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Navigator
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="browse" className="space-y-6">
+            {/* Search & Filters */}
+            <GraceCard>
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                  <Input
+                    placeholder="Search resources..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="pl-10 rounded-full"
+                  />
+                </div>
+                
+                <Select value={category} onValueChange={setCategory}>
+                  <SelectTrigger className="w-full md:w-48">
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    {categories.map(cat => (
+                      <SelectItem key={cat} value={cat}>
+                        {cat?.replace(/_/g, ' ')}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+
+                <Select value={county} onValueChange={setCounty}>
+                  <SelectTrigger className="w-full md:w-48">
+                    <SelectValue placeholder="County" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Counties</SelectItem>
+                    {iowaCounties.map(c => (
+                      <SelectItem key={c} value={c}>{c}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </GraceCard>
+
+            {/* Results count */}
+            <div className="flex items-center justify-between">
+              <p className="text-gray-600">
+                {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} found
+              </p>
+              {(category !== 'all' || county !== 'all' || search) && (
+                <Button 
+                  variant="ghost" 
+                  size="sm"
+                  onClick={() => { setSearch(''); setCategory('all'); setCounty('all'); }}
+                >
+                  Clear filters
+                </Button>
+              )}
             </div>
-            
-            <Select value={category} onValueChange={setCategory}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                {categories.map(cat => (
-                  <SelectItem key={cat} value={cat}>
-                    {cat?.replace(/_/g, ' ')}
-                  </SelectItem>
+
+            {/* Resources Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <AnimatePresence>
+                {filteredResources.map((resource) => (
+                  <ResourceCard 
+                    key={resource.id} 
+                    resource={resource}
+                    onClick={() => setSelectedResource(resource)}
+                  />
                 ))}
-              </SelectContent>
-            </Select>
+              </AnimatePresence>
+            </div>
 
-            <Select value={county} onValueChange={setCounty}>
-              <SelectTrigger className="w-full md:w-48">
-                <SelectValue placeholder="County" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Counties</SelectItem>
-                {iowaCounties.map(c => (
-                  <SelectItem key={c} value={c}>{c}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-        </GraceCard>
+            {filteredResources.length === 0 && !isLoading && (
+              <GraceCard className="text-center py-12">
+                <MapPin className="w-12 h-12 mx-auto text-gray-400 mb-4" />
+                <h3 className="text-lg font-medium text-gray-700">No resources found</h3>
+                <p className="text-gray-500 mt-1">Try adjusting your search or filters</p>
+              </GraceCard>
+            )}
+          </TabsContent>
 
-        {/* Results count */}
-        <div className="flex items-center justify-between mb-6">
-          <p className="text-gray-600">
-            {filteredResources.length} resource{filteredResources.length !== 1 ? 's' : ''} found
-          </p>
-          {(category !== 'all' || county !== 'all' || search) && (
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={() => { setSearch(''); setCategory('all'); setCounty('all'); }}
-            >
-              Clear filters
-            </Button>
-          )}
-        </div>
-
-        {/* Resources Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <AnimatePresence>
-            {filteredResources.map((resource) => (
-              <ResourceCard 
-                key={resource.id} 
-                resource={resource}
-                onClick={() => setSelectedResource(resource)}
-              />
-            ))}
-          </AnimatePresence>
-        </div>
-
-        {filteredResources.length === 0 && !isLoading && (
-          <GraceCard className="text-center py-12">
-            <MapPin className="w-12 h-12 mx-auto text-gray-400 mb-4" />
-            <h3 className="text-lg font-medium text-gray-700">No resources found</h3>
-            <p className="text-gray-500 mt-1">Try adjusting your search or filters</p>
-          </GraceCard>
-        )}
+          <TabsContent value="ai">
+            <AIResourceNavigator user={user} />
+          </TabsContent>
+        </Tabs>
 
         <ResourceDetail 
           resource={selectedResource} 
