@@ -24,12 +24,13 @@ const navItems = [
   { name: 'Walls', href: 'CommunityWalls', icon: Heart },
   { name: 'Events', href: 'Events', icon: Calendar },
   { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
+  { name: 'Daily Reflection', href: 'DailyReflection', icon: Sparkles },
   { name: 'Assessment', href: 'Assessment', icon: Compass }
 ];
 
 const adminNavItems = [
   { name: 'Admin Analytics', href: 'AdminDashboard', icon: Shield },
-  { name: 'GovDash Portal', href: 'GovDashPortal', icon: Award }
+  { name: 'RecoveryCon Portal', href: 'GovDashPortal', icon: Award }
 ];
 
 
