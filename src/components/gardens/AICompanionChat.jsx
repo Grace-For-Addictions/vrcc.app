@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
@@ -11,6 +11,8 @@ export default function AICompanionChat({ user, garden, sessions }) {
   const [message, setMessage] = useState('');
   const [conversation, setConversation] = useState([]);
   const [dailyMessage, setDailyMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const generateProactiveMessage = async () => {
@@ -58,8 +60,6 @@ Keep it 2-3 sentences, warm, and actionable.`,
 
     generateProactiveMessage();
   }, [sessions.length]);
-  const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
 
   const sendMessage = useMutation({
     mutationFn: async (userMessage) => {
