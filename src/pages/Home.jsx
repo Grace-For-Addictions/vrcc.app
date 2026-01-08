@@ -40,9 +40,9 @@ export default function Home() {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         
-        // Check if intake completed
+        // Check if intake completed - redirect to external form for first-time users
         if (!currentUser.intake_completed) {
-          setShowIntakeModal(true);
+          window.location.href = 'https://awsna01.fivecrm.com/273529/user_files/webpage/001/IntakeDemographicsForm.html';
         }
       } catch (e) {
         // User not logged in
