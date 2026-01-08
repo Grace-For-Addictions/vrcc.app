@@ -16,6 +16,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger } from
 "@/components/ui/dropdown-menu";
+import IntakeRequired from '@/components/intake/IntakeRequired';
 
 const navItems = [
   { name: 'Home', href: 'Home', icon: Home },
@@ -37,22 +38,41 @@ const adminNavItems = [
 export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [needsIntake, setNeedsIntake] = useState(false);
 
   useEffect(() => {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check if intake is required
+        if (!currentUser.intake_completed) {
+          setNeedsIntake(true);
+        }
       } catch (e) {
-
-
         // Not logged in
-      }};loadUser();
+      }
+    };
+    loadUser();
   }, []);
 
   const handleLogout = async () => {
     await base44.auth.logout();
   };
+
+  // Block access if intake not completed
+  if (user && needsIntake) {
+    return (
+      <IntakeRequired 
+        user={user} 
+        onComplete={() => {
+          setNeedsIntake(false);
+          setUser({ ...user, intake_completed: true });
+        }} 
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
