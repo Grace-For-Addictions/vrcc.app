@@ -11,6 +11,7 @@ import PolicyTracker from '@/components/govdash/PolicyTracker';
 import BeepurpleSync from '@/components/govdash/BeepurpleSync';
 import ComplianceMonitor from '@/components/govdash/ComplianceMonitor';
 import FundingPipeline from '@/components/govdash/FundingPipeline';
+import RealTimeAnalytics from '@/components/govdash/RealTimeAnalytics';
 
 export default function GovDashPortal() {
   const [user, setUser] = useState(null);
@@ -135,6 +136,9 @@ export default function GovDashPortal() {
             <p className="text-sm text-gray-600">Total Requested</p>
           </motion.div>
         </div>
+
+        {/* Real-Time Monitor */}
+        <RealTimeAnalytics />
 
         <Tabs defaultValue="outcomes" className="space-y-6">
           <TabsList className="grid w-full grid-cols-6 bg-white">
