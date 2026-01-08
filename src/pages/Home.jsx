@@ -24,14 +24,12 @@ import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
 import CommunityGardenVisual from '@/components/community/CommunityGardenVisual';
-import IntakeModal from '@/components/intake/IntakeModal';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 
 export default function Home() {
   const [user, setUser] = useState(null);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [showIntakeModal, setShowIntakeModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -42,7 +40,8 @@ export default function Home() {
         
         // Check if intake completed - redirect to external form for first-time users
         if (!currentUser.intake_completed) {
-          window.location.href = 'https://awsna01.fivecrm.com/273529/user_files/webpage/001/IntakeDemographicsForm.html';
+          const intakeUrl = `https://awsna01.fivecrm.com/273529/user_files/webpage/001/IntakeDemographicsForm.html?email=${encodeURIComponent(currentUser.email)}&name=${encodeURIComponent(currentUser.full_name)}&return_url=${encodeURIComponent(window.location.origin + '/intake-complete')}`;
+          window.location.href = intakeUrl;
         }
       } catch (e) {
         // User not logged in
@@ -289,17 +288,6 @@ export default function Home() {
 
   return (
     <>
-      {/* Mandatory Intake Modal */}
-      {showIntakeModal && user && (
-        <IntakeModal
-          user={user}
-          onComplete={() => {
-            setShowIntakeModal(false);
-            setUser({ ...user, intake_completed: true });
-          }}
-        />
-      )}
-
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
         
