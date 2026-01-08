@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
+import { Label } from '@/components/ui/label';
 import GraceCard from '@/components/common/GraceCard';
 
 export default function GrowingGroups({ user, biomeId }) {
