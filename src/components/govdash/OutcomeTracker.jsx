@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Filter, Download, BarChart3, PieChart, Calendar } from 'lucide-react';
+import { TrendingUp, Filter, Download, BarChart3, PieChart, Calendar, DollarSign } from 'lucide-react';
 import { BarChart, Bar, LineChart, Line, PieChart as RechartsPie, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
