@@ -14,6 +14,7 @@ import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
 
 export default function CoachingLogger() {
   const [user, setUser] = useState(null);
+  const [needsIntake, setNeedsIntake] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -21,6 +22,13 @@ export default function CoachingLogger() {
       try {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
+        
+        // Check if intake completed - redirect to external form for new users
+        if (!currentUser.intake_completed) {
+          setNeedsIntake(true);
+          const intakeUrl = `https://awsna01.fivecrm.com/273529/user_files/webpage/001/IntakeDemographicsForm.html?email=${encodeURIComponent(currentUser.email)}&name=${encodeURIComponent(currentUser.full_name)}`;
+          window.open(intakeUrl, '_blank');
+        }
       } catch (e) {
         base44.auth.redirectToLogin();
       }
@@ -41,6 +49,40 @@ export default function CoachingLogger() {
         <GraceCard>
           <ClipboardList className="w-12 h-12 mx-auto text-blue-600 animate-pulse mb-4" />
           <p className="text-gray-600">Loading coaching portal...</p>
+        </GraceCard>
+      </div>
+    );
+  }
+
+  if (needsIntake) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white flex items-center justify-center p-6">
+        <GraceCard className="max-w-md text-center">
+          <Sparkles className="w-16 h-16 mx-auto text-blue-600 mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-3">Intake Form Required</h2>
+          <p className="text-gray-700 mb-6">
+            We've opened the intake form in a new tab. Please complete it to access the coaching logger.
+          </p>
+          <div className="space-y-3">
+            <button
+              onClick={() => {
+                const intakeUrl = `https://awsna01.fivecrm.com/273529/user_files/webpage/001/IntakeDemographicsForm.html?email=${encodeURIComponent(user.email)}&name=${encodeURIComponent(user.full_name)}`;
+                window.open(intakeUrl, '_blank');
+              }}
+              className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+            >
+              Open Intake Form Again
+            </button>
+            <button
+              onClick={async () => {
+                await base44.auth.updateMe({ intake_completed: true });
+                setNeedsIntake(false);
+              }}
+              className="w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+            >
+              I've Completed the Intake
+            </button>
+          </div>
         </GraceCard>
       </div>
     );
