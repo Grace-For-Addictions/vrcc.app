@@ -17,6 +17,8 @@ export default function JobInterviewSimulator({ user }) {
   const [currentAnswer, setCurrentAnswer] = useState('');
   const [feedback, setFeedback] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [difficulty, setDifficulty] = useState('beginner');
+  const [liveHints, setLiveHints] = useState([]);
 
   const JOB_TYPES = [
     'Retail/Customer Service',
@@ -60,6 +62,20 @@ Format as JSON array of question strings.`,
   const submitAnswer = async () => {
     if (!currentAnswer.trim()) return;
 
+    setLoading(true);
+    
+    // AI analyzes answer in real-time and provides instant hint
+    try {
+      const instantFeedback = await base44.integrations.Core.InvokeLLM({
+        prompt: `Quick analysis: Is this job interview answer strong enough?\nQuestion: ${questions[currentQuestion]}\nAnswer: ${currentAnswer}\n\nProvide a brief 1-sentence hint if it needs improvement, or encouragement if it's good. Be specific.`,
+      });
+      
+      setLiveHints([...liveHints, { question: currentQuestion, hint: instantFeedback }]);
+      toast.success(instantFeedback.substring(0, 100) + '...');
+    } catch (error) {
+      // Continue even if instant feedback fails
+    }
+
     setAnswers({ ...answers, [currentQuestion]: currentAnswer });
     
     if (currentQuestion < questions.length - 1) {
@@ -68,13 +84,22 @@ Format as JSON array of question strings.`,
     } else {
       await generateFeedback();
     }
+    
+    setLoading(false);
   };
 
   const generateFeedback = async () => {
     setLoading(true);
     try {
+      // Calculate adaptive difficulty for next session
+      const answersQuality = Object.values(answers).map(a => a.length).reduce((sum, len) => sum + len, 0) / Object.keys(answers).length;
+      const suggestedDifficulty = answersQuality > 150 ? 'advanced' : answersQuality > 80 ? 'intermediate' : 'beginner';
+      
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Provide constructive feedback on these job interview responses for a ${jobType} position. The person is in recovery and may have justice involvement history.
+        prompt: `Provide AI-driven adaptive feedback on these job interview responses for a ${jobType} position. The person is in recovery and may have justice involvement history.
+
+Current skill level: ${difficulty}
+Suggested next level: ${suggestedDifficulty}
 
 ${questions.map((q, i) => `Q${i + 1}: ${q}\nA${i + 1}: ${answers[i]}\n`).join('\n')}
 
@@ -83,7 +108,9 @@ Provide:
 2. Strengths in responses
 3. Areas for improvement (specific, actionable)
 4. Reframed example answers for 2 weakest responses
-5. Confidence-building encouragement
+5. Body language tips for in-person interviews
+6. Confidence-building encouragement
+7. Adaptive difficulty recommendation (should they try harder questions next time?)
 
 Be constructive, trauma-informed, and recovery-focused.`,
         response_json_schema: {
@@ -93,10 +120,14 @@ Be constructive, trauma-informed, and recovery-focused.`,
             strengths: { type: "array", items: { type: "string" } },
             improvements: { type: "array", items: { type: "string" } },
             example_reframes: { type: "array", items: { type: "object", properties: { question: { type: "string" }, better_answer: { type: "string" } } } },
-            encouragement: { type: "string" }
+            body_language_tips: { type: "array", items: { type: "string" } },
+            encouragement: { type: "string" },
+            difficulty_recommendation: { type: "string" }
           }
         }
       });
+
+      setDifficulty(suggestedDifficulty);
 
       setFeedback(response);
       
@@ -156,11 +187,30 @@ Be constructive, trauma-informed, and recovery-focused.`,
             </div>
           ))}
 
+          {feedback.body_language_tips && feedback.body_language_tips.length > 0 && (
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">🎭 Body Language & Presence Tips</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {feedback.body_language_tips.map((tip, i) => (
+                  <li key={i} className="text-sm text-gray-700">{tip}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
             <p className="text-sm text-green-900">💚 {feedback.encouragement}</p>
           </div>
 
-          <Button onClick={() => { setStarted(false); setCurrentQuestion(0); setAnswers({}); setFeedback(null); }} className="w-full">
+          {feedback.difficulty_recommendation && (
+            <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+              <p className="text-sm text-blue-900">
+                <strong>🎯 AI Recommendation:</strong> {feedback.difficulty_recommendation}
+              </p>
+            </div>
+          )}
+
+          <Button onClick={() => { setStarted(false); setCurrentQuestion(0); setAnswers({}); setFeedback(null); setLiveHints([]); }} className="w-full">
             Practice Another Interview
           </Button>
         </div>

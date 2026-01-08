@@ -16,6 +16,9 @@ export default function ConflictResolutionSimulator({ user }) {
   const [scenarioData, setScenarioData] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [difficulty, setDifficulty] = useState('intermediate');
+  const [emotionalState, setEmotionalState] = useState('calm');
+  const [instantFeedback, setInstantFeedback] = useState(null);
 
   const SCENARIOS = [
     { value: 'roommate', label: 'Recovery Housing Roommate Conflict' },
@@ -77,9 +80,36 @@ Format with clear stages, realistic dialogue, and recovery-relevant context.`,
     }
   };
 
-  const makeChoice = (optionIndex) => {
+  const makeChoice = async (optionIndex) => {
     const choice = scenarioData.stages[stage].options[optionIndex];
     setUserChoices([...userChoices, { stage, choice }]);
+    
+    // AI provides instant coaching feedback
+    setLoading(true);
+    try {
+      const hint = await base44.integrations.Core.InvokeLLM({
+        prompt: `Quick coaching on this conflict choice:\nChoice: ${choice.text}\nType: ${choice.type}\n\nProvide 1 sentence of immediate reinforcement (if healthy) or gentle redirection (if avoidant/aggressive). Be warm and specific.`
+      });
+      
+      setInstantFeedback(hint);
+      
+      // Update emotional state based on choice type
+      if (choice.type === 'healthy') {
+        setEmotionalState('calm');
+        toast.success('Great choice! De-escalating conflict.');
+      } else if (choice.type === 'avoidant') {
+        setEmotionalState('anxious');
+        toast.info('Consider addressing this directly.');
+      } else {
+        setEmotionalState('tense');
+        toast.warning('That might escalate things.');
+      }
+      
+      setTimeout(() => setInstantFeedback(null), 3000);
+    } catch (error) {
+      // Continue even if instant feedback fails
+    }
+    setLoading(false);
     
     if (stage < scenarioData.stages.length - 1) {
       setStage(stage + 1);
@@ -91,8 +121,17 @@ Format with clear stages, realistic dialogue, and recovery-relevant context.`,
   const generateFeedback = async () => {
     setLoading(true);
     try {
+      // Calculate performance for adaptive difficulty
+      const healthyChoices = userChoices.filter(c => c.choice.type === 'healthy').length;
+      const performanceRate = healthyChoices / userChoices.length;
+      const suggestedDifficulty = performanceRate > 0.8 ? 'advanced' : performanceRate > 0.5 ? 'intermediate' : 'beginner';
+      
       const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `Analyze conflict resolution choices for ${scenario} scenario.
+        prompt: `AI-driven adaptive feedback on conflict resolution for ${scenario} scenario.
+
+Current skill level: ${difficulty}
+Suggested next level: ${suggestedDifficulty}
+Healthy choices: ${healthyChoices}/${userChoices.length}
 
 Choices made: ${userChoices.map((c, i) => `Stage ${i + 1}: ${c.choice.text} (${c.choice.type})`).join('\n')}
 
@@ -100,9 +139,11 @@ Provide:
 1. Overall approach score (1-10)
 2. Communication effectiveness
 3. Healthy strategies used
-4. Patterns to be aware of
+4. Patterns to be aware of (trauma responses, conflict avoidance, aggression)
 5. Alternative approaches for stages with avoidant/aggressive choices
 6. Neuroplasticity insight (how practicing healthy conflict builds new pathways)
+7. Body regulation techniques for similar real-life conflicts
+8. Adaptive difficulty recommendation
 
 Be specific, empowering, and recovery-focused.`,
         response_json_schema: {
@@ -113,10 +154,14 @@ Be specific, empowering, and recovery-focused.`,
             strengths: { type: "array", items: { type: "string" } },
             patterns: { type: "string" },
             alternatives: { type: "array", items: { type: "string" } },
-            neuroplasticity_insight: { type: "string" }
+            neuroplasticity_insight: { type: "string" },
+            body_regulation_tips: { type: "array", items: { type: "string" } },
+            difficulty_recommendation: { type: "string" }
           }
         }
       });
+
+      setDifficulty(suggestedDifficulty);
 
       setFeedback(response);
       
@@ -186,7 +231,26 @@ Be specific, empowering, and recovery-focused.`,
             </p>
           </div>
 
-          <Button onClick={() => { setStarted(false); setStage(0); setUserChoices([]); setFeedback(null); }} className="w-full">
+          {feedback.body_regulation_tips && feedback.body_regulation_tips.length > 0 && (
+            <div>
+              <h4 className="font-semibold text-gray-900 mb-2">🫁 Body Regulation Techniques</h4>
+              <ul className="list-disc list-inside space-y-1">
+                {feedback.body_regulation_tips.map((tip, i) => (
+                  <li key={i} className="text-sm text-gray-700">{tip}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {feedback.difficulty_recommendation && (
+            <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
+              <p className="text-sm text-purple-900">
+                <strong>🎯 AI Recommendation:</strong> {feedback.difficulty_recommendation}
+              </p>
+            </div>
+          )}
+
+          <Button onClick={() => { setStarted(false); setStage(0); setUserChoices([]); setFeedback(null); setInstantFeedback(null); }} className="w-full">
             Practice Another Scenario
           </Button>
         </div>
@@ -263,9 +327,29 @@ Be specific, empowering, and recovery-focused.`,
         animate={{ opacity: 1, x: 0 }}
         className="space-y-4"
       >
-        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
+        <div className={`p-4 rounded-lg border-2 ${
+          emotionalState === 'calm' ? 'bg-green-50 border-green-200' :
+          emotionalState === 'anxious' ? 'bg-yellow-50 border-yellow-200' :
+          'bg-red-50 border-red-200'
+        }`}>
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-xs font-semibold uppercase tracking-wide">
+              {emotionalState === 'calm' ? '😌 Calm' : emotionalState === 'anxious' ? '😰 Anxious' : '😤 Tense'}
+            </p>
+            <p className="text-xs text-gray-600">Emotional State</p>
+          </div>
           <p className="font-medium text-gray-900">{currentStage.situation}</p>
         </div>
+
+        {instantFeedback && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="p-3 bg-purple-50 border border-purple-200 rounded-lg"
+          >
+            <p className="text-sm text-purple-900">💡 {instantFeedback}</p>
+          </motion.div>
+        )}
 
         <div className="space-y-3">
           <p className="text-sm font-medium text-gray-700">How do you respond?</p>
