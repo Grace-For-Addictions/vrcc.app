@@ -168,7 +168,7 @@ export default function AutomatedOutreach() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="low_engagement">Low Engagement (7+ days, <3 check-ins)</SelectItem>
+                  <SelectItem value="low_engagement">Low Engagement (7+ days, {'<'}3 check-ins)</SelectItem>
                   <SelectItem value="inactive_30_days">Inactive 30+ Days</SelectItem>
                   <SelectItem value="goal_support">Sessions but No Goals Set</SelectItem>
                   <SelectItem value="milestone_celebration">Milestone Reached</SelectItem>
