@@ -16,6 +16,8 @@ import PredictiveAnalytics from '@/components/govdash/PredictiveAnalytics';
 import ClientProgressionDashboard from '@/components/govdash/ClientProgressionDashboard';
 import AISessionSummarizer from '@/components/govdash/AISessionSummarizer';
 import GrantReportGenerator from '@/components/govdash/GrantReportGenerator';
+import RecoveryConAssistant from '@/components/govdash/RecoveryConAssistant';
+import AutomatedOutreach from '@/components/govdash/AutomatedOutreach';
 
 export default function GovDashPortal() {
   const [user, setUser] = useState(null);
@@ -171,17 +173,19 @@ export default function GovDashPortal() {
         <RealTimeAnalytics />
 
         <Tabs defaultValue="outcomes" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-10 bg-white text-xs">
+          <TabsList className="grid w-full grid-cols-3 lg:grid-cols-12 bg-white text-xs">
             <TabsTrigger value="outcomes">Outcomes</TabsTrigger>
             <TabsTrigger value="grants">Grants</TabsTrigger>
             <TabsTrigger value="reports">Reports</TabsTrigger>
             <TabsTrigger value="sessions">Sessions AI</TabsTrigger>
+            <TabsTrigger value="outreach">Outreach</TabsTrigger>
             <TabsTrigger value="predictive">Predictive</TabsTrigger>
             <TabsTrigger value="progression">Clients</TabsTrigger>
             <TabsTrigger value="policy">Policy</TabsTrigger>
             <TabsTrigger value="beepurple">5CRM</TabsTrigger>
             <TabsTrigger value="compliance">Compliance</TabsTrigger>
             <TabsTrigger value="funding">Pipeline</TabsTrigger>
+            <TabsTrigger value="vr">VR Modules</TabsTrigger>
           </TabsList>
 
           <TabsContent value="outcomes">
@@ -198,6 +202,31 @@ export default function GovDashPortal() {
 
           <TabsContent value="sessions">
             <AISessionSummarizer />
+          </TabsContent>
+
+          <TabsContent value="outreach">
+            <AutomatedOutreach />
+          </TabsContent>
+
+          <TabsContent value="vr">
+            <div className="space-y-6">
+              <GraceCard gradient>
+                <h3 className="text-2xl font-bold text-gray-900 mb-2">VR Recovery Skills Modules</h3>
+                <p className="text-gray-700 mb-4">
+                  AI-powered VR training with adaptive difficulty, realistic role-playing, and personalized feedback.
+                </p>
+              </GraceCard>
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-3">💰 Financial Management</h4>
+                  {React.createElement(require('@/components/vr/BudgetingVRModule').default, { user })}
+                </div>
+                <div>
+                  <h4 className="font-bold text-gray-900 mb-3">❤️ Relationship Building</h4>
+                  {React.createElement(require('@/components/vr/RelationshipBuildingVR').default, { user })}
+                </div>
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="predictive">
