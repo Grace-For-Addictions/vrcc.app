@@ -28,7 +28,8 @@ const navItems = [
 ];
 
 const adminNavItems = [
-  { name: 'Admin Analytics', href: 'AdminDashboard', icon: Shield }
+  { name: 'Admin Analytics', href: 'AdminDashboard', icon: Shield },
+  { name: 'GovDash Portal', href: 'GovDashPortal', icon: Award }
 ];
 
 
