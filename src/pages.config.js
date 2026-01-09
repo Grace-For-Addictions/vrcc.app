@@ -33,6 +33,7 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
 import CoachDashboard from './pages/CoachDashboard';
+import Gamification from './pages/Gamification';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +73,7 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
     "CoachDashboard": CoachDashboard,
+    "Gamification": Gamification,
 }
 
 export const pagesConfig = {

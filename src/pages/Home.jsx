@@ -21,6 +21,7 @@ import SessionAnalyzer from '@/components/ai/SessionAnalyzer';
 import GoalProgressNudges from '@/components/ai/GoalProgressNudges';
 import AIRecoveryJourney from '@/components/ai/AIRecoveryJourney';
 import RecoveryPlanAI from '@/components/ai/RecoveryPlanAI';
+import ProgressAnalysis from '@/components/ai/ProgressAnalysis';
 import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
@@ -144,9 +145,17 @@ export default function Home() {
     {
       title: 'Recovery Garden',
       description: 'Watch your virtual garden grow as you engage and heal',
-      icon: Sparkles,
+      icon: Flower2,
       href: 'RecoveryGarden',
       color: 'emerald',
+      isNew: true
+    },
+    {
+      title: 'Gamification Hub',
+      description: 'Track challenges, earn badges, climb leaderboards, get AI challenge picks',
+      icon: Award,
+      href: 'Gamification',
+      color: 'purple',
       isNew: true
     },
     {
@@ -361,6 +370,13 @@ export default function Home() {
         {user && hasJourneyData && (
           <section>
             <RecoveryPlanAI user={user} />
+          </section>
+        )}
+
+        {/* Progress Analysis Dashboard */}
+        {user && hasJourneyData && (
+          <section>
+            <ProgressAnalysis user={user} shareWithSponsor={false} />
           </section>
         )}
 

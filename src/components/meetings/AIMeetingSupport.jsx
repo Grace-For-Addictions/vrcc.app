@@ -30,9 +30,10 @@ Provide:
 1. Key themes discussed
 2. Wins and milestones shared
 3. Support needs identified
-4. Action items or follow-ups
-5. Neuroplasticity insights based on discussions
-6. Resources mentioned or needed
+4. Action items or follow-ups (with responsible attendees)
+5. Key decisions made
+6. Neuroplasticity insights based on discussions
+7. Resources mentioned or needed
 
 Use warm, recovery-focused, stigma-free language.`,
         response_json_schema: {
@@ -41,7 +42,17 @@ Use warm, recovery-focused, stigma-free language.`,
             key_themes: { type: "array", items: { type: "string" } },
             wins_shared: { type: "array", items: { type: "string" } },
             support_needs: { type: "array", items: { type: "string" } },
-            action_items: { type: "array", items: { type: "string" } },
+            action_items: { 
+              type: "array", 
+              items: { 
+                type: "object",
+                properties: {
+                  task: { type: "string" },
+                  responsible: { type: "string" }
+                }
+              }
+            },
+            key_decisions: { type: "array", items: { type: "string" } },
             neuroplasticity_moments: { type: "string" },
             resources_needed: { type: "array", items: { type: "string" } },
             overall_summary: { type: "string" }
@@ -49,11 +60,24 @@ Use warm, recovery-focused, stigma-free language.`,
         }
       });
 
+      // Auto-save as meeting summary
+      await base44.entities.MeetingSummary.create({
+        meeting_type: meetingType,
+        meeting_date: new Date().toISOString(),
+        attendee_count: attendees.length,
+        attendee_list: attendees,
+        summary: aiSummary.overall_summary,
+        key_themes: aiSummary.key_themes,
+        action_items: aiSummary.action_items,
+        key_decisions: aiSummary.key_decisions,
+        transcript: transcriptText
+      });
+
       return aiSummary;
     },
     onSuccess: (data) => {
       setSummary(data);
-      toast.success('Meeting summary generated!');
+      toast.success('Meeting summary generated and saved!');
     }
   });
 
@@ -232,6 +256,31 @@ Return a list of speaker identifiers and the number of times they spoke.`,
                       <Badge key={idx} className="bg-purple-100 text-purple-800">
                         {theme}
                       </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {summary.key_decisions?.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-blue-800 mb-2">✓ Key Decisions</h4>
+                  <ul className="space-y-1">
+                    {summary.key_decisions.map((decision, idx) => (
+                      <li key={idx} className="text-sm text-gray-700">• {decision}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {summary.action_items?.length > 0 && (
+                <div>
+                  <h4 className="font-semibold text-purple-800 mb-2">📋 Action Items</h4>
+                  <div className="space-y-2">
+                    {summary.action_items.map((item, idx) => (
+                      <div key={idx} className="p-2 bg-white/60 rounded">
+                        <p className="text-sm font-medium text-gray-900">{item.task}</p>
+                        <p className="text-xs text-gray-600">Responsible: {item.responsible}</p>
+                      </div>
                     ))}
                   </div>
                 </div>

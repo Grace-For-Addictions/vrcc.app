@@ -26,6 +26,7 @@ const navItems = [
   { name: 'Events', href: 'Events', icon: Calendar },
   { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
   { name: 'Recovery Garden', href: 'RecoveryGarden', icon: Sparkles },
+  { name: 'Gamification', href: 'Gamification', icon: Award },
   { name: 'Assessment', href: 'Assessment', icon: Compass }
 ];
 
