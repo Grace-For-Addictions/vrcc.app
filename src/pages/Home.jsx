@@ -147,8 +147,6 @@ export default function Home() {
       isNew: true
     },
     {
-
-    {
       title: 'Grant Writing Station',
       description: 'Expert AI grant writer with strategic planning and 12+ grantmakers',
       icon: Award,
