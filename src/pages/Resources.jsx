@@ -15,6 +15,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import PersonalizedRecommendations from '@/components/resources/PersonalizedRecommendations';
+import CuratedResourceLists from '@/components/resources/CuratedResourceLists';
+import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Sparkles } from 'lucide-react';
 
 const categoryIcons = {
   treatment: Stethoscope,
@@ -216,12 +221,12 @@ export default function Resources() {
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="browse">Browse Resources</TabsTrigger>
             <TabsTrigger value="personalized">
-              <Sparkles className="w-4 h-4 mr-2" />
+              <Sparkles className="w-4 h-4 mr-1" />
               For You
             </TabsTrigger>
             <TabsTrigger value="favorites">
-              <Heart className="w-4 h-4 mr-2" />
-              My Favorites
+              <Heart className="w-4 h-4 mr-1" />
+              Favorites
             </TabsTrigger>
             <TabsTrigger value="ai">AI Navigator</TabsTrigger>
           </TabsList>
