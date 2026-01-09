@@ -24,6 +24,8 @@ import RecoveryPlanAI from '@/components/ai/RecoveryPlanAI';
 import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
+import GuidedTour from '@/components/onboarding/GuidedTour';
+import PostRegistrationNudge from '@/components/onboarding/PostRegistrationNudge';
 import CommunityGardenVisual from '@/components/community/CommunityGardenVisual';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -465,11 +467,19 @@ export default function Home() {
         {/* AI Grace Chat Widget */}
         <GraceChatWidget />
 
+        {/* Guided Tour */}
+        {user && !localStorage.getItem('guidedTourCompleted') && (
+          <GuidedTour user={user} />
+        )}
+
+        {/* Post-Registration Nudges */}
+        {user && <PostRegistrationNudge user={user} />}
+
         {/* AI Features */}
         <ProactiveOutreach user={user} profile={profile} />
         <SessionAnalyzer user={user} profile={profile} />
         <GoalProgressNudges user={user} profile={profile} />
-      </div>
-    </>
-  );
-}
+        </div>
+        </>
+        );
+        }

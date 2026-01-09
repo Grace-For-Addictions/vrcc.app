@@ -13,6 +13,7 @@ import GraceChat from './pages/GraceChat';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
+import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
 import NarcanTracker from './pages/NarcanTracker';
 import Neuroplasticity from './pages/Neuroplasticity';
@@ -31,7 +32,6 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import MeetingManagement from './pages/MeetingManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -51,6 +51,7 @@ export const PAGES = {
     "GrantWriter": GrantWriter,
     "Home": Home,
     "IBHRSReporting": IBHRSReporting,
+    "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
     "NarcanTracker": NarcanTracker,
     "Neuroplasticity": Neuroplasticity,
@@ -69,7 +70,6 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "MeetingManagement": MeetingManagement,
 }
 
 export const pagesConfig = {
