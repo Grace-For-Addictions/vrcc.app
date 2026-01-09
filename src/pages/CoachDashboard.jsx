@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, AlertTriangle, MessageCircle, Target, Sparkles, Eye, Plus, Send } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -16,6 +16,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
 
 export default function CoachDashboard() {
+  const queryClient = useQueryClient();
   const [user, setUser] = useState(null);
   const [selectedMentee, setSelectedMentee] = useState(null);
   const [showGoalDialog, setShowGoalDialog] = useState(false);
