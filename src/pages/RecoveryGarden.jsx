@@ -265,6 +265,11 @@ export default function RecoveryGarden() {
           />
         </div>
 
+        {/* Growing Groups Tab */}
+        <div className="mb-8">
+          <GrowingGroups user={user} />
+        </div>
+
         {/* How to Grow */}
         <GraceCard className="mt-12">
           <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
