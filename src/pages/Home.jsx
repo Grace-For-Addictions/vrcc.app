@@ -20,6 +20,7 @@ import GoalSettingAssistant from '@/components/ai/GoalSettingAssistant';
 import SessionAnalyzer from '@/components/ai/SessionAnalyzer';
 import GoalProgressNudges from '@/components/ai/GoalProgressNudges';
 import AIRecoveryJourney from '@/components/ai/AIRecoveryJourney';
+import RecoveryPlanAI from '@/components/ai/RecoveryPlanAI';
 import DailyGraceCheckIn from '@/components/checkin/DailyGraceCheckIn';
 import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
@@ -351,6 +352,13 @@ export default function Home() {
               progress={0}
               onComplete={() => {}}
             />
+          </section>
+        )}
+
+        {/* AI Recovery Coach */}
+        {user && hasJourneyData && (
+          <section>
+            <RecoveryPlanAI user={user} />
           </section>
         )}
 

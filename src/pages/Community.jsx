@@ -14,6 +14,8 @@ import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
 import AIIcebreakers from '@/components/community/AIIcebreakers';
+import SponsorConnection from '@/components/community/SponsorConnection';
+import BiomeEnhancements from '@/components/community/BiomeEnhancements';
 import { createPageUrl } from '@/utils';
 import { Link } from 'react-router-dom';
 
@@ -187,7 +189,20 @@ function ActiveChatRoom({ room, onLeave }) {
 
 export default function Community() {
   const [activeRoom, setActiveRoom] = useState(null);
+  const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+      } catch (e) {
+        // Not logged in
+      }
+    };
+    loadUser();
+  }, []);
 
   const { data: rooms, isLoading } = useQuery({
     queryKey: ['chatRooms'],
@@ -234,15 +249,30 @@ export default function Community() {
         </motion.div>
 
         {activeRoom ? (
-          <ActiveChatRoom room={activeRoom} onLeave={handleLeaveRoom} />
+          <>
+            <ActiveChatRoom room={activeRoom} onLeave={handleLeaveRoom} />
+            
+            {/* Biome AI Enhancements */}
+            <div className="mt-6">
+              <BiomeEnhancements biomeId={activeRoom.id} user={user} />
+            </div>
+          </>
         ) : (
           <>
             <Tabs defaultValue="all" className="mb-8">
-              <TabsList className="bg-white border">
+              <TabsList className="bg-white border grid grid-cols-4">
                 <TabsTrigger value="all">All Rooms</TabsTrigger>
                 <TabsTrigger value="support">Support</TabsTrigger>
                 <TabsTrigger value="social">Social</TabsTrigger>
+                <TabsTrigger value="sponsors">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Sponsors
+                </TabsTrigger>
               </TabsList>
+
+              <TabsContent value="sponsors" className="mt-6">
+                <SponsorConnection user={user} />
+              </TabsContent>
             </Tabs>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
