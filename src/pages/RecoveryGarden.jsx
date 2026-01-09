@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import GrowingGroups from '@/components/garden/GrowingGroups';
 
 const plantTypes = {
   seed: { icon: Sprout, label: 'Seed', color: 'text-amber-600', points: 0 },

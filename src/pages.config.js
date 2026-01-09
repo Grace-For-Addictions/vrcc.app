@@ -1,6 +1,7 @@
 import AdminDashboard from './pages/AdminDashboard';
 import AdminPortal from './pages/AdminPortal';
 import Assessment from './pages/Assessment';
+import CoachDashboard from './pages/CoachDashboard';
 import CoachingLogger from './pages/CoachingLogger';
 import Community from './pages/Community';
 import CommunityWalls from './pages/CommunityWalls';
@@ -8,6 +9,7 @@ import Crisis from './pages/Crisis';
 import DailyReflection from './pages/DailyReflection';
 import DigitalEquity from './pages/DigitalEquity';
 import Events from './pages/Events';
+import Gamification from './pages/Gamification';
 import GovDashPortal from './pages/GovDashPortal';
 import GraceChat from './pages/GraceChat';
 import GrantWriter from './pages/GrantWriter';
@@ -32,8 +34,6 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import CoachDashboard from './pages/CoachDashboard';
-import Gamification from './pages/Gamification';
 import __Layout from './Layout.jsx';
 
 
@@ -41,6 +41,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AdminPortal": AdminPortal,
     "Assessment": Assessment,
+    "CoachDashboard": CoachDashboard,
     "CoachingLogger": CoachingLogger,
     "Community": Community,
     "CommunityWalls": CommunityWalls,
@@ -48,6 +49,7 @@ export const PAGES = {
     "DailyReflection": DailyReflection,
     "DigitalEquity": DigitalEquity,
     "Events": Events,
+    "Gamification": Gamification,
     "GovDashPortal": GovDashPortal,
     "GraceChat": GraceChat,
     "GrantWriter": GrantWriter,
@@ -72,8 +74,6 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "CoachDashboard": CoachDashboard,
-    "Gamification": Gamification,
 }
 
 export const pagesConfig = {

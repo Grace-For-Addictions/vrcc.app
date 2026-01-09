@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger } from
 "@/components/ui/dropdown-menu";
 import IntakeRequired from '@/components/intake/IntakeRequired';
+import MandatoryIntakeModal from '@/components/intake/MandatoryIntakeModal';
 
 const navItems = [
   { name: 'Home', href: 'Home', icon: Home },
@@ -65,7 +66,7 @@ export default function Layout({ children, currentPageName }) {
   // Block access if intake not completed
   if (user && needsIntake) {
     return (
-      <IntakeRequired 
+      <MandatoryIntakeModal
         user={user} 
         onComplete={() => {
           setNeedsIntake(false);
