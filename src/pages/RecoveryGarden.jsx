@@ -9,6 +9,8 @@ import {
 import AIPlantSuggestions from '@/components/garden/AIPlantSuggestions';
 import PlantGifting from '@/components/garden/PlantGifting';
 import CommunityGardenView from '@/components/garden/CommunityGardenView';
+import GardenLeaderboards from '@/components/garden/GardenLeaderboards';
+import UnlockableDecorations from '@/components/garden/UnlockableDecorations';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import GraceHeader from '@/components/common/GraceHeader';
@@ -247,6 +249,19 @@ export default function RecoveryGarden() {
             <PlantGifting currentUser={user} userPoints={userPoints} />
           </div>
         )}
+
+        {/* Leaderboards */}
+        <div className="mb-8">
+          <GardenLeaderboards />
+        </div>
+
+        {/* Unlockable Decorations */}
+        <div className="mb-8">
+          <UnlockableDecorations 
+            totalGifts={0} 
+            totalCommunityPoints={allProfiles.reduce((sum, p) => sum + (p.points || 0), 0)} 
+          />
+        </div>
 
         {/* How to Grow */}
         <GraceCard className="mt-12">

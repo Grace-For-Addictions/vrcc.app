@@ -147,13 +147,7 @@ export default function Home() {
       isNew: true
     },
     {
-      title: 'Community Garden Hub',
-      description: 'Gift seeds, celebrate growth, and view collective milestones',
-      icon: Flower2,
-      href: 'CommunityGardenHub',
-      color: 'green',
-      isNew: true
-    },
+
     {
       title: 'Grant Writing Station',
       description: 'Expert AI grant writer with strategic planning and 12+ grantmakers',

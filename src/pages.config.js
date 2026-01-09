@@ -3,8 +3,6 @@ import AdminPortal from './pages/AdminPortal';
 import Assessment from './pages/Assessment';
 import CoachingLogger from './pages/CoachingLogger';
 import Community from './pages/Community';
-import CommunityGardenHub from './pages/CommunityGardenHub';
-import CommunityGardens from './pages/CommunityGardens';
 import CommunityWalls from './pages/CommunityWalls';
 import Crisis from './pages/Crisis';
 import DailyReflection from './pages/DailyReflection';
@@ -42,8 +40,6 @@ export const PAGES = {
     "Assessment": Assessment,
     "CoachingLogger": CoachingLogger,
     "Community": Community,
-    "CommunityGardenHub": CommunityGardenHub,
-    "CommunityGardens": CommunityGardens,
     "CommunityWalls": CommunityWalls,
     "Crisis": Crisis,
     "DailyReflection": DailyReflection,

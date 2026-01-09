@@ -25,7 +25,7 @@ const navItems = [
   { name: 'Walls', href: 'CommunityWalls', icon: Heart },
   { name: 'Events', href: 'Events', icon: Calendar },
   { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
-  { name: 'Daily Reflection', href: 'DailyReflection', icon: Sparkles },
+  { name: 'Recovery Garden', href: 'RecoveryGarden', icon: Sparkles },
   { name: 'Assessment', href: 'Assessment', icon: Compass }
 ];
 
