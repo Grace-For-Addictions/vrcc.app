@@ -13,6 +13,7 @@ import GardenLeaderboards from '@/components/garden/GardenLeaderboards';
 import UnlockableDecorations from '@/components/garden/UnlockableDecorations';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
