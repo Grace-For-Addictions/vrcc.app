@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
+import AIMeetingSupport from '@/components/meetings/AIMeetingSupport';
 import { toast } from 'sonner';
 
 const GFARC_PRINCIPLES = [
@@ -131,9 +132,13 @@ export default function MeetingManagement() {
         />
 
         <Tabs defaultValue="upcoming" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="upcoming">Upcoming Meetings</TabsTrigger>
             <TabsTrigger value="log">Quick Log</TabsTrigger>
+            <TabsTrigger value="ai-support">
+              <Sparkles className="w-4 h-4 mr-2" />
+              AI Support
+            </TabsTrigger>
             <TabsTrigger value="history">My History</TabsTrigger>
             <TabsTrigger value="gfarc">GFARC Principles</TabsTrigger>
           </TabsList>
@@ -202,6 +207,11 @@ export default function MeetingManagement() {
                 ))
               )}
             </div>
+          </TabsContent>
+
+          {/* AI Meeting Support */}
+          <TabsContent value="ai-support">
+            <AIMeetingSupport meetingType="GFARC" />
           </TabsContent>
 
           {/* Quick Log */}
