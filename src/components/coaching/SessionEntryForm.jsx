@@ -141,18 +141,31 @@ ${aiSummary.concerns ? `FOLLOW-UP NEEDED: ${aiSummary.concerns}` : ''}
 
     setAiProcessing(true);
     try {
+      // Fetch emergency resources from database
+      const emergencyResources = await base44.entities.EmergencyResource.list('-created_date', 50);
+      const regularResources = await base44.entities.Resource.list('-created_date', 100);
+
       const suggestions = await base44.integrations.Core.InvokeLLM({
         prompt: `Analyze this coaching session and provide comprehensive resource suggestions:
 
 Session Notes: "${formData.activity_notes}"
+Participant: ${formData.contact_name}
+Days in Recovery: ${formData.days_in_recovery || 'Not specified'}
+
+Available Emergency Resources:
+${emergencyResources.map(r => `- ${r.title} (${r.resource_type}): ${r.description}`).join('\n')}
+
+Available Regular Resources (top 20):
+${regularResources.slice(0, 20).map(r => `- ${r.name} (${r.category}): ${r.description || ''}`).join('\n')}
 
 Provide:
 1. Top 3 referral types based on identified needs
-2. For each, suggest specific Iowa-based resources with rationale
-3. Identify recurring themes or patterns
-4. Suggest follow-up action items
+2. For each, match to ACTUAL resources from the lists above (use exact names)
+3. Suggest specific recovery goals based on session content
+4. Identify any crisis indicators that need EmergencyResource suggestions
+5. Suggest recovery milestones to celebrate
 
-Consider housing, employment, mental health, legal, family, healthcare, benefits, transportation needs.`,
+Consider housing, employment, mental health, legal, family, healthcare, crisis support needs.`,
         response_json_schema: {
           type: "object",
           properties: {
@@ -162,28 +175,41 @@ Consider housing, employment, mental health, legal, family, healthcare, benefits
                 type: "object",
                 properties: {
                   referral_type: { type: "string" },
-                  specific_resource: { type: "string" },
+                  matched_resource: { type: "string" },
                   rationale: { type: "string" }
                 }
               }
             },
-            recurring_themes: { type: "array", items: { type: "string" } },
-            action_items: { type: "array", items: { type: "string" } }
+            suggested_goals: { type: "array", items: { type: "string" } },
+            recovery_milestones: { type: "array", items: { type: "string" } },
+            emergency_needs: { type: "array", items: { type: "string" } },
+            recurring_themes: { type: "array", items: { type: "string" } }
           }
         }
       });
 
-      const message = `🔍 AI Resource Analysis:\n\n` +
+      // Auto-populate goal field if suggested
+      if (suggestions.suggested_goals?.length > 0 && !formData.personal_goal) {
+        setFormData({
+          ...formData,
+          personal_goal: suggestions.suggested_goals[0],
+          goal_set: true
+        });
+      }
+
+      const message = `🔍 AI Resource & Goal Analysis:\n\n` +
         `SUGGESTED REFERRALS:\n` +
         suggestions.referral_suggestions.map((s, i) => 
-          `${i + 1}. ${s.referral_type}\n   Resource: ${s.specific_resource}\n   Why: ${s.rationale}`
+          `${i + 1}. ${s.referral_type}\n   Resource: ${s.matched_resource}\n   Why: ${s.rationale}`
         ).join('\n\n') +
-        `\n\nRECURRING THEMES:\n` +
-        suggestions.recurring_themes.map((t, i) => `• ${t}`).join('\n') +
-        `\n\nACTION ITEMS:\n` +
-        suggestions.action_items.map((a, i) => `${i + 1}. ${a}`).join('\n');
+        (suggestions.suggested_goals?.length > 0 ? `\n\n📋 SUGGESTED GOALS:\n${suggestions.suggested_goals.map((g, i) => `${i + 1}. ${g}`).join('\n')}` : '') +
+        (suggestions.recovery_milestones?.length > 0 ? `\n\n🎉 MILESTONES TO CELEBRATE:\n${suggestions.recovery_milestones.map((m, i) => `• ${m}`).join('\n')}` : '') +
+        (suggestions.emergency_needs?.length > 0 ? `\n\n⚠️ CRISIS SUPPORT NEEDED:\n${suggestions.emergency_needs.map((e, i) => `• ${e}`).join('\n')}` : '') +
+        `\n\n💡 RECURRING THEMES:\n` +
+        suggestions.recurring_themes.map((t, i) => `• ${t}`).join('\n');
 
       alert(message);
+      toast.success('Goal auto-filled from AI suggestion!');
     } catch (error) {
       toast.error('Failed to generate suggestions');
     } finally {

@@ -31,6 +31,7 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import MeetingManagement from './pages/MeetingManagement';
 import __Layout from './Layout.jsx';
 
 
@@ -68,6 +69,7 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
+    "MeetingManagement": MeetingManagement,
 }
 
 export const pagesConfig = {

@@ -174,7 +174,7 @@ export default function Resources() {
   const [county, setCounty] = useState('all');
   const [selectedResource, setSelectedResource] = useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
@@ -213,12 +213,17 @@ export default function Resources() {
         />
 
         <Tabs defaultValue="browse" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="browse">Browse Resources</TabsTrigger>
-            <TabsTrigger value="ai">
+            <TabsTrigger value="personalized">
               <Sparkles className="w-4 h-4 mr-2" />
-              AI Navigator
+              For You
             </TabsTrigger>
+            <TabsTrigger value="favorites">
+              <Heart className="w-4 h-4 mr-2" />
+              My Favorites
+            </TabsTrigger>
+            <TabsTrigger value="ai">AI Navigator</TabsTrigger>
           </TabsList>
 
           <TabsContent value="browse" className="space-y-6">
@@ -299,6 +304,14 @@ export default function Resources() {
                 <p className="text-gray-500 mt-1">Try adjusting your search or filters</p>
               </GraceCard>
             )}
+          </TabsContent>
+
+          <TabsContent value="personalized">
+            <PersonalizedRecommendations user={user} />
+          </TabsContent>
+
+          <TabsContent value="favorites">
+            <CuratedResourceLists user={user} isCoach={user?.role === 'admin'} />
           </TabsContent>
 
           <TabsContent value="ai">
