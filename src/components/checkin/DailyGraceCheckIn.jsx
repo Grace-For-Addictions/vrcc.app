@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useBeepurpleLogger, ACTIVITY_TYPES } from '@/components/beepurple/BeepurpleActivityLogger';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';
 import { motion, AnimatePresence } from 'framer-motion';
