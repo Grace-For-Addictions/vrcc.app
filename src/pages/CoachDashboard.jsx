@@ -106,6 +106,43 @@ export default function CoachDashboard() {
     }
   });
 
+  const { data: aiCoachingPrompts } = useQuery({
+    queryKey: ['aiCoachingPrompts', user?.email],
+    queryFn: async () => {
+      const prompts = await Promise.all(
+        myMentees.slice(0, 5).map(async (connection) => {
+          const activity = menteeActivity.find(a => a.mentee_email === connection.mentee_email);
+          const insights = menteeInsights.find(m => m.mentee_email === connection.mentee_email)?.insights || [];
+          
+          if (!activity || insights.length === 0) return null;
+
+          const prompt = await base44.integrations.Core.InvokeLLM({
+            prompt: `Generate a personalized coaching prompt for a peer recovery coach:
+
+Mentee: ${connection.mentee_email}
+Recent check-ins: ${activity.recent_check_ins}
+Recent meetings: ${activity.recent_meetings}
+BARC trend: ${activity.barc_trend > 0 ? 'improving' : activity.barc_trend < 0 ? 'declining' : 'stable'}
+Recent insights: ${insights.slice(0, 2).map(i => i.title).join(', ')}
+
+Provide a warm, actionable coaching prompt for the coach to use in next session (2-3 sentences).
+Use strengths-based, neuroplasticity-focused language.`,
+            add_context_from_internet: false
+          });
+
+          return {
+            mentee_email: connection.mentee_email,
+            prompt
+          };
+        })
+      );
+      
+      return prompts.filter(Boolean);
+    },
+    enabled: !!user && myMentees.length > 0 && menteeActivity.length > 0,
+    initialData: []
+  });
+
   const { data: menteeActivity } = useQuery({
     queryKey: ['menteeActivity', user?.email],
     queryFn: async () => {
@@ -217,6 +254,24 @@ export default function CoachDashboard() {
           </TabsList>
 
           {/* Overview */}
+          {/* AI Coaching Prompts */}
+          {aiCoachingPrompts.length > 0 && (
+            <GraceCard className="mb-6 bg-gradient-to-br from-purple-50 to-pink-50 border-2 border-purple-200">
+              <h3 className="text-lg font-bold text-purple-900 mb-4 flex items-center gap-2">
+                <Sparkles className="w-6 h-6" />
+                AI Coaching Prompts - Ready for Your Next Session
+              </h3>
+              <div className="space-y-3">
+                {aiCoachingPrompts.map((item, idx) => (
+                  <div key={idx} className="p-4 bg-white rounded-lg border border-purple-200">
+                    <p className="font-medium text-gray-900 mb-2">{item.mentee_email}</p>
+                    <p className="text-sm text-gray-700 italic">"{item.prompt}"</p>
+                  </div>
+                ))}
+              </div>
+            </GraceCard>
+          )}
+
           <TabsContent value="overview">
             <div className="space-y-4">
               {myMentees.length === 0 ? (
