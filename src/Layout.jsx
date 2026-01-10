@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useBeepurpleSync } from '@/components/beepurple/BeepurpleSync';
 import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import { base44 } from '@/api/base44Client';
@@ -38,6 +39,7 @@ const adminNavItems = [
 
 
 export default function Layout({ children, currentPageName }) {
+  useBeepurpleSync(); // Enable bidirectional Beepurple sync
   const [user, setUser] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [needsIntake, setNeedsIntake] = useState(false);

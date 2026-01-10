@@ -20,6 +20,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
   const [generating, setGenerating] = useState(false);
   const [aiResponse, setAiResponse] = useState(null);
   
+  const { logActivity, LoggerComponent } = useBeepurpleLogger();
   const queryClient = useQueryClient();
 
   const { data: todayCheckIn } = useQuery({
@@ -147,7 +148,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
 
       setAiResponse(ai);
 
-      await base44.entities.DailyCheckIn.create({
+      const checkInData = {
         time_mode: timeMode,
         mood_score: formData.mood_score,
         mood_note: formData.mood_note,
@@ -164,6 +165,15 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
         ai_affirmation: ai.affirmation,
         ai_intention: ai.daily_intention,
         ai_suggestions: ai.suggestions
+      };
+
+      await base44.entities.DailyCheckIn.create(checkInData);
+
+      // Log to Beepurple 5CRM
+      await logActivity(ACTIVITY_TYPES.DAILY_CHECK_IN, {
+        mood: formData.mood_score,
+        craving_level: formData.craving_intensity,
+        recovery_capital_snapshot: formData.barc_snapshot
       });
 
       setGenerating(false);
@@ -513,6 +523,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
           )}
         </GraceCard>
       </motion.div>
+      <LoggerComponent />
     </AnimatePresence>
   );
 }
