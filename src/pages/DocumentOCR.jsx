@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import RoleGuard from '@/components/navigation/RoleGuard';
 import { useMutation } from '@tanstack/react-query';
 import { Upload, FileText, CheckCircle, AlertCircle, Loader2, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -116,6 +117,7 @@ export default function DocumentOCR() {
   };
 
   return (
+    <RoleGuard allowedRoles={['program_staff']} pageName="Document OCR">
     <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
       <div className="max-w-4xl mx-auto px-4 py-8">
         <GraceHeader
@@ -260,5 +262,6 @@ export default function DocumentOCR() {
         </div>
       </div>
     </div>
+    </RoleGuard>
   );
 }

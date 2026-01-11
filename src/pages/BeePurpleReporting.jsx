@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
+import RoleGuard from '@/components/navigation/RoleGuard';
 import { useQuery } from '@tanstack/react-query';
 import { BarChart, Bar, LineChart, Line, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { BarChart3, Download, Filter, TrendingUp, Users, Activity } from 'lucide-react';
@@ -119,6 +120,7 @@ export default function BeePurpleReporting() {
   };
 
   return (
+    <RoleGuard allowedRoles={['program_staff']} pageName="BeePurple Analytics & Reporting">
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <GraceHeader
@@ -280,5 +282,6 @@ export default function BeePurpleReporting() {
         </Tabs>
       </div>
     </div>
+    </RoleGuard>
   );
 }

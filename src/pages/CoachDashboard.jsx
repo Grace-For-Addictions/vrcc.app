@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
+import RoleGuard from '@/components/navigation/RoleGuard';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, AlertTriangle, MessageCircle, Target, Sparkles, Eye, Plus, Send } from 'lucide-react';
@@ -180,6 +181,7 @@ Use strengths-based, neuroplasticity-focused language.`,
   );
 
   return (
+    <RoleGuard allowedRoles={['peer_support', 'coach']} pageName="Coach Dashboard">
     <div className="min-h-screen bg-gradient-to-b from-blue-50 to-white">
       <div className="max-w-7xl mx-auto px-4 py-8">
         <GraceHeader
@@ -625,5 +627,6 @@ Use strengths-based, neuroplasticity-focused language.`,
         </Tabs>
       </div>
     </div>
+    </RoleGuard>
   );
 }
