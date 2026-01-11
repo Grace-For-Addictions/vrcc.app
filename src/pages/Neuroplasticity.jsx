@@ -9,6 +9,8 @@ import { Progress } from '@/components/ui/progress';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
+import { base44 } from '@/api/base44Client';
+import ReadinessGate from '@/components/navigation/ReadinessGate';
 
 const brainFacts = [
 {
@@ -246,10 +248,53 @@ function BrainQuiz() {
 
 export default function Neuroplasticity() {
   const [completedExercises, setCompletedExercises] = useState([]);
+  const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const currentUser = await base44.auth.me();
+        setUser(currentUser);
+        const profiles = await base44.entities.UserProfile.filter({ created_by: currentUser.email });
+        setProfile(profiles[0] || null);
+      } catch (e) {
+        // Not logged in - allow public access
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadUser();
+  }, []);
 
   const handleCompleteExercise = (exercise) => {
     setCompletedExercises((prev) => [...prev, exercise.id]);
   };
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <Brain className="w-12 h-12 mx-auto text-purple-600 animate-pulse mb-4" />
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Readiness gate for logged-in participants
+  if (user && profile && (profile.readiness_level < 3 || !profile.consent_acknowledged)) {
+    return (
+      <ReadinessGate 
+        requiredLevel={3}
+        currentLevel={profile.readiness_level}
+        hasConsent={profile.consent_acknowledged}
+        featureName="Brain Science & Transformation Hub"
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
