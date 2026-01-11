@@ -239,7 +239,12 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
           {!isOpen && !aiResponse && (
             <motion.div layout>
               <Button 
-                onClick={() => setIsOpen(true)}
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setIsOpen(true);
+                }}
                 className="w-full bg-teal-600 hover:bg-teal-700"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
