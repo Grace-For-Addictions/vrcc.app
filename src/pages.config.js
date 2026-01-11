@@ -37,6 +37,7 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import StaffSOPs from './pages/StaffSOPs';
 import __Layout from './Layout.jsx';
 
 
@@ -80,6 +81,7 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
+    "StaffSOPs": StaffSOPs,
 }
 
 export const pagesConfig = {
