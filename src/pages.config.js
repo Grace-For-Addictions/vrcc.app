@@ -1,6 +1,7 @@
 import AdminDashboard from './pages/AdminDashboard';
 import AdminPortal from './pages/AdminPortal';
 import Assessment from './pages/Assessment';
+import BeePurpleReporting from './pages/BeePurpleReporting';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachingLogger from './pages/CoachingLogger';
 import Community from './pages/Community';
@@ -8,6 +9,7 @@ import CommunityWalls from './pages/CommunityWalls';
 import Crisis from './pages/Crisis';
 import DailyReflection from './pages/DailyReflection';
 import DigitalEquity from './pages/DigitalEquity';
+import DocumentOCR from './pages/DocumentOCR';
 import Events from './pages/Events';
 import Gamification from './pages/Gamification';
 import GovDashPortal from './pages/GovDashPortal';
@@ -35,8 +37,6 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import DocumentOCR from './pages/DocumentOCR';
-import BeePurpleReporting from './pages/BeePurpleReporting';
 import __Layout from './Layout.jsx';
 
 
@@ -44,6 +44,7 @@ export const PAGES = {
     "AdminDashboard": AdminDashboard,
     "AdminPortal": AdminPortal,
     "Assessment": Assessment,
+    "BeePurpleReporting": BeePurpleReporting,
     "CoachDashboard": CoachDashboard,
     "CoachingLogger": CoachingLogger,
     "Community": Community,
@@ -51,6 +52,7 @@ export const PAGES = {
     "Crisis": Crisis,
     "DailyReflection": DailyReflection,
     "DigitalEquity": DigitalEquity,
+    "DocumentOCR": DocumentOCR,
     "Events": Events,
     "Gamification": Gamification,
     "GovDashPortal": GovDashPortal,
@@ -78,8 +80,6 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "DocumentOCR": DocumentOCR,
-    "BeePurpleReporting": BeePurpleReporting,
 }
 
 export const pagesConfig = {

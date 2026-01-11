@@ -19,6 +19,7 @@ import {
 "@/components/ui/dropdown-menu";
 import IntakeRequired from '@/components/intake/IntakeRequired';
 import MandatoryIntakeModal from '@/components/intake/MandatoryIntakeModal';
+import { getRoleNavItems } from '@/components/navigation/RoleBasedNav';
 
 const navItems = [
   { name: 'Home', href: 'Home', icon: Home },
@@ -41,8 +42,10 @@ const adminNavItems = [
 export default function Layout({ children, currentPageName }) {
   useBeepurpleSync(); // Enable bidirectional Beepurple sync
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [needsIntake, setNeedsIntake] = useState(false);
+  const [allowedNav, setAllowedNav] = useState({ show: [], hide: [] });
 
   useEffect(() => {
     const loadUser = async () => {
@@ -50,12 +53,27 @@ export default function Layout({ children, currentPageName }) {
         const currentUser = await base44.auth.me();
         setUser(currentUser);
         
+        // Load profile for readiness gating
+        const profiles = await base44.entities.UserProfile.filter({ created_by: currentUser.email });
+        const userProfile = profiles[0] || null;
+        setProfile(userProfile);
+        
+        // Calculate allowed navigation
+        const nav = getRoleNavItems(
+          currentUser.user_role,
+          currentUser.role === 'admin',
+          userProfile?.readiness_level || 1,
+          userProfile?.consent_acknowledged || false
+        );
+        setAllowedNav(nav);
+        
         // Check if intake is required
         if (!currentUser.intake_completed) {
           setNeedsIntake(true);
         }
       } catch (e) {
-        // Not logged in
+        // Not logged in - show public nav
+        setAllowedNav(getRoleNavItems(null, false));
       }
     };
     loadUser();
@@ -106,7 +124,10 @@ export default function Layout({ children, currentPageName }) {
 
             {/* Desktop Nav */}
             <nav className="hidden lg:flex items-center gap-1">
-              {navItems.map((item) =>
+              {navItems
+                .filter(item => allowedNav.show === 'ALL' || 
+                               (allowedNav.show.includes(item.href) && !allowedNav.hide.includes(item.href)))
+                .map((item) =>
               <Link
                 key={item.name}
                 to={createPageUrl(item.href)}
@@ -121,7 +142,10 @@ export default function Layout({ children, currentPageName }) {
                 </Link>
               )}
 
-              {user?.role === 'admin' && adminNavItems.map((item) =>
+              {(user?.role === 'admin' || user?.user_role === 'administrator' || user?.user_role === 'executive') && 
+               adminNavItems
+                .filter(item => allowedNav.show === 'ALL' || allowedNav.show.includes(item.href))
+                .map((item) =>
               <Link
                 key={item.name}
                 to={createPageUrl(item.href)}
@@ -220,7 +244,10 @@ export default function Layout({ children, currentPageName }) {
             className="lg:hidden border-t border-gray-100 bg-white">
 
               <nav className="px-4 py-4 space-y-1">
-                {navItems.map((item) =>
+                {navItems
+                  .filter(item => allowedNav.show === 'ALL' || 
+                                 (allowedNav.show.includes(item.href) && !allowedNav.hide.includes(item.href)))
+                  .map((item) =>
               <Link
                 key={item.name}
                 to={createPageUrl(item.href)}
