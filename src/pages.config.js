@@ -18,6 +18,7 @@ import IBHRSReporting from './pages/IBHRSReporting';
 import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
 import NarcanTracker from './pages/NarcanTracker';
+import NavigatorDashboard from './pages/NavigatorDashboard';
 import Neuroplasticity from './pages/Neuroplasticity';
 import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
 import PeerCoachTraining from './pages/PeerCoachTraining';
@@ -34,7 +35,8 @@ import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import NavigatorDashboard from './pages/NavigatorDashboard';
+import DocumentOCR from './pages/DocumentOCR';
+import BeePurpleReporting from './pages/BeePurpleReporting';
 import __Layout from './Layout.jsx';
 
 
@@ -59,6 +61,7 @@ export const PAGES = {
     "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
     "NarcanTracker": NarcanTracker,
+    "NavigatorDashboard": NavigatorDashboard,
     "Neuroplasticity": Neuroplasticity,
     "PeerCoachAnalytics": PeerCoachAnalytics,
     "PeerCoachTraining": PeerCoachTraining,
@@ -75,7 +78,8 @@ export const PAGES = {
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "NavigatorDashboard": NavigatorDashboard,
+    "DocumentOCR": DocumentOCR,
+    "BeePurpleReporting": BeePurpleReporting,
 }
 
 export const pagesConfig = {
