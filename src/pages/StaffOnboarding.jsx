@@ -13,6 +13,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
+import { createPageUrl } from '@/utils';
 
 const STEPS = [
   { id: 'welcome', title: 'Welcome & Orientation', icon: BookOpen },
@@ -619,7 +620,7 @@ export default function StaffOnboarding() {
       });
 
       toast.success('Onboarding completed successfully! Welcome to the team 💚');
-      window.location.href = '/';
+      window.location.href = createPageUrl('Home');
     } catch (error) {
       toast.error('Failed to complete onboarding. Please try again.');
     } finally {
