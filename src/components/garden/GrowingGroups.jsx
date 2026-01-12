@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { motion } from 'framer-motion';
-import { Users, Plus, Send, Heart, Search, Lock } from 'lucide-react';
+import { Users, Plus, Send, Heart, Search, Lock, Settings, UserPlus, Mail, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,6 +16,9 @@ export default function GrowingGroups({ user }) {
   const queryClient = useQueryClient();
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [fertilizerRecipient, setFertilizerRecipient] = useState(null);
+  const [editingGroup, setEditingGroup] = useState(null);
+  const [inviteEmail, setInviteEmail] = useState('');
+  const [inviteGroup, setInviteGroup] = useState(null);
 
   const { data: groups } = useQuery({
     queryKey: ['growingGroups'],
@@ -77,6 +80,52 @@ export default function GrowingGroups({ user }) {
     onSuccess: () => {
       toast.success('Gift sent! 🎁');
       setFertilizerRecipient(null);
+    }
+  });
+
+  const updateGroup = useMutation({
+    mutationFn: ({ groupId, data }) => base44.entities.GrowingGroup.update(groupId, data),
+    onSuccess: () => {
+      queryClient.invalidateQueries(['growingGroups']);
+      queryClient.invalidateQueries(['myGroups']);
+      toast.success('Group updated! ✅');
+      setEditingGroup(null);
+    }
+  });
+
+  const inviteToGroup = useMutation({
+    mutationFn: async ({ group, email }) => {
+      const existingMembers = group.member_emails || [];
+      if (existingMembers.includes(email)) {
+        throw new Error('User is already a member');
+      }
+      return base44.entities.GrowingGroup.update(group.id, {
+        member_emails: [...existingMembers, email]
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['growingGroups']);
+      queryClient.invalidateQueries(['myGroups']);
+      toast.success('Invitation sent! 📧');
+      setInviteEmail('');
+      setInviteGroup(null);
+    },
+    onError: (error) => {
+      toast.error(error.message || 'Failed to send invite');
+    }
+  });
+
+  const removeMember = useMutation({
+    mutationFn: ({ group, email }) => {
+      const updatedMembers = (group.member_emails || []).filter(m => m !== email);
+      return base44.entities.GrowingGroup.update(group.id, {
+        member_emails: updatedMembers
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['growingGroups']);
+      queryClient.invalidateQueries(['myGroups']);
+      toast.success('Member removed');
     }
   });
 
@@ -211,21 +260,41 @@ export default function GrowingGroups({ user }) {
           <div className="space-y-3">
             {myGroups.map((group) => {
               const type = groupTypes[group.group_type];
+              const isCreator = group.created_by === user.email;
               return (
                 <div key={group.id} className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-3 flex-1">
                       <span className="text-3xl">{type.icon}</span>
-                      <div>
+                      <div className="flex-1">
                         <h4 className="font-medium text-gray-900">{group.group_name}</h4>
                         <p className="text-sm text-gray-600">{group.description}</p>
                         <div className="flex items-center gap-2 mt-2">
                           <Badge variant="outline">{group.member_emails?.length || 1} members</Badge>
                           <Badge variant="outline">{group.biome_type.replace(/_/g, ' ')}</Badge>
                           {group.is_private && <Lock className="w-3 h-3 text-gray-400" />}
+                          {isCreator && <Badge className="bg-purple-600">Creator</Badge>}
                         </div>
                       </div>
                     </div>
+                    {isCreator && (
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setInviteGroup(group)}
+                        >
+                          <UserPlus className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setEditingGroup({ ...group })}
+                        >
+                          <Settings className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               );
@@ -272,6 +341,134 @@ export default function GrowingGroups({ user }) {
           })}
         </div>
       </GraceCard>
+
+      {/* Edit Group Dialog */}
+      <Dialog open={!!editingGroup} onOpenChange={() => setEditingGroup(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Edit Group</DialogTitle>
+          </DialogHeader>
+          {editingGroup && (
+            <div className="space-y-4">
+              <Input
+                placeholder="Group name..."
+                value={editingGroup.group_name}
+                onChange={(e) => setEditingGroup({ ...editingGroup, group_name: e.target.value })}
+              />
+              <Select 
+                value={editingGroup.group_type} 
+                onValueChange={(v) => setEditingGroup({ ...editingGroup, group_type: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Group type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.entries(groupTypes).map(([key, { icon }]) => (
+                    <SelectItem key={key} value={key}>
+                      {icon} {key.replace(/_/g, ' ')}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select 
+                value={editingGroup.biome_type} 
+                onValueChange={(v) => setEditingGroup({ ...editingGroup, biome_type: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Biome" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="compassion_grove">🌳 Compassion Grove</SelectItem>
+                  <SelectItem value="hope_meadow">🌾 Hope Meadow</SelectItem>
+                  <SelectItem value="serenity_spring">💧 Serenity Spring</SelectItem>
+                  <SelectItem value="resilience_forest">🌲 Resilience Forest</SelectItem>
+                  <SelectItem value="faith_garden">✨ Faith Garden</SelectItem>
+                </SelectContent>
+              </Select>
+              <Textarea
+                placeholder="Group description..."
+                value={editingGroup.description || ''}
+                onChange={(e) => setEditingGroup({ ...editingGroup, description: e.target.value })}
+                rows={3}
+              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={editingGroup.is_private}
+                  onChange={(e) => setEditingGroup({ ...editingGroup, is_private: e.target.checked })}
+                  className="rounded"
+                />
+                <label className="text-sm text-gray-700">Private group (invite only)</label>
+              </div>
+
+              <div className="border-t pt-4">
+                <h4 className="font-medium text-gray-900 mb-3">Members ({editingGroup.member_emails?.length || 0})</h4>
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {(editingGroup.member_emails || []).map((email) => (
+                    <div key={email} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <span className="text-sm text-gray-700">{email}</span>
+                      {email !== editingGroup.created_by && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => removeMember.mutate({ group: editingGroup, email })}
+                        >
+                          <X className="w-4 h-4 text-red-600" />
+                        </Button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <Button
+                onClick={() => updateGroup.mutate({ 
+                  groupId: editingGroup.id, 
+                  data: {
+                    group_name: editingGroup.group_name,
+                    group_type: editingGroup.group_type,
+                    biome_type: editingGroup.biome_type,
+                    description: editingGroup.description,
+                    is_private: editingGroup.is_private
+                  }
+                })}
+                disabled={!editingGroup.group_name}
+                className="w-full bg-teal-600 hover:bg-teal-700"
+              >
+                Save Changes
+              </Button>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
+      {/* Invite to Group Dialog */}
+      <Dialog open={!!inviteGroup} onOpenChange={() => { setInviteGroup(null); setInviteEmail(''); }}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Invite to {inviteGroup?.group_name}</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <p className="text-sm text-gray-600">
+              Enter the email address of the person you'd like to invite to this group.
+            </p>
+            <Input
+              type="email"
+              placeholder="friend@example.com"
+              value={inviteEmail}
+              onChange={(e) => setInviteEmail(e.target.value)}
+            />
+            <Button
+              onClick={() => inviteToGroup.mutate({ group: inviteGroup, email: inviteEmail })}
+              disabled={!inviteEmail || !inviteEmail.includes('@')}
+              className="w-full bg-blue-600 hover:bg-blue-700"
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Send Invite
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Send Fertilizer Dialog */}
       <Dialog open={!!fertilizerRecipient} onOpenChange={() => setFertilizerRecipient(null)}>
