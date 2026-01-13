@@ -505,77 +505,79 @@ export default function AdminDashboard() {
         </Tabs>
 
         {/* Stakeholder Insights */}
-        <GraceCard className="mt-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Award className="w-6 h-6 text-purple-600" />
-            Key Outcomes for Stakeholders
-          </h3>
-          <p className="text-sm text-gray-600 mb-6">
-            Critical metrics for grant makers, legislators, state/federal officials, and community partners
-          </p>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-              <h4 className="font-semibold text-blue-900 mb-2">Community Reach</h4>
-              <p className="text-3xl font-bold text-blue-700">{stats.totalUsers}</p>
-              <p className="text-sm text-blue-600 mt-1">Unique participants served</p>
-            </div>
-
-            <div className="p-4 bg-green-50 rounded-lg border border-green-200">
-              <h4 className="font-semibold text-green-900 mb-2">Sustained Engagement</h4>
-              <p className="text-3xl font-bold text-green-700">{stats.avgStreak} days</p>
-              <p className="text-sm text-green-600 mt-1">Average user retention streak</p>
-            </div>
-
-            <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-              <h4 className="font-semibold text-purple-900 mb-2">Recovery Capital Growth</h4>
-              <p className="text-3xl font-bold text-purple-700">{stats.rccImprovementRate}%</p>
-              <p className="text-sm text-purple-600 mt-1">Users showing RCC improvement</p>
-            </div>
-
-            <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
-              <h4 className="font-semibold text-teal-900 mb-2">Peer Support Delivered</h4>
-              <p className="text-3xl font-bold text-teal-700">{stats.totalCoachingSessions}</p>
-              <p className="text-sm text-teal-600 mt-1">One-on-one coaching sessions</p>
-            </div>
-
-            <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <h4 className="font-semibold text-amber-900 mb-2">Crisis Prevention</h4>
-              <p className="text-3xl font-bold text-amber-700">24/7</p>
-              <p className="text-sm text-amber-600 mt-1">AI Grace availability + peer network</p>
-            </div>
-
-            <div className="p-4 bg-rose-50 rounded-lg border border-rose-200">
-              <h4 className="font-semibold text-rose-900 mb-2">Resource Navigation</h4>
-              <p className="text-3xl font-bold text-rose-700">{stats.resourcesNavigated}</p>
-              <p className="text-sm text-rose-600 mt-1">Resources accessed across Iowa</p>
-            </div>
-
-            <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
-              <h4 className="font-semibold text-indigo-900 mb-2">Community Building</h4>
-              <p className="text-3xl font-bold text-indigo-700">{stats.messagesLastWeek}</p>
-              <p className="text-sm text-indigo-600 mt-1">Peer connections in last 7 days</p>
-            </div>
-
-            <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-              <h4 className="font-semibold text-emerald-900 mb-2">Virtual Meeting Reach</h4>
-              <p className="text-3xl font-bold text-emerald-700">{stats.gfarcMeetingAttendance}</p>
-              <p className="text-sm text-emerald-600 mt-1">Total GFARC participants</p>
-            </div>
-
-            <div className="p-4 bg-violet-50 rounded-lg border border-violet-200">
-              <h4 className="font-semibold text-violet-900 mb-2">Cost Effectiveness</h4>
-              <p className="text-3xl font-bold text-violet-700">$0</p>
-              <p className="text-sm text-violet-600 mt-1">Participant fees - 100% free</p>
-            </div>
-          </div>
-
-          <div className="mt-6 p-4 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-lg">
-            <p className="text-sm text-gray-800">
-              <strong>Platform Impact:</strong> Grace For Addictions provides statewide, 24/7 peer-led recovery support with zero barriers to access. Powered by AI and neuroplasticity-informed design, the platform demonstrates measurable improvements in recovery capital, sustained engagement, and community connection across all 99 Iowa counties.
+        <div className="mt-8">
+          <GraceCard>
+            <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+              <Award className="w-6 h-6 text-purple-600" />
+              Key Outcomes for Stakeholders
+            </h3>
+            <p className="text-sm text-gray-600 mb-6">
+              Critical metrics for grant makers, legislators, state/federal officials, and community partners
             </p>
-          </div>
-        </GraceCard>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h4 className="font-semibold text-blue-900 mb-2">Community Reach</h4>
+                <p className="text-3xl font-bold text-blue-700">{stats.totalUsers}</p>
+                <p className="text-sm text-blue-600 mt-1">Unique participants served</p>
+              </div>
+
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <h4 className="font-semibold text-green-900 mb-2">Sustained Engagement</h4>
+                <p className="text-3xl font-bold text-green-700">{stats.avgStreak} days</p>
+                <p className="text-sm text-green-600 mt-1">Average user retention streak</p>
+              </div>
+
+              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <h4 className="font-semibold text-purple-900 mb-2">Recovery Capital Growth</h4>
+                <p className="text-3xl font-bold text-purple-700">{stats.rccImprovementRate}%</p>
+                <p className="text-sm text-purple-600 mt-1">Users showing RCC improvement</p>
+              </div>
+
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <h4 className="font-semibold text-teal-900 mb-2">Peer Support Delivered</h4>
+                <p className="text-3xl font-bold text-teal-700">{stats.totalCoachingSessions}</p>
+                <p className="text-sm text-teal-600 mt-1">One-on-one coaching sessions</p>
+              </div>
+
+              <div className="p-4 bg-amber-50 rounded-lg border border-amber-200">
+                <h4 className="font-semibold text-amber-900 mb-2">Crisis Prevention</h4>
+                <p className="text-3xl font-bold text-amber-700">24/7</p>
+                <p className="text-sm text-amber-600 mt-1">AI Grace availability + peer network</p>
+              </div>
+
+              <div className="p-4 bg-rose-50 rounded-lg border border-rose-200">
+                <h4 className="font-semibold text-rose-900 mb-2">Resource Navigation</h4>
+                <p className="text-3xl font-bold text-rose-700">{stats.resourcesNavigated}</p>
+                <p className="text-sm text-rose-600 mt-1">Resources accessed across Iowa</p>
+              </div>
+
+              <div className="p-4 bg-indigo-50 rounded-lg border border-indigo-200">
+                <h4 className="font-semibold text-indigo-900 mb-2">Community Building</h4>
+                <p className="text-3xl font-bold text-indigo-700">{stats.messagesLastWeek}</p>
+                <p className="text-sm text-indigo-600 mt-1">Peer connections in last 7 days</p>
+              </div>
+
+              <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                <h4 className="font-semibold text-emerald-900 mb-2">Virtual Meeting Reach</h4>
+                <p className="text-3xl font-bold text-emerald-700">{stats.gfarcMeetingAttendance}</p>
+                <p className="text-sm text-emerald-600 mt-1">Total GFARC participants</p>
+              </div>
+
+              <div className="p-4 bg-violet-50 rounded-lg border border-violet-200">
+                <h4 className="font-semibold text-violet-900 mb-2">Cost Effectiveness</h4>
+                <p className="text-3xl font-bold text-violet-700">$0</p>
+                <p className="text-sm text-violet-600 mt-1">Participant fees - 100% free</p>
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-200 rounded-lg">
+              <p className="text-sm text-gray-800">
+                <strong>Platform Impact:</strong> Grace For Addictions provides statewide, 24/7 peer-led recovery support with zero barriers to access. Powered by AI and neuroplasticity-informed design, the platform demonstrates measurable improvements in recovery capital, sustained engagement, and community connection across all 99 Iowa counties.
+              </p>
+            </div>
+          </GraceCard>
+        </div>
 
         {/* Custom Reports */}
         <TabsContent value="reports">
