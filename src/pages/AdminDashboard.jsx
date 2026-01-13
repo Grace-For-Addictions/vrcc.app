@@ -14,6 +14,9 @@ import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import CareAlertMonitor from '@/components/rbac/CareAlertMonitor';
 import TooltipWrapper from '@/components/rbac/TooltipWrapper';
+import AdvancedPredictiveAnalytics from '@/components/ai/AdvancedPredictiveAnalytics';
+import CustomReportBuilder from '@/components/admin/CustomReportBuilder';
+import ResourceDensityAnalytics from '@/components/admin/ResourceDensityAnalytics';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -489,6 +492,16 @@ export default function AdminDashboard() {
               </div>
             </GraceCard>
           </TabsContent>
+
+          {/* Custom Reports */}
+          <TabsContent value="reports">
+            <CustomReportBuilder />
+          </TabsContent>
+
+          {/* Resource Gap Analysis */}
+          <TabsContent value="resources">
+            <ResourceDensityAnalytics />
+          </TabsContent>
         </Tabs>
 
         {/* Stakeholder Insights */}
@@ -577,20 +590,20 @@ export default function AdminDashboard() {
 
         {/* A/B Testing Section */}
         <GraceCard className="mt-8">
-        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-          <Zap className="w-6 h-6 text-amber-500" />
-          A/B Testing & Experimentation
-        </h3>
-        <p className="text-gray-600 mb-4">
-          Test new features, content recommendations, and AI prompts to improve participant experience.
-        </p>
-        <div className="p-6 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg text-center">
-          <Eye className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-          <p className="text-gray-600">A/B testing dashboard coming soon</p>
-          <p className="text-sm text-gray-500 mt-1">
-            Will enable testing of AI prompts, UI variations, and content strategies
+          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+            <Zap className="w-6 h-6 text-amber-500" />
+            A/B Testing & Experimentation
+          </h3>
+          <p className="text-gray-600 mb-4">
+            Test new features, content recommendations, and AI prompts to improve participant experience.
           </p>
-        </div>
+          <div className="p-6 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg text-center">
+            <Eye className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+            <p className="text-gray-600">A/B testing dashboard coming soon</p>
+            <p className="text-sm text-gray-500 mt-1">
+              Will enable testing of AI prompts, UI variations, and content strategies
+            </p>
+          </div>
         </GraceCard>
       </div>
     </div>
