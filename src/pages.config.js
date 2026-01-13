@@ -5,6 +5,7 @@ import BeePurpleReporting from './pages/BeePurpleReporting';
 import CoachDashboard from './pages/CoachDashboard';
 import CoachingLogger from './pages/CoachingLogger';
 import Community from './pages/Community';
+import CommunityForum from './pages/CommunityForum';
 import CommunityWalls from './pages/CommunityWalls';
 import Crisis from './pages/Crisis';
 import DailyReflection from './pages/DailyReflection';
@@ -42,7 +43,6 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import CommunityForum from './pages/CommunityForum';
 import __Layout from './Layout.jsx';
 
 
@@ -54,6 +54,7 @@ export const PAGES = {
     "CoachDashboard": CoachDashboard,
     "CoachingLogger": CoachingLogger,
     "Community": Community,
+    "CommunityForum": CommunityForum,
     "CommunityWalls": CommunityWalls,
     "Crisis": Crisis,
     "DailyReflection": DailyReflection,
@@ -91,7 +92,6 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "CommunityForum": CommunityForum,
 }
 
 export const pagesConfig = {

@@ -292,7 +292,11 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 py-8 space-y-8">
         
         {/* Welcome Hero */}
-        <WelcomeHero profile={profile} />
+        <WelcomeHero user={user} profile={profile} />
+        
+        {user && <ProactiveNudges userEmail={user.email} />}
+        
+        {user && <PersonalizedContentEngine userEmail={user.email} />}
 
         {/* Onboarding Welcome Card - Only show if no journey data AND not recently dismissed */}
         {user && !hasJourneyData && !showCelebration && (() => {
@@ -497,7 +501,8 @@ export default function Home() {
         <ProactiveOutreach user={user} profile={profile} />
         <SessionAnalyzer user={user} profile={profile} />
         <GoalProgressNudges user={user} profile={profile} />
-        </div>
-        </>
-        );
-        }
+      </div>
+      </div>
+    </>
+  );
+}
