@@ -11,6 +11,8 @@ import SessionHistory from '@/components/coaching/SessionHistory';
 import CoachingAnalytics from '@/components/coaching/CoachingAnalytics';
 import EnhancedCoachingAnalytics from '@/components/coaching/EnhancedCoachingAnalytics';
 import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
+import RoleGuard from '@/components/navigation/RoleGuard';
+import TooltipWrapper from '@/components/rbac/TooltipWrapper';
 
 export default function CoachingLogger() {
   const [user, setUser] = useState(null);
@@ -47,13 +49,16 @@ export default function CoachingLogger() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-blue-50 via-indigo-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <GraceHeader
-          title="Coaching & Resource Navigation Logger"
-          subtitle="AI-assisted session logging with 5CRM integration"
-          icon={ClipboardList}
-        />
+    <RoleGuard allowedRoles={['peer_support', 'program_staff']} pageName="Coaching Logger">
+      <div className="min-h-screen bg-gradient-to-b from-blue-50 via-indigo-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <TooltipWrapper tooltipKey="session_notes">
+            <GraceHeader
+              title="Coaching & Resource Navigation Logger"
+              subtitle="AI-assisted session logging with 5CRM integration"
+              icon={ClipboardList}
+            />
+          </TooltipWrapper>
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
@@ -127,7 +132,8 @@ export default function CoachingLogger() {
             />
           </TabsContent>
         </Tabs>
+        </div>
       </div>
-    </div>
+    </RoleGuard>
   );
 }

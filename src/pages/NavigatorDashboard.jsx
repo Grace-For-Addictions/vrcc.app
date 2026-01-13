@@ -11,11 +11,15 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
 import { toast } from 'sonner';
+import RoleGuard from '@/components/navigation/RoleGuard';
+import PermissionCheck from '@/components/rbac/PermissionCheck';
+import { TraumaInformedTextarea } from '@/components/rbac/TraumaInformedInput';
+import CareAlertMonitor from '@/components/rbac/CareAlertMonitor';
+import TooltipWrapper from '@/components/rbac/TooltipWrapper';
 
 export default function NavigatorDashboard() {
   const [user, setUser] = useState(null);
@@ -158,13 +162,16 @@ Use trauma-informed, strengths-based language.`,
   const activeReferrals = allReferrals.filter(r => r.status === 'active');
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <GraceHeader
-          title="Navigator Dashboard"
-          subtitle="Prioritize caseloads, coordinate care teams, streamline referrals"
-          icon={MapPin}
-        />
+    <RoleGuard allowedRoles={['program_staff']} requireAdmin={false} pageName="Navigator Dashboard">
+      <div className="min-h-screen bg-gradient-to-b from-purple-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <GraceHeader
+            title="Navigator Dashboard"
+            subtitle="Prioritize caseloads, coordinate care teams, streamline referrals"
+            icon={MapPin}
+          />
+
+          <CareAlertMonitor userRole={user?.user_role} />
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
@@ -375,10 +382,12 @@ Use trauma-informed, strengths-based language.`,
                           <SelectItem value="transportation">Transportation</SelectItem>
                         </SelectContent>
                       </Select>
-                      <Textarea placeholder="Referral notes..." rows={3} />
-                      <Button className="w-full bg-blue-600 hover:bg-blue-700">
-                        Create & Sync to BeePurple
-                      </Button>
+                      <TraumaInformedTextarea placeholder="Referral notes..." rows={3} />
+                      <PermissionCheck object="resource_requests" action="approve">
+                       <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                         Create & Sync to BeePurple
+                       </Button>
+                      </PermissionCheck>
                     </div>
                   </DialogContent>
                 </Dialog>
@@ -423,7 +432,8 @@ Use trauma-informed, strengths-based language.`,
             </GraceCard>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
-    </div>
+    </RoleGuard>
   );
 }

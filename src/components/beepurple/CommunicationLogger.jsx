@@ -5,12 +5,12 @@ import { Phone, Mail, Video, MessageCircle, Plus, Bell, Calendar } from 'lucide-
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { TraumaInformedTextarea } from '@/components/rbac/TraumaInformedInput';
+import PermissionCheck from '@/components/rbac/PermissionCheck';
 
 export default function CommunicationLogger({ clientEmail }) {
   const queryClient = useQueryClient();
@@ -80,7 +80,8 @@ export default function CommunicationLogger({ clientEmail }) {
     <Card className="p-6">
       <div className="flex items-center justify-between mb-6">
         <h3 className="text-lg font-semibold text-gray-900">Communication History</h3>
-        <Dialog open={showDialog} onOpenChange={setShowDialog}>
+        <PermissionCheck object="daily_outreach_logs" action="create">
+          <Dialog open={showDialog} onOpenChange={setShowDialog}>
           <DialogTrigger asChild>
             <Button size="sm" className="bg-teal-600 hover:bg-teal-700">
               <Plus className="w-4 h-4 mr-2" />
@@ -110,7 +111,7 @@ export default function CommunicationLogger({ clientEmail }) {
                 onChange={(e) => setNewLog({ ...newLog, subject: e.target.value })}
               />
 
-              <Textarea
+              <TraumaInformedTextarea
                 placeholder="Notes and details..."
                 value={newLog.notes}
                 onChange={(e) => setNewLog({ ...newLog, notes: e.target.value })}
@@ -155,8 +156,9 @@ export default function CommunicationLogger({ clientEmail }) {
               </Button>
             </div>
           </DialogContent>
-        </Dialog>
-      </div>
+          </Dialog>
+          </PermissionCheck>
+          </div>
 
       <div className="space-y-3">
         {logs.length === 0 ? (
