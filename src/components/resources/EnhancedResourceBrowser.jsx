@@ -79,7 +79,9 @@ export default function EnhancedResourceBrowser() {
   const filteredResources = resources.filter(r => {
     const matchesSearch = !searchTerm || 
       r.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      r.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      r.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      r.subcategory?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesCounty = selectedCounty === 'all' || r.county === selectedCounty;
     const matchesCategory = selectedCategory === 'all' || r.category === selectedCategory;
@@ -87,7 +89,7 @@ export default function EnhancedResourceBrowser() {
     return matchesSearch && matchesCounty && matchesCategory;
   });
 
-  const counties = [...new Set(resources.map(r => r.county).filter(Boolean))];
+  const counties = [...new Set(resources.map(r => r.county).filter(Boolean))].sort();
 
   return (
     <div className="space-y-6">

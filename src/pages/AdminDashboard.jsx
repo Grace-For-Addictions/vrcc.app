@@ -238,11 +238,13 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="engagement" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="engagement">Engagement</TabsTrigger>
-            <TabsTrigger value="dropoff">Drop-off Points</TabsTrigger>
+            <TabsTrigger value="dropoff">Predictive AI</TabsTrigger>
             <TabsTrigger value="ai-effectiveness">AI Outreach</TabsTrigger>
             <TabsTrigger value="readiness">Readiness Logic</TabsTrigger>
+            <TabsTrigger value="reports">Custom Reports</TabsTrigger>
+            <TabsTrigger value="resources">Resource Gaps</TabsTrigger>
           </TabsList>
 
           {/* Engagement Tab */}
@@ -358,31 +360,35 @@ export default function AdminDashboard() {
 
           {/* Drop-off Analysis */}
           <TabsContent value="dropoff">
-            <GraceCard>
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
-                Key Drop-off Points (Participant-Led Focus)
-              </h3>
-              <p className="text-sm text-gray-600 mb-6">
-                These metrics identify where users may need additional support or clearer pathways - not pressure to advance.
-              </p>
-              
-              <div className="space-y-4">
-                {dropoffPoints.map((point, idx) => (
-                  <div key={idx} className="p-4 bg-red-50 border border-red-200 rounded-lg">
-                    <div className="flex items-start gap-3">
-                      <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-red-900">{point.stage}</h4>
-                        <p className="text-2xl font-bold text-red-700 mt-1">{point.rate.toFixed(0)}% drop-off</p>
-                        <p className="text-sm text-red-800 mt-2">
-                          Potential intervention: Simplify onboarding, offer guided tour, or add AI nudges
-                        </p>
+            <div className="space-y-6">
+              <GraceCard>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+                  Key Drop-off Points (Participant-Led Focus)
+                </h3>
+                <p className="text-sm text-gray-600 mb-6">
+                  These metrics identify where users may need additional support or clearer pathways - not pressure to advance.
+                </p>
+                
+                <div className="space-y-4">
+                  {dropoffPoints.map((point, idx) => (
+                    <div key={idx} className="p-4 bg-red-50 border border-red-200 rounded-lg">
+                      <div className="flex items-start gap-3">
+                        <AlertCircle className="w-5 h-5 text-red-600 mt-0.5" />
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-red-900">{point.stage}</h4>
+                          <p className="text-2xl font-bold text-red-700 mt-1">{point.rate.toFixed(0)}% drop-off</p>
+                          <p className="text-sm text-red-800 mt-2">
+                            Potential intervention: Simplify onboarding, offer guided tour, or add AI nudges
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
-            </GraceCard>
+                  ))}
+                </div>
+              </GraceCard>
+              
+              <AdvancedPredictiveAnalytics />
+            </div>
           </TabsContent>
 
           {/* AI Effectiveness */}
@@ -558,22 +564,33 @@ export default function AdminDashboard() {
           </div>
         </GraceCard>
 
+        {/* Custom Reports */}
+        <TabsContent value="reports">
+          <CustomReportBuilder />
+        </TabsContent>
+
+        {/* Resource Gap Analysis */}
+        <TabsContent value="resources">
+          <ResourceDensityAnalytics />
+        </TabsContent>
+        </Tabs>
+
         {/* A/B Testing Section */}
         <GraceCard className="mt-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
-            <Zap className="w-6 h-6 text-amber-500" />
-            A/B Testing & Experimentation
-          </h3>
-          <p className="text-gray-600 mb-4">
-            Test new features, content recommendations, and AI prompts to improve participant experience.
+        <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+          <Zap className="w-6 h-6 text-amber-500" />
+          A/B Testing & Experimentation
+        </h3>
+        <p className="text-gray-600 mb-4">
+          Test new features, content recommendations, and AI prompts to improve participant experience.
+        </p>
+        <div className="p-6 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg text-center">
+          <Eye className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+          <p className="text-gray-600">A/B testing dashboard coming soon</p>
+          <p className="text-sm text-gray-500 mt-1">
+            Will enable testing of AI prompts, UI variations, and content strategies
           </p>
-          <div className="p-6 bg-gray-100 border-2 border-dashed border-gray-300 rounded-lg text-center">
-            <Eye className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-            <p className="text-gray-600">A/B testing dashboard coming soon</p>
-            <p className="text-sm text-gray-500 mt-1">
-              Will enable testing of AI prompts, UI variations, and content strategies
-            </p>
-          </div>
+        </div>
         </GraceCard>
       </div>
     </div>

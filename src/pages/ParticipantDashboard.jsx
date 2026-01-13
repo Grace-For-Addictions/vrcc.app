@@ -56,8 +56,15 @@ export default function ParticipantDashboard() {
     enabled: !!user
   });
 
+  const { data: myReferrals = [] } = useQuery({
+    queryKey: ['my-referrals', user?.email],
+    queryFn: () => base44.entities.ClosedLoopReferral.filter({ participant_email: user.email }),
+    enabled: !!user
+  });
+
   const activeGoals = myGoals.filter(g => g.status === 'in_progress');
   const completedGoals = myGoals.filter(g => g.status === 'achieved');
+  const activeReferrals = myReferrals.filter(r => !['completed', 'closed', 'declined'].includes(r.status));
   
   const last7DaysCheckIns = recentCheckIns.slice(0, 7).reverse();
   const moodData = last7DaysCheckIns.map((c, idx) => ({
