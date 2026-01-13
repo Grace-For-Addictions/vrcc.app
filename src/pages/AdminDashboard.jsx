@@ -12,6 +12,8 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from "@/components/ui/badge";
 import GraceHeader from '@/components/common/GraceHeader';
 import GraceCard from '@/components/common/GraceCard';
+import CareAlertMonitor from '@/components/rbac/CareAlertMonitor';
+import TooltipWrapper from '@/components/rbac/TooltipWrapper';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -178,31 +180,37 @@ export default function AdminDashboard() {
           icon={BarChart3}
         />
 
+        <CareAlertMonitor userRole={user?.user_role} />
+
         {/* High-Level Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <GraceCard>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
-                <Users className="w-6 h-6 text-blue-600" />
+          <TooltipWrapper tooltipKey="progress">
+            <GraceCard>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center">
+                  <Users className="w-6 h-6 text-blue-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-blue-700">{stats.totalUsers}</p>
+                  <p className="text-sm text-gray-600">Total Participants</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-blue-700">{stats.totalUsers}</p>
-                <p className="text-sm text-gray-600">Total Participants</p>
-              </div>
-            </div>
-          </GraceCard>
+            </GraceCard>
+          </TooltipWrapper>
 
-          <GraceCard>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
-                <Activity className="w-6 h-6 text-green-600" />
+          <TooltipWrapper tooltipKey="engagement">
+            <GraceCard>
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center">
+                  <Activity className="w-6 h-6 text-green-600" />
+                </div>
+                <div>
+                  <p className="text-2xl font-bold text-green-700">{stats.activeLastWeek}</p>
+                  <p className="text-sm text-gray-600">Active (7 days)</p>
+                </div>
               </div>
-              <div>
-                <p className="text-2xl font-bold text-green-700">{stats.activeLastWeek}</p>
-                <p className="text-sm text-gray-600">Active (7 days)</p>
-              </div>
-            </div>
-          </GraceCard>
+            </GraceCard>
+          </TooltipWrapper>
 
           <GraceCard>
             <div className="flex items-center gap-4">

@@ -15,6 +15,8 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { toast } from 'sonner';
+import CareAlertMonitor from '@/components/rbac/CareAlertMonitor';
+import TooltipWrapper from '@/components/rbac/TooltipWrapper';
 
 export default function CoachDashboard() {
   const queryClient = useQueryClient();
@@ -190,17 +192,21 @@ Use strengths-based, neuroplasticity-focused language.`,
           icon={Users}
         />
 
+        <CareAlertMonitor userRole={user?.user_role} />
+
         {/* Quick Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-          <GraceCard>
-            <div className="flex items-center gap-3">
-              <Users className="w-8 h-8 text-blue-600" />
-              <div>
-                <p className="text-2xl font-bold">{myMentees.length}</p>
-                <p className="text-sm text-gray-600">Active Mentees</p>
+          <TooltipWrapper tooltipKey="goals">
+            <GraceCard>
+              <div className="flex items-center gap-3">
+                <Users className="w-8 h-8 text-blue-600" />
+                <div>
+                  <p className="text-2xl font-bold">{myMentees.length}</p>
+                  <p className="text-sm text-gray-600">Active Mentees</p>
+                </div>
               </div>
-            </div>
-          </GraceCard>
+            </GraceCard>
+          </TooltipWrapper>
 
           <GraceCard>
             <div className="flex items-center gap-3">
