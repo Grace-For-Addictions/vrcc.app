@@ -72,7 +72,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
 
   const getTimeMode = () => {
     const hour = new Date().getHours();
-    return hour >= 4 && hour < 17 ? 'morning' : 'evening';
+    return hour < 17 ? 'daily' : 'evening';
   };
 
   const timeMode = getTimeMode();
@@ -108,8 +108,8 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
     mutationFn: async () => {
       setGenerating(true);
 
-      const aiPrompt = timeMode === 'morning' 
-        ? `Generate a morning affirmation and daily intention for someone with:
+      const aiPrompt = timeMode === 'daily' 
+        ? `Generate a daily affirmation and daily intention for someone with:
           Mood: ${formData.mood_score}/5
           Craving intensity: ${formData.craving_intensity}/10
           Feels supported: ${formData.feel_supported}
@@ -210,7 +210,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
               transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
               className="w-14 h-14 rounded-full bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center shadow-lg"
             >
-              {timeMode === 'morning' ? (
+              {timeMode === 'daily' ? (
                 <Sun className="w-7 h-7 text-white" />
               ) : (
                 <Moon className="w-7 h-7 text-white" />
@@ -219,11 +219,11 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
 
             <div className="flex-1">
               <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                {timeMode === 'morning' ? '☀️ Morning Grace Check-In' : '🌙 Evening Grace Reflection'}
+                {timeMode === 'daily' ? '☀️ Daily Grace Check-In' : '🌙 Evening Grace Reflection'}
               </h3>
               <p className="text-sm text-gray-600 mt-1">
-                {timeMode === 'morning' 
-                  ? 'Ready for a quick check-in to start your day with intention? (Takes ~5 minutes)'
+                {timeMode === 'daily' 
+                  ? 'Ready for a quick check-in to set your intention? (Takes ~5 minutes)'
                   : 'As the day winds down, ready for a gentle reflection? (Takes ~5 minutes)'
                 }
               </p>
@@ -248,7 +248,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
                 className="w-full bg-teal-600 hover:bg-teal-700"
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                Start {timeMode === 'morning' ? 'Check-In' : 'Reflection'}
+                Start {timeMode === 'daily' ? 'Check-In' : 'Reflection'}
               </Button>
             </motion.div>
           )}
@@ -339,7 +339,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
                 </div>
               </div>
 
-              {timeMode === 'morning' && (
+              {timeMode === 'daily' && (
                 <>
                   <div className="p-4 bg-purple-50 rounded-xl border border-purple-200">
                     <h4 className="font-semibold text-purple-900 mb-3 flex items-center gap-2">
@@ -477,7 +477,7 @@ export default function DailyGraceCheckIn({ user, profile, onComplete }) {
               <div className="p-4 bg-teal-50 rounded-xl border border-teal-200">
                 <h4 className="font-semibold text-teal-900 mb-2 flex items-center gap-2">
                   <Target className="w-5 h-5" />
-                  {timeMode === 'morning' ? 'Today\'s Intention' : 'Tomorrow\'s Intention'}
+                  {timeMode === 'daily' ? 'Today\'s Intention' : 'Tomorrow\'s Intention'}
                 </h4>
                 <p className="text-teal-800 italic">"{aiResponse.daily_intention}"</p>
               </div>
