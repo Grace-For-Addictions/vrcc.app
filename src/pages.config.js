@@ -14,6 +14,7 @@ import Events from './pages/Events';
 import Gamification from './pages/Gamification';
 import GovDashPortal from './pages/GovDashPortal';
 import GraceChat from './pages/GraceChat';
+import GraceHouseManagement from './pages/GraceHouseManagement';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
@@ -22,6 +23,7 @@ import MeetingsHub from './pages/MeetingsHub';
 import NarcanTracker from './pages/NarcanTracker';
 import NavigatorDashboard from './pages/NavigatorDashboard';
 import Neuroplasticity from './pages/Neuroplasticity';
+import ParticipantDashboard from './pages/ParticipantDashboard';
 import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
 import PeerCoachTraining from './pages/PeerCoachTraining';
 import PeerMatching from './pages/PeerMatching';
@@ -38,10 +40,9 @@ import StaffSOPs from './pages/StaffSOPs';
 import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
-import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import GraceHouseManagement from './pages/GraceHouseManagement';
-import ParticipantDashboard from './pages/ParticipantDashboard';
 import VolunteerHub from './pages/VolunteerHub';
+import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import CommunityForum from './pages/CommunityForum';
 import __Layout from './Layout.jsx';
 
 
@@ -62,6 +63,7 @@ export const PAGES = {
     "Gamification": Gamification,
     "GovDashPortal": GovDashPortal,
     "GraceChat": GraceChat,
+    "GraceHouseManagement": GraceHouseManagement,
     "GrantWriter": GrantWriter,
     "Home": Home,
     "IBHRSReporting": IBHRSReporting,
@@ -70,6 +72,7 @@ export const PAGES = {
     "NarcanTracker": NarcanTracker,
     "NavigatorDashboard": NavigatorDashboard,
     "Neuroplasticity": Neuroplasticity,
+    "ParticipantDashboard": ParticipantDashboard,
     "PeerCoachAnalytics": PeerCoachAnalytics,
     "PeerCoachTraining": PeerCoachTraining,
     "PeerMatching": PeerMatching,
@@ -86,10 +89,9 @@ export const PAGES = {
     "TeamChallenges": TeamChallenges,
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
-    "WorkforceDevelopment": WorkforceDevelopment,
-    "GraceHouseManagement": GraceHouseManagement,
-    "ParticipantDashboard": ParticipantDashboard,
     "VolunteerHub": VolunteerHub,
+    "WorkforceDevelopment": WorkforceDevelopment,
+    "CommunityForum": CommunityForum,
 }
 
 export const pagesConfig = {
