@@ -484,25 +484,24 @@ export default function Home() {
             Community Rewires the Brain • Recovery is Possible
           </p>
         </motion.div>
-      </div>
-
-        {/* AI Grace Chat Widget */}
-        <GraceChatWidget />
-
-        {/* Guided Tour */}
-        {user && !localStorage.getItem('guidedTourCompleted') && (
-          <GuidedTour user={user} />
-        )}
-
-        {/* Post-Registration Nudges */}
-        {user && <PostRegistrationNudge user={user} />}
-
+        
         {/* AI Features */}
         <ProactiveOutreach user={user} profile={profile} />
         <SessionAnalyzer user={user} profile={profile} />
         <GoalProgressNudges user={user} profile={profile} />
-        </div>
       </div>
+      </div>
+
+      {/* AI Grace Chat Widget */}
+      <GraceChatWidget />
+
+      {/* Guided Tour */}
+      {user && !localStorage.getItem('guidedTourCompleted') && (
+        <GuidedTour user={user} />
+      )}
+
+      {/* Post-Registration Nudges */}
+      {user && <PostRegistrationNudge user={user} />}
     </>
   );
 }
