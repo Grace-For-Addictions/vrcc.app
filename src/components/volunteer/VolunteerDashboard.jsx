@@ -10,6 +10,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Users, Award, Calendar, Clock, CheckCircle2, Plus, Heart, Star } from 'lucide-react';
+import VolunteerMatching from './VolunteerMatching';
+import PerformanceFeedback from './PerformanceFeedback';
 
 export default function VolunteerDashboard() {
   const [user, setUser] = useState(null);
@@ -186,42 +188,36 @@ export default function VolunteerDashboard() {
           </CardContent>
         </Card>
 
-        {/* Available Opportunities */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Available Opportunities</CardTitle>
-            <CardDescription>Matched to your skills and interests</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {myProfile?.skills_interests?.includes('transportation') && (
-                <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-teal-900">MRCC Transportation Support</p>
-                      <p className="text-sm text-teal-700">Provide warm handoff transport</p>
-                      <Badge className="mt-2 bg-teal-100 text-teal-700">Matches your skills</Badge>
+        {/* AI-Powered Volunteer Matching */}
+        {myProfile && user?.email && (
+          <VolunteerMatching volunteerEmail={user.email} />
+        )}
+
+        {/* Performance Feedback */}
+        {myProfile && myProfile.performance_ratings && myProfile.performance_ratings.length > 0 && (
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Feedback</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {myProfile.performance_ratings.slice(-3).reverse().map((rating, idx) => (
+                  <div key={idx} className="p-3 bg-gray-50 rounded-lg border">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex gap-1">
+                        {[1, 2, 3, 4, 5].map(s => (
+                          <Star key={s} className={`w-4 h-4 ${s <= rating.rating ? 'fill-amber-400 text-amber-400' : 'text-gray-300'}`} />
+                        ))}
+                      </div>
+                      <p className="text-xs text-gray-500">{new Date(rating.date).toLocaleDateString()}</p>
                     </div>
-                    <Button size="sm" className="bg-teal-600 hover:bg-teal-700">Sign Up</Button>
+                    <p className="text-sm text-gray-700">{rating.feedback}</p>
                   </div>
-                </div>
-              )}
-              
-              {myProfile?.just_grace_certified && (
-                <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-purple-900">Peer Coaching Session</p>
-                      <p className="text-sm text-purple-700">1:1 support sessions available</p>
-                      <Badge className="mt-2 bg-purple-100 text-purple-700">JUST GRACE Certified</Badge>
-                    </div>
-                    <Button size="sm" className="bg-purple-600 hover:bg-purple-700">View Details</Button>
-                  </div>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

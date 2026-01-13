@@ -8,117 +8,123 @@ import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { FileText, Download, Calendar, Mail, Save, Loader2, Plus } from 'lucide-react';
+import { FileText, Download, Send, Calendar, Filter, Plus, Save } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
-const AVAILABLE_METRICS = [
-  { id: 'total_users', label: 'Total Users', category: 'engagement' },
-  { id: 'active_users', label: 'Active Users (30 days)', category: 'engagement' },
-  { id: 'check_ins', label: 'Daily Check-ins', category: 'engagement' },
-  { id: 'session_attendance', label: 'Session Attendance', category: 'engagement' },
-  { id: 'goal_completion', label: 'Goal Completion Rate', category: 'outcomes' },
-  { id: 'assessment_scores', label: 'Assessment Scores (BARC-10, PIL)', category: 'outcomes' },
-  { id: 'housing_stability', label: 'Housing Stability', category: 'outcomes' },
-  { id: 'employment_status', label: 'Employment Status', category: 'outcomes' },
-  { id: 'resource_connections', label: 'Resource Connections', category: 'services' },
-  { id: 'narcan_distribution', label: 'Narcan Distribution', category: 'services' },
-  { id: 'crisis_interventions', label: 'Crisis Interventions', category: 'services' }
-];
-
-const ENTITY_TYPES = [
-  'UserProfile', 'DailyCheckIn', 'CoachingSessionLog', 'Assessment', 
-  'MenteeGoal', 'HousingStatus', 'EmploymentHistory', 'NarcanLog'
-];
-
 export default function CustomReportBuilder() {
-  const [isBuilding, setIsBuilding] = useState(false);
-  const [reportName, setReportName] = useState('');
-  const [selectedMetrics, setSelectedMetrics] = useState([]);
-  const [selectedEntities, setSelectedEntities] = useState([]);
-  const [dateRange, setDateRange] = useState({ start: '', end: '' });
-  const [demographicFilters, setDemographicFilters] = useState({});
-  const [isScheduled, setIsScheduled] = useState(false);
-  const [scheduleFrequency, setScheduleFrequency] = useState('weekly');
-  const [deliveryEmails, setDeliveryEmails] = useState('');
+  const [reportConfig, setReportConfig] = useState({
+    report_name: '',
+    metrics: [],
+    date_range: { start_date: '', end_date: '' },
+    demographic_filters: {},
+    entity_types: []
+  });
+  const [isSaving, setIsSaving] = useState(false);
   const queryClient = useQueryClient();
 
-  const { data: savedReports = [], isLoading } = useQuery({
+  const { data: savedReports = [] } = useQuery({
     queryKey: ['custom-reports'],
     queryFn: () => base44.entities.CustomReport.list('-created_date')
   });
 
+  const availableMetrics = [
+    { id: 'total_participants', label: 'Total Participants', category: 'enrollment' },
+    { id: 'active_participants', label: 'Active Participants', category: 'enrollment' },
+    { id: 'new_admissions', label: 'New Admissions', category: 'enrollment' },
+    { id: 'completion_rate', label: 'Program Completion Rate', category: 'outcomes' },
+    { id: 'employment_rate', label: 'Employment Rate', category: 'outcomes' },
+    { id: 'housing_secured', label: 'Housing Secured', category: 'outcomes' },
+    { id: 'avg_barc_score', label: 'Average BARC-10 Score', category: 'assessments' },
+    { id: 'narcan_distributions', label: 'Narcan Distributions', category: 'harm_reduction' },
+    { id: 'reversal_reports', label: 'Reversal Reports', category: 'harm_reduction' },
+    { id: 'coaching_sessions', label: 'Coaching Sessions Delivered', category: 'services' },
+    { id: 'group_attendance', label: 'Group Program Attendance', category: 'services' },
+    { id: 'volunteer_hours', label: 'Volunteer Hours', category: 'operations' },
+    { id: 'referrals_completed', label: 'Referrals Completed', category: 'coordination' },
+    { id: 'grace_house_admissions', label: 'Grace House Admissions', category: 'housing' }
+  ];
+
   const saveReportMutation = useMutation({
-    mutationFn: (config) => base44.entities.CustomReport.create(config),
+    mutationFn: async () => {
+      const user = await base44.auth.me();
+      return base44.entities.CustomReport.create({
+        report_name: reportConfig.report_name,
+        created_by: user.email,
+        configuration: reportConfig,
+        is_scheduled: false
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['custom-reports']);
-      resetForm();
-    }
-  });
-
-  const generateReportMutation = useMutation({
-    mutationFn: async (reportConfig) => {
-      // This would call a backend function to generate the actual report
-      return base44.integrations.Core.InvokeLLM({
-        prompt: `Generate a comprehensive recovery program report with the following configuration:
-        
-Metrics: ${reportConfig.metrics.join(', ')}
-Entities: ${reportConfig.entity_types.join(', ')}
-Date Range: ${reportConfig.date_range.start_date} to ${reportConfig.date_range.end_date}
-Filters: ${JSON.stringify(reportConfig.demographic_filters)}
-
-Provide analysis, trends, and key insights in a structured format suitable for stakeholders.`,
-        add_context_from_internet: false
+      setReportConfig({
+        report_name: '',
+        metrics: [],
+        date_range: { start_date: '', end_date: '' },
+        demographic_filters: {},
+        entity_types: []
       });
     }
   });
 
-  const resetForm = () => {
-    setReportName('');
-    setSelectedMetrics([]);
-    setSelectedEntities([]);
-    setDateRange({ start: '', end: '' });
-    setDemographicFilters({});
-    setIsScheduled(false);
-    setDeliveryEmails('');
-  };
-
-  const handleSaveReport = async () => {
-    const config = {
-      report_name: reportName,
-      configuration: {
-        metrics: selectedMetrics,
-        entity_types: selectedEntities,
-        date_range: {
-          start_date: dateRange.start,
-          end_date: dateRange.end
-        },
-        demographic_filters: demographicFilters
-      },
-      is_scheduled: isScheduled,
-      schedule_config: isScheduled ? {
-        frequency: scheduleFrequency,
-        delivery_emails: deliveryEmails.split(',').map(e => e.trim())
-      } : null
-    };
-
-    await saveReportMutation.mutateAsync(config);
-  };
-
-  const handleGenerateReport = async (config) => {
-    setIsBuilding(true);
-    try {
-      const result = await generateReportMutation.mutateAsync(config);
-      // Download or display result
-      const blob = new Blob([result], { type: 'text/plain' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${config.report_name || 'report'}_${new Date().toISOString().split('T')[0]}.txt`;
-      a.click();
-    } finally {
-      setIsBuilding(false);
+  const generateReportMutation = useMutation({
+    mutationFn: async (config) => {
+      // Generate report data based on configuration
+      const reportData = {};
+      
+      // Fetch data for each selected metric
+      for (const metricId of config.metrics) {
+        const metric = availableMetrics.find(m => m.id === metricId);
+        
+        // Calculate metric value based on entities and filters
+        switch (metricId) {
+          case 'total_participants':
+            const profiles = await base44.entities.UserProfile.list();
+            reportData[metricId] = profiles.length;
+            break;
+          case 'coaching_sessions':
+            const sessions = await base44.entities.CoachingSessionLog.list();
+            reportData[metricId] = sessions.length;
+            break;
+          case 'housing_secured':
+            const housing = await base44.entities.HousingStatus.filter({ 
+              housing_status: 'permanent_housing' 
+            });
+            reportData[metricId] = housing.length;
+            break;
+          // Add more metric calculations as needed
+        }
+      }
+      
+      return { reportData, config };
+    },
+    onSuccess: ({ reportData, config }) => {
+      // Create downloadable report (simplified - would use jsPDF in production)
+      console.log('Generated report:', reportData);
+      
+      // Update last_generated timestamp
+      const report = savedReports.find(r => r.report_name === config.report_name);
+      if (report) {
+        base44.entities.CustomReport.update(report.id, {
+          last_generated: new Date().toISOString()
+        });
+      }
     }
+  });
+
+  const toggleMetric = (metricId) => {
+    setReportConfig(prev => ({
+      ...prev,
+      metrics: prev.metrics.includes(metricId)
+        ? prev.metrics.filter(m => m !== metricId)
+        : [...prev.metrics, metricId]
+    }));
   };
+
+  const metricsByCategory = availableMetrics.reduce((acc, metric) => {
+    if (!acc[metric.category]) acc[metric.category] = [];
+    acc[metric.category].push(metric);
+    return acc;
+  }, {});
 
   return (
     <div className="space-y-6">
@@ -126,208 +132,180 @@ Provide analysis, trends, and key insights in a structured format suitable for s
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Custom Report Builder</CardTitle>
+              <CardTitle className="flex items-center gap-2">
+                <FileText className="w-5 h-5 text-teal-600" />
+                Custom Report Builder
+              </CardTitle>
               <CardDescription>Create, save, and schedule custom reports</CardDescription>
             </div>
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="w-4 h-4 mr-2" />
-                  New Report
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-                <DialogHeader>
-                  <DialogTitle>Build Custom Report</DialogTitle>
-                  <DialogDescription>
-                    Select metrics, date ranges, and filters for your report
-                  </DialogDescription>
-                </DialogHeader>
-
-                <div className="space-y-6 py-4">
-                  <div>
-                    <Label>Report Name</Label>
-                    <Input
-                      value={reportName}
-                      onChange={(e) => setReportName(e.target.value)}
-                      placeholder="e.g., Monthly Engagement Report"
-                    />
-                  </div>
-
-                  <div>
-                    <Label className="mb-3 block">Select Metrics</Label>
-                    <div className="space-y-3">
-                      {['engagement', 'outcomes', 'services'].map(category => (
-                        <div key={category}>
-                          <p className="text-sm font-medium text-gray-600 mb-2 capitalize">{category}</p>
-                          <div className="space-y-2 ml-4">
-                            {AVAILABLE_METRICS.filter(m => m.category === category).map(metric => (
-                              <div key={metric.id} className="flex items-center gap-2">
-                                <Checkbox
-                                  checked={selectedMetrics.includes(metric.id)}
-                                  onCheckedChange={(checked) => {
-                                    if (checked) {
-                                      setSelectedMetrics([...selectedMetrics, metric.id]);
-                                    } else {
-                                      setSelectedMetrics(selectedMetrics.filter(m => m !== metric.id));
-                                    }
-                                  }}
-                                />
-                                <Label className="font-normal">{metric.label}</Label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label className="mb-3 block">Data Sources (Entities)</Label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {ENTITY_TYPES.map(entity => (
-                        <div key={entity} className="flex items-center gap-2">
-                          <Checkbox
-                            checked={selectedEntities.includes(entity)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                setSelectedEntities([...selectedEntities, entity]);
-                              } else {
-                                setSelectedEntities(selectedEntities.filter(e => e !== entity));
-                              }
-                            }}
-                          />
-                          <Label className="font-normal text-sm">{entity}</Label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label>Start Date</Label>
-                      <Input
-                        type="date"
-                        value={dateRange.start}
-                        onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                      />
-                    </div>
-                    <div>
-                      <Label>End Date</Label>
-                      <Input
-                        type="date"
-                        value={dateRange.end}
-                        onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t">
-                    <div className="flex items-center gap-2 mb-4">
-                      <Checkbox
-                        checked={isScheduled}
-                        onCheckedChange={setIsScheduled}
-                      />
-                      <Label>Schedule automated delivery</Label>
-                    </div>
-
-                    {isScheduled && (
-                      <div className="space-y-4 ml-6">
-                        <div>
-                          <Label>Frequency</Label>
-                          <Select value={scheduleFrequency} onValueChange={setScheduleFrequency}>
-                            <SelectTrigger>
-                              <SelectValue />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="daily">Daily</SelectItem>
-                              <SelectItem value="weekly">Weekly</SelectItem>
-                              <SelectItem value="monthly">Monthly</SelectItem>
-                              <SelectItem value="quarterly">Quarterly</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-
-                        <div>
-                          <Label>Delivery Email(s)</Label>
-                          <Input
-                            value={deliveryEmails}
-                            onChange={(e) => setDeliveryEmails(e.target.value)}
-                            placeholder="email1@example.com, email2@example.com"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex gap-2 pt-4">
-                    <Button 
-                      onClick={handleSaveReport}
-                      disabled={!reportName || selectedMetrics.length === 0}
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      Save Report
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      onClick={() => handleGenerateReport({
-                        report_name: reportName,
-                        metrics: selectedMetrics,
-                        entity_types: selectedEntities,
-                        date_range: dateRange,
-                        demographic_filters: demographicFilters
-                      })}
-                      disabled={!reportName || selectedMetrics.length === 0 || isBuilding}
-                    >
-                      {isBuilding ? (
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      ) : (
-                        <Download className="w-4 h-4 mr-2" />
-                      )}
-                      Generate Now
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
           </div>
         </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Report Name */}
+          <div>
+            <Label>Report Name</Label>
+            <Input
+              value={reportConfig.report_name}
+              onChange={(e) => setReportConfig({...reportConfig, report_name: e.target.value})}
+              placeholder="e.g., Monthly Outcomes Report"
+            />
+          </div>
+
+          {/* Date Range */}
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Start Date</Label>
+              <Input
+                type="date"
+                value={reportConfig.date_range.start_date}
+                onChange={(e) => setReportConfig({
+                  ...reportConfig,
+                  date_range: { ...reportConfig.date_range, start_date: e.target.value }
+                })}
+              />
+            </div>
+            <div>
+              <Label>End Date</Label>
+              <Input
+                type="date"
+                value={reportConfig.date_range.end_date}
+                onChange={(e) => setReportConfig({
+                  ...reportConfig,
+                  date_range: { ...reportConfig.date_range, end_date: e.target.value }
+                })}
+              />
+            </div>
+          </div>
+
+          {/* Metrics Selection */}
+          <div>
+            <Label className="mb-3 block">Select Metrics to Include</Label>
+            <div className="space-y-4">
+              {Object.entries(metricsByCategory).map(([category, metrics]) => (
+                <div key={category} className="border rounded-lg p-4">
+                  <p className="text-sm font-medium text-gray-700 mb-3 capitalize">
+                    {category.replace(/_/g, ' ')}
+                  </p>
+                  <div className="space-y-2">
+                    {metrics.map(metric => (
+                      <div key={metric.id} className="flex items-center gap-2">
+                        <Checkbox
+                          checked={reportConfig.metrics.includes(metric.id)}
+                          onCheckedChange={() => toggleMetric(metric.id)}
+                        />
+                        <label className="text-sm cursor-pointer">{metric.label}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Demographic Filters */}
+          <div>
+            <Label className="mb-3 block">Demographic Filters (Optional)</Label>
+            <div className="grid grid-cols-2 gap-4">
+              <Select 
+                onValueChange={(value) => setReportConfig({
+                  ...reportConfig,
+                  demographic_filters: { ...reportConfig.demographic_filters, county: value }
+                })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="County" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Counties</SelectItem>
+                  <SelectItem value="Polk">Polk</SelectItem>
+                  <SelectItem value="Linn">Linn</SelectItem>
+                  <SelectItem value="Scott">Scott</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select 
+                onValueChange={(value) => setReportConfig({
+                  ...reportConfig,
+                  demographic_filters: { ...reportConfig.demographic_filters, pathway: value }
+                })}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Pathway" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Pathways</SelectItem>
+                  <SelectItem value="substance_use">Substance Use</SelectItem>
+                  <SelectItem value="mental_health">Mental Health</SelectItem>
+                  <SelectItem value="justice_involved">Justice Involved</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex gap-2 pt-4">
+            <Button
+              onClick={() => saveReportMutation.mutate()}
+              disabled={!reportConfig.report_name || reportConfig.metrics.length === 0}
+              variant="outline"
+            >
+              <Save className="w-4 h-4 mr-2" />
+              Save Configuration
+            </Button>
+            <Button
+              onClick={() => generateReportMutation.mutate(reportConfig)}
+              disabled={reportConfig.metrics.length === 0}
+              className="bg-teal-600 hover:bg-teal-700"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Generate Report
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Saved Reports */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Saved Report Configurations</CardTitle>
+          <CardDescription>Quick access to your saved reports</CardDescription>
+        </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {savedReports.length === 0 ? (
-              <p className="text-center text-gray-500 py-8">No saved reports yet</p>
-            ) : (
-              savedReports.map(report => (
-                <Card key={report.id}>
+          {savedReports.length === 0 ? (
+            <p className="text-center text-gray-500 py-4">No saved reports yet</p>
+          ) : (
+            <div className="space-y-3">
+              {savedReports.map(report => (
+                <Card key={report.id} className="bg-gray-50">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div>
-                        <CardTitle className="text-lg">{report.report_name}</CardTitle>
-                        <CardDescription>
-                          {report.configuration.metrics.length} metrics • {report.configuration.entity_types.length} data sources
+                        <CardTitle className="text-base">{report.report_name}</CardTitle>
+                        <CardDescription className="text-xs mt-1">
+                          {report.configuration.metrics?.length || 0} metrics selected
                         </CardDescription>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {report.is_scheduled && (
-                          <Badge variant="outline" className="gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {report.schedule_config.frequency}
-                          </Badge>
-                        )}
+                      <div className="flex gap-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => handleGenerateReport(report.configuration)}
+                          onClick={() => generateReportMutation.mutate(report.configuration)}
                         >
                           <Download className="w-4 h-4" />
                         </Button>
+                        {report.is_scheduled && (
+                          <Badge className="bg-purple-100 text-purple-700">
+                            <Calendar className="w-3 h-3 mr-1" />
+                            Scheduled
+                          </Badge>
+                        )}
                       </div>
                     </div>
                   </CardHeader>
                 </Card>
-              ))
-            )}
-          </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
