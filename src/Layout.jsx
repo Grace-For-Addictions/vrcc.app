@@ -58,10 +58,10 @@ export default function Layout({ children, currentPageName }) {
         const userProfile = profiles[0] || null;
         setProfile(userProfile);
         
-        // Calculate allowed navigation
+        // Calculate allowed navigation with full RBAC
         const nav = getRoleNavItems(
-          currentUser.user_role,
-          currentUser.role === 'admin',
+          currentUser.user_role || 'participant',
+          currentUser.role === 'admin' || currentUser.user_role === 'administrator',
           userProfile?.readiness_level || 1,
           userProfile?.consent_acknowledged || false
         );

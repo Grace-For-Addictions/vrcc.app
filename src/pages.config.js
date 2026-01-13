@@ -33,12 +33,12 @@ import RecoveryGarden from './pages/RecoveryGarden';
 import Residencies from './pages/Residencies';
 import Resources from './pages/Resources';
 import SchoolPrevention from './pages/SchoolPrevention';
+import StaffOnboarding from './pages/StaffOnboarding';
 import StaffSOPs from './pages/StaffSOPs';
 import TeamChallenges from './pages/TeamChallenges';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import StaffOnboarding from './pages/StaffOnboarding';
 import __Layout from './Layout.jsx';
 
 
@@ -78,12 +78,12 @@ export const PAGES = {
     "Residencies": Residencies,
     "Resources": Resources,
     "SchoolPrevention": SchoolPrevention,
+    "StaffOnboarding": StaffOnboarding,
     "StaffSOPs": StaffSOPs,
     "TeamChallenges": TeamChallenges,
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "StaffOnboarding": StaffOnboarding,
 }
 
 export const pagesConfig = {
