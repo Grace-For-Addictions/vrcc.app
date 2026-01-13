@@ -501,7 +501,7 @@ export default function Home() {
         <ProactiveOutreach user={user} profile={profile} />
         <SessionAnalyzer user={user} profile={profile} />
         <GoalProgressNudges user={user} profile={profile} />
-      </div>
+        </div>
       </div>
     </>
   );
