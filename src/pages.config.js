@@ -40,6 +40,8 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
 import GraceHouseManagement from './pages/GraceHouseManagement';
+import ParticipantDashboard from './pages/ParticipantDashboard';
+import VolunteerHub from './pages/VolunteerHub';
 import __Layout from './Layout.jsx';
 
 
@@ -86,6 +88,8 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "WorkforceDevelopment": WorkforceDevelopment,
     "GraceHouseManagement": GraceHouseManagement,
+    "ParticipantDashboard": ParticipantDashboard,
+    "VolunteerHub": VolunteerHub,
 }
 
 export const pagesConfig = {
