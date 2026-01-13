@@ -13,6 +13,8 @@ import WelcomeHero from '@/components/dashboard/WelcomeHero';
 import QuickActions from '@/components/dashboard/QuickActions';
 import DailyChallenge from '@/components/dashboard/DailyChallenge';
 import LighthouseBeacon from '@/components/dashboard/LighthouseBeacon';
+import PersonalizedContentEngine from '@/components/ai/PersonalizedContentEngine';
+import ProactiveNudges from '@/components/ai/ProactiveNudges';
 import GraceCard from '@/components/common/GraceCard';
 import GraceChatWidget from '@/components/chat/GraceChatWidget';
 import ProactiveOutreach from '@/components/ai/ProactiveOutreach';
