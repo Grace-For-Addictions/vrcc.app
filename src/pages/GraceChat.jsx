@@ -8,6 +8,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import GraceCard from '@/components/common/GraceCard';
+import ReactMarkdown from 'react-markdown';
 
 const quickPrompts = [
   { icon: Heart, text: "I need encouragement today", color: "bg-rose-100 text-rose-700" },
@@ -18,29 +19,35 @@ const quickPrompts = [
 ];
 
 export default function GraceChat() {
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: `Hey there! 💚 I'm Grace, your 24/7 recovery companion powered by GPT-5.2.
-
-    I'm here to chat, celebrate your wins, help you find Iowa resources, explain brain science, provide proactive support, or just listen when you need someone.
-
-**What I can help with:**
-• Finding treatment, housing, jobs, and support across Iowa (dynamic resource matching by ZIP)
-• Explaining how connection literally rewires your brain (neuroplasticity)
-• Celebrating your milestones (every day counts!)
-• Grounding exercises when things feel hard
-• Proactively checking in based on your engagement
-• Personalized event and resource suggestions
-• Goal-setting assistance tied to "Your Why"
-• Connecting you with peer coaches and warm handoffs
-
-What's on your mind today?`
-    }
-  ]);
+  const [conversation, setConversation] = useState(null);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef(null);
+
+  useEffect(() => {
+    const initConversation = async () => {
+      try {
+        const conv = await base44.agents.createConversation({
+          agent_name: 'grace_companion',
+          metadata: { name: 'Grace Chat Session' }
+        });
+        setConversation(conv);
+        setMessages(conv.messages || []);
+      } catch (error) {
+        console.error('Failed to initialize conversation:', error);
+      }
+    };
+    initConversation();
+  }, []);
+
+  useEffect(() => {
+    if (!conversation) return;
+    const unsubscribe = base44.agents.subscribeToConversation(conversation.id, (data) => {
+      setMessages(data.messages);
+    });
+    return () => unsubscribe();
+  }, [conversation]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -52,49 +59,18 @@ What's on your mind today?`
 
   const handleSend = async (messageText) => {
     const userMessage = messageText || input.trim();
-    if (!userMessage || isLoading) return;
+    if (!userMessage || isLoading || !conversation) return;
 
     setInput('');
-    setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
     setIsLoading(true);
 
     try {
-      const response = await base44.integrations.Core.InvokeLLM({
-        prompt: `You are AI Grace, the warm, encouraging recovery companion for Grace For Addictions Virtual Recovery Community Center in Iowa. Powered by GPT-5.2 on Wix/Base44 platform.
-
-      CORE VALUES: "No Fees. No Stigma. Just Grace." | "Community Rewires the Brain." | "Recovery is Possible."
-
-      NEUROPLASTICITY FRAMING: Always emphasize that connection, support, and healthy choices physically rewire the brain. Use terms like "building new pathways," "strengthening resilience circuits," "your brain's capacity to heal."
-
-CRISIS PROTOCOL: If user mentions suicidal thoughts, self-harm, overdose, or immediate danger:
-- Acknowledge their pain with deep empathy
-- Provide: 988 Suicide & Crisis Lifeline (call or text 988), Iowa Warm Line (844-775-9276)
-- Offer to connect them with a peer coach
-- Never minimize or dismiss their feelings
-
-TONE: Warm, encouraging, occasionally playful. Use person-first language always ("person in recovery" not "addict"). Use neuroscience metaphors about brain rewiring. Keep responses conversational, not clinical.
-
-CAPABILITIES:
-- Explain recovery concepts using GRACE/ICARE principles
-- Celebrate milestones and streaks
-- Provide grounding exercises and coping tools
-- Share info about Iowa resources
-- Discuss neuroplasticity and how connection heals the brain
-
-BOUNDARIES: Cannot provide medical advice or diagnose. Encourage professional help when appropriate.
-
-User message: ${userMessage}
-
-Respond as Grace (keep response under 200 words, use markdown for formatting):`,
-        add_context_from_internet: false
+      await base44.agents.addMessage(conversation, {
+        role: 'user',
+        content: userMessage
       });
-
-      setMessages(prev => [...prev, { role: 'assistant', content: response }]);
     } catch (error) {
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: "I'm having a moment - but I'm still here for you! 💚 Try again, or if you need immediate support, call 988 anytime. You matter." 
-      }]);
+      console.error('Failed to send message:', error);
     } finally {
       setIsLoading(false);
     }
@@ -143,13 +119,13 @@ Respond as Grace (keep response under 200 words, use markdown for formatting):`,
                     ? 'bg-teal-600 text-white rounded-br-md' 
                     : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-bl-md'
                 }`}>
-                  <div className="prose prose-sm max-w-none">
-                    {msg.content.split('\n').map((line, i) => (
-                      <p key={i} className={`${msg.role === 'user' ? 'text-white' : 'text-gray-700'} mb-2 last:mb-0`}>
-                        {line}
-                      </p>
-                    ))}
-                  </div>
+                  {msg.role === 'user' ? (
+                    <p className="text-white">{msg.content}</p>
+                  ) : (
+                    <ReactMarkdown className="prose prose-sm max-w-none prose-p:text-gray-700 prose-strong:text-gray-900">
+                      {msg.content}
+                    </ReactMarkdown>
+                  )}
                 </div>
               </motion.div>
             ))}
