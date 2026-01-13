@@ -579,17 +579,6 @@ export default function AdminDashboard() {
           </GraceCard>
         </div>
 
-        {/* Custom Reports */}
-        <TabsContent value="reports">
-          <CustomReportBuilder />
-        </TabsContent>
-
-        {/* Resource Gap Analysis */}
-        <TabsContent value="resources">
-          <ResourceDensityAnalytics />
-        </TabsContent>
-        </Tabs>
-
         {/* A/B Testing Section */}
         <GraceCard className="mt-8">
           <h3 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
