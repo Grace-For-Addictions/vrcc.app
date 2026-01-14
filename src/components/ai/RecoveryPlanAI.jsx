@@ -74,7 +74,7 @@ export default function RecoveryPlanAI({ user }) {
     try {
       // Calculate average mood from recent check-ins
       const avgMood = recentCheckIns.length > 0
-        ? recentCheckIns.reduce((sum, ci) => sum + (ci.mood_rating || 0), 0) / recentCheckIns.length
+        ? recentCheckIns.reduce((sum, ci) => sum + (ci.mood_score || ci.mood_rating || 0), 0) / recentCheckIns.length
         : 0;
 
       // Get BARC-10 score

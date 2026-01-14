@@ -61,7 +61,7 @@ export default function ProgressAnalysis({ user, shareWithSponsor = false }) {
       setIsAnalyzing(true);
 
       const barcScores = assessments.map(a => a.total_score);
-      const moodScores = checkIns.map(c => c.mood_rating).filter(Boolean);
+      const moodScores = checkIns.map(c => c.mood_score || c.mood_rating).filter(Boolean);
       const recentCheckInCount = checkIns.filter(c => {
         const daysSince = (new Date() - new Date(c.created_date)) / (1000 * 60 * 60 * 24);
         return daysSince <= 7;
