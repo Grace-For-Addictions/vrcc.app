@@ -43,6 +43,7 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import GracePorchGatherings from './pages/GracePorchGatherings';
 import __Layout from './Layout.jsx';
 
 
@@ -92,6 +93,7 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
+    "GracePorchGatherings": GracePorchGatherings,
 }
 
 export const pagesConfig = {

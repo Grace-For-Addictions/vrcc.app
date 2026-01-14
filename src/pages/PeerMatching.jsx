@@ -272,13 +272,30 @@ export default function PeerMatching() {
           </div>
           <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
             <Heart className="w-5 h-5 text-rose-500" />
-            <span className="text-sm text-gray-600">Peer-to-Peer Support</span>
+            <span className="text-sm text-gray-600">Opt-In Only</span>
           </div>
           <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
             <Star className="w-5 h-5 text-amber-500" />
             <span className="text-sm text-gray-600">AI-Powered Matching</span>
           </div>
         </div>
+
+        {/* Privacy Notice */}
+        <GraceCard className="mb-8 bg-purple-50 border-purple-200">
+          <div className="flex items-start gap-3">
+            <Shield className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
+            <div>
+              <h4 className="font-semibold text-purple-900 mb-2">Your Privacy is Protected</h4>
+              <ul className="text-sm text-purple-800 space-y-1">
+                <li>• You control what you share and when</li>
+                <li>• Matches require mutual consent to connect</li>
+                <li>• You can unmatch anytime, no questions asked</li>
+                <li>• Anonymous options keep your identity private</li>
+                <li>• Your contact info is never shared without permission</li>
+              </ul>
+            </div>
+          </div>
+        </GraceCard>
 
         {showForm ? (
           <MatchRequestForm 

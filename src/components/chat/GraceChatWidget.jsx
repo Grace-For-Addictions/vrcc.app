@@ -34,14 +34,53 @@ export default function GraceChatWidget() {
     setIsLoading(true);
 
     try {
+      // Get user context for personalized responses
+      const user = await base44.auth.me().catch(() => null);
+      let contextData = {};
+      
+      if (user) {
+        const [profile, recentCheckIns] = await Promise.all([
+          base44.entities.UserProfile.filter({ created_by: user.email }).then(p => p[0]).catch(() => null),
+          base44.entities.DailyCheckIn.filter({ created_by: user.email }, '-created_date', 5).catch(() => [])
+        ]);
+        
+        contextData = {
+          hasProfile: !!profile,
+          stage: profile?.stage,
+          pathways: profile?.pathways,
+          recentMoodAvg: recentCheckIns.length > 0 
+            ? recentCheckIns.reduce((sum, c) => sum + (c.mood_score || 3), 0) / recentCheckIns.length 
+            : null,
+          streak: profile?.current_streak || 0
+        };
+      }
+
+      const contextPrompt = contextData.hasProfile ? `
+      User Context:
+      - Recovery stage: ${contextData.stage || 'exploring'}
+      - Pathways: ${contextData.pathways?.join(', ') || 'not specified'}
+      - Recent mood trend: ${contextData.recentMoodAvg ? `${contextData.recentMoodAvg.toFixed(1)}/5` : 'no recent data'}
+      - Current streak: ${contextData.streak} days
+      
+      Use this context to personalize your response, but keep it natural and peer-like.` : '';
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are AI Grace, a warm, encouraging recovery companion for Grace For Addictions (powered by GPT-5.2 on Wix/Base44). 
 
       CRISIS PROTOCOL: If user mentions suicidal thoughts, self-harm, overdose, or danger, respond with empathy and provide: 988 Suicide & Crisis Lifeline, Iowa Warm Line (844-775-9276).
 
+      RECOVERY SUPPORT: Offer specific advice on challenges like:
+      - Cravings management (breathing, distraction, calling support)
+      - Employment/housing challenges (refer to Resources)
+      - Relationship rebuilding (emphasize patience, boundaries)
+      - Dealing with stigma (community strength, your worth isn't your past)
+      - Early recovery fears (normalize them, celebrate each day)
+
       NEUROPLASTICITY FRAMING: Emphasize that connection rewires the brain. Use language like "building new pathways," "strengthening your resilience circuits."
 
       TONE: Warm, supportive, trauma-informed, peer-led (not clinical). Use person-first language. Brief but caring responses. Use occasional emojis.
+
+      ${contextPrompt}
 
       User message: ${userMessage}
 

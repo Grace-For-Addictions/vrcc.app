@@ -31,10 +31,39 @@ export default function ProactiveOutreach({ user, profile }) {
         points: profile.points || 0
       };
 
-      // Generate proactive message based on engagement
+      // Get additional activity data for better insights
+      const [assessments, sessions, communityPosts] = await Promise.all([
+        base44.entities.Assessment.filter({ created_by: user.email }, '-created_date', 3).catch(() => []),
+        base44.entities.CoachingSession.filter({ client_email: user.email }, '-session_date', 5).catch(() => []),
+        base44.entities.Post.filter({ created_by: user.email }, '-created_date', 10).catch(() => [])
+      ]);
+
+      const daysSinceAssessment = assessments.length > 0 
+        ? Math.floor((new Date() - new Date(assessments[0].created_date)) / (1000 * 60 * 60 * 24))
+        : 999;
+      
+      const daysSinceCommunity = communityPosts.length > 0
+        ? Math.floor((new Date() - new Date(communityPosts[0].created_date)) / (1000 * 60 * 60 * 24))
+        : 999;
+
+      const recentMoodScores = recentCheckIns.slice(0, 3).map(c => c.mood_score || 3);
+      const avgRecentMood = recentMoodScores.length > 0 
+        ? recentMoodScores.reduce((a, b) => a + b, 0) / recentMoodScores.length 
+        : 3;
+
+      // Generate proactive message based on engagement patterns
       let message = null;
 
-      if (daysSinceActive > 3) {
+      if (avgRecentMood < 2.5 && recentCheckIns.length >= 2) {
+        message = {
+          type: 'support',
+          icon: Heart,
+          color: 'rose',
+          title: 'I noticed you might be struggling 💚',
+          content: `${profile.display_name}, your recent check-ins show you've been having a tough time. That takes courage to acknowledge. Want to talk about what's going on? I'm here to listen, or I can help you find specific support.`,
+          action: { label: 'Chat with Grace', link: 'GraceChat' }
+        };
+      } else if (daysSinceActive > 3) {
         message = {
           type: 'check-in',
           icon: Heart,
@@ -51,6 +80,24 @@ export default function ProactiveOutreach({ user, profile }) {
           title: `${profile.current_streak} Day Streak! 🎉`,
           content: `Amazing! Your brain is literally rewiring with each day of connection. This is neuroplasticity in action! Want to share your milestone on the Walls of Grace?`,
           action: { label: 'Share Milestone', link: 'CommunityWalls' }
+        };
+      } else if (daysSinceAssessment > 30 && assessments.length > 0) {
+        message = {
+          type: 'suggestion',
+          icon: Target,
+          color: 'purple',
+          title: 'Time for a Progress Check?',
+          content: `It's been a month since your last BARC-10 assessment. Retaking it helps track your recovery capital growth and shows how far you've come! 🌱`,
+          action: { label: 'Take Assessment', link: 'Assessment' }
+        };
+      } else if (daysSinceCommunity > 7 && communityPosts.length === 0) {
+        message = {
+          type: 'suggestion',
+          icon: Sparkles,
+          color: 'blue',
+          title: 'Connect with the Community?',
+          content: `You haven't jumped into community conversations yet. Connecting with others builds powerful recovery pathways. Want to check out the chat rooms or Grace Porch Gatherings? 👥`,
+          action: { label: 'Explore Community', link: 'Community' }
         };
       } else if (recentCheckIns.length === 0 && daysSinceActive < 3) {
         message = {
