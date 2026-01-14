@@ -40,21 +40,20 @@ export const getRoleNavItems = (userRole, isAdmin, readinessLevel = 1, consentAc
     };
   }
 
-  // Participant (default) - readiness-gated
+  // Participant (default) - PILOT BUILD: ALL FEATURES UNLOCKED
   const participantNav = {
     show: ['Home', 'Community', 'Resources', 'CommunityWalls', 'Events', 'Crisis', 'GraceChat', 
            'Assessment', 'RecoveryGarden', 'Gamification', 'PeerMatching', 'Quizzes', 
-           'TeamChallenges', 'RecoveryCapitalCafe', 'DigitalEquity', 'MeetingsHub'],
+           'TeamChallenges', 'RecoveryCapitalCafe', 'DigitalEquity', 'MeetingsHub',
+           'Neuroplasticity', 'WorkforceDevelopment', 'SchoolPrevention', 'VideoLibrary',
+           'NarcanTracker', 'GrantWriter', 'VRCheckoutHub', 'DailyReflection', 'ProviderHub',
+           'ProviderAnalytics', 'IBHRSReporting'],
     hide: ['AdminDashboard', 'CoachDashboard', 'NavigatorDashboard', 'BeePurpleReporting', 
-           'GovDashPortal', 'DocumentOCR', 'CoachingLogger', 'PeerCoachTraining']
+           'GovDashPortal', 'DocumentOCR', 'CoachingLogger', 'PeerCoachTraining', 'CoachingLogger']
   };
 
-  // Gate Transformation Hub features by readiness
-  if (readinessLevel >= 3 && consentAcknowledged) {
-    participantNav.show.push('Neuroplasticity', 'WorkforceDevelopment', 'SchoolPrevention');
-  } else {
-    participantNav.hide.push('Neuroplasticity', 'WorkforceDevelopment', 'SchoolPrevention');
-  }
+  // PILOT BUILD: All Transformation Hub features immediately accessible
+  // No readiness or consent gating - encourage exploration and data gathering
 
   return participantNav;
 };

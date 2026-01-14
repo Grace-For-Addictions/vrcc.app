@@ -56,11 +56,11 @@ export default function WelcomeCard({ onStartCheckIn, onStartAssessment, onDismi
                   Every recovery story begins with a single, courageous step—and yours can start whenever you're ready.
                 </p>
                 <p>
-                  Start with a quick daily check-in or the BARC-10 assessment (just 2 minutes!). This helps me understand your journey and offer personalized support.
+                  Everything is open to you right now. Start with a quick daily check-in or the BARC-10 assessment (just 2 minutes), or explore freely—there's no wrong way to begin.
                 </p>
                 <div className="flex items-center gap-2 mt-2 text-sm text-teal-700 bg-teal-100/50 rounded-lg px-3 py-2">
                   <Sparkles className="w-4 h-4" />
-                  <span>Most people start with the assessment first</span>
+                  <span>All features, tools, and resources are available to you immediately</span>
                 </div>
               </div>
             </div>

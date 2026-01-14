@@ -106,12 +106,11 @@ export default function PersonalizedContentEngine({ userEmail }) {
         })
         .slice(0, 3);
 
-      // Filter events based on stage and interests
+      // Filter events based on upcoming schedule - PILOT BUILD: no readiness gating
       const recommendedEvents = allEvents
         .filter(e => {
           const futureEvent = new Date(e.start_time) > new Date();
-          const matchesStage = !e.required_readiness_level || readinessLevel >= e.required_readiness_level;
-          return futureEvent && matchesStage;
+          return futureEvent; // All events accessible in pilot phase
         })
         .slice(0, 2);
 
