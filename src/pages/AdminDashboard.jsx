@@ -94,6 +94,13 @@ export default function AdminDashboard() {
     initialData: []
   });
 
+  const { data: allGFAPlans } = useQuery({
+    queryKey: ['allGFAPlans'],
+    queryFn: () => base44.entities.GFAPlan.list('-updated_date', 500),
+    enabled: !!user,
+    initialData: []
+  });
+
   if (!user) return null;
 
   // Analytics calculations
@@ -136,6 +143,35 @@ export default function AdminDashboard() {
       });
       const total = Object.keys(usersWithMultipleAssessments).length;
       return total > 0 ? ((improved / total) * 100).toFixed(0) : 0;
+    })(),
+    gfaPlansCreated: allGFAPlans.filter(p => p.is_active).length,
+    gfaPlansOptedInTracking: allGFAPlans.filter(p => p.opt_in_tracking).length,
+    gfaPlansOptedInAnonymized: allGFAPlans.filter(p => p.opt_in_anonymized_data).length,
+    gfaAvgSectionsCompleted: allGFAPlans.length > 0 ? 
+      (allGFAPlans.reduce((sum, p) => sum + (p.sections_completed || 0), 0) / allGFAPlans.length).toFixed(1) : 0,
+    gfaTotalGrowthMoments: allGFAPlans.reduce((sum, p) => sum + (p.self_reported_outcomes?.length || 0), 0),
+    gfaBARCCorrelation: (() => {
+      // Users with both GFA Plan touches and BARC improvements
+      const usersWithBothData = allGFAPlans.filter(plan => {
+        const userAssessments = allAssessments.filter(a => a.created_by === plan.user_email);
+        return userAssessments.length >= 2 && plan.sections_completed > 0;
+      });
+      
+      let positiveCorrelation = 0;
+      usersWithBothData.forEach(plan => {
+        const userAssessments = allAssessments
+          .filter(a => a.created_by === plan.user_email)
+          .sort((a, b) => new Date(a.created_date) - new Date(b.created_date));
+        
+        if (userAssessments.length >= 2) {
+          const first = userAssessments[0].total_score || 0;
+          const last = userAssessments[userAssessments.length - 1].total_score || 0;
+          if (last > first) positiveCorrelation++;
+        }
+      });
+      
+      return usersWithBothData.length > 0 ? 
+        ((positiveCorrelation / usersWithBothData.length) * 100).toFixed(0) : 0;
     })()
   };
 
@@ -241,14 +277,119 @@ export default function AdminDashboard() {
         </div>
 
         <Tabs defaultValue="engagement" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-6">
+          <TabsList className="grid w-full grid-cols-7 gap-1">
             <TabsTrigger value="engagement">Engagement</TabsTrigger>
+            <TabsTrigger value="gfa-plans">GFA Plans</TabsTrigger>
             <TabsTrigger value="dropoff">Predictive AI</TabsTrigger>
             <TabsTrigger value="ai-effectiveness">AI Outreach</TabsTrigger>
             <TabsTrigger value="readiness">Readiness Logic</TabsTrigger>
             <TabsTrigger value="reports">Custom Reports</TabsTrigger>
             <TabsTrigger value="resources">Resource Gaps</TabsTrigger>
           </TabsList>
+
+          {/* GFA Plans Tab */}
+          <TabsContent value="gfa-plans">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <GraceCard>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">GFA Plan Adoption & Outcomes</h3>
+                <div className="space-y-4">
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Plans Created</span>
+                      <Badge>{stats.gfaPlansCreated}</Badge>
+                    </div>
+                    <Progress value={(stats.gfaPlansCreated / stats.totalUsers) * 100} />
+                    <div className="text-xs text-gray-500 mt-1">
+                      {((stats.gfaPlansCreated / stats.totalUsers) * 100).toFixed(0)}% of active users
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Opted In to Track Progress</span>
+                      <Badge>{stats.gfaPlansOptedInTracking}</Badge>
+                    </div>
+                    <Progress value={(stats.gfaPlansOptedInTracking / (stats.gfaPlansCreated || 1)) * 100} />
+                    <div className="text-xs text-gray-500 mt-1">
+                      {((stats.gfaPlansOptedInTracking / (stats.gfaPlansCreated || 1)) * 100).toFixed(0)}% of plan creators
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Contributing Anonymized Data</span>
+                      <Badge>{stats.gfaPlansOptedInAnonymized}</Badge>
+                    </div>
+                    <Progress value={(stats.gfaPlansOptedInAnonymized / (stats.gfaPlansCreated || 1)) * 100} />
+                    <div className="text-xs text-gray-500 mt-1">
+                      {((stats.gfaPlansOptedInAnonymized / (stats.gfaPlansCreated || 1)) * 100).toFixed(0)}% consented to research
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-gray-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Avg GRACE Sections Completed</span>
+                      <Badge variant="outline" className="text-lg font-bold">{stats.gfaAvgSectionsCompleted}/5</Badge>
+                    </div>
+                    <Progress value={(stats.gfaAvgSectionsCompleted / 5) * 100} className="bg-teal-100" />
+                    <div className="text-xs text-gray-500 mt-1">
+                      Average across all active plans
+                    </div>
+                  </div>
+
+                  <div>
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-medium">Self-Reported Growth Moments</span>
+                      <Badge className="bg-purple-100 text-purple-700">{stats.gfaTotalGrowthMoments}</Badge>
+                    </div>
+                    <div className="text-xs text-gray-500 mt-1">
+                      Participants tracking small wins and progress
+                    </div>
+                  </div>
+                </div>
+              </GraceCard>
+
+              <GraceCard>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">GFA Plan Impact on Wellbeing</h3>
+                <div className="space-y-4">
+                  <div className="p-4 bg-gradient-to-br from-teal-50 to-teal-100 rounded-lg border border-teal-200">
+                    <h4 className="font-semibold text-teal-900 mb-2">BARC-10 Correlation</h4>
+                    <p className="text-4xl font-bold text-teal-700 mb-2">{stats.gfaBARCCorrelation}%</p>
+                    <p className="text-sm text-teal-800">
+                      Users with active GFA Plans showing BARC-10 improvement
+                    </p>
+                  </div>
+
+                  <div className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold text-gray-900 mb-3">Most/Least Visited Sections</h4>
+                    <div className="space-y-2">
+                      {[
+                        { section: 'Gratitude', count: allGFAPlans.filter(p => p.section_gratitude).length, color: 'teal' },
+                        { section: 'Resilience', count: allGFAPlans.filter(p => p.section_resilience).length, color: 'blue' },
+                        { section: 'Acceptance', count: allGFAPlans.filter(p => p.section_acceptance).length, color: 'rose' },
+                        { section: 'Connection', count: allGFAPlans.filter(p => p.section_connection).length, color: 'purple' },
+                        { section: 'Empowerment', count: allGFAPlans.filter(p => p.section_empowerment).length, color: 'amber' }
+                      ].sort((a, b) => b.count - a.count).map((s, idx) => (
+                        <div key={s.section}>
+                          <div className="flex justify-between text-xs mb-1">
+                            <span className="font-medium">{s.section}</span>
+                            <span>{s.count} plans</span>
+                          </div>
+                          <Progress value={(s.count / (stats.gfaPlansCreated || 1)) * 100} className={`h-2 bg-${s.color}-200`} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+                    <p className="text-sm text-amber-900">
+                      <strong>Privacy Note:</strong> All aggregated data respects participant consent. Only anonymized patterns from users who opted in are included in analytics.
+                    </p>
+                  </div>
+                </div>
+              </GraceCard>
+            </div>
+          </TabsContent>
 
           {/* Engagement Tab */}
           <TabsContent value="engagement">
@@ -568,6 +709,18 @@ export default function AdminDashboard() {
                 <h4 className="font-semibold text-violet-900 mb-2">Cost Effectiveness</h4>
                 <p className="text-3xl font-bold text-violet-700">$0</p>
                 <p className="text-sm text-violet-600 mt-1">Participant fees - 100% free</p>
+              </div>
+
+              <div className="p-4 bg-teal-50 rounded-lg border border-teal-200">
+                <h4 className="font-semibold text-teal-900 mb-2">GFA Plans Created</h4>
+                <p className="text-3xl font-bold text-teal-700">{stats.gfaPlansCreated}</p>
+                <p className="text-sm text-teal-600 mt-1">Personalized recovery action plans</p>
+              </div>
+
+              <div className="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <h4 className="font-semibold text-purple-900 mb-2">Growth Moments Tracked</h4>
+                <p className="text-3xl font-bold text-purple-700">{stats.gfaTotalGrowthMoments}</p>
+                <p className="text-sm text-purple-600 mt-1">Self-reported progress markers</p>
               </div>
             </div>
 

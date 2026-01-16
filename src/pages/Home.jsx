@@ -29,6 +29,8 @@ import WelcomeCard from '@/components/onboarding/WelcomeCard';
 import CelebrationCard from '@/components/onboarding/CelebrationCard';
 import GuidedTour from '@/components/onboarding/GuidedTour';
 import PostRegistrationNudge from '@/components/onboarding/PostRegistrationNudge';
+import GFAPlanInvitation from '@/components/onboarding/GFAPlanInvitation';
+import GFAPlanCard from '@/components/gfaplan/GFAPlanCard';
 import CommunityGardenVisual from '@/components/community/CommunityGardenVisual';
 import { useNavigate } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
@@ -336,6 +338,16 @@ export default function Home() {
         {/* Celebration Card */}
         {showCelebration && (
           <CelebrationCard onClose={() => setShowCelebration(false)} />
+        )}
+
+        {/* GFA Plan Invitation - Show after first login */}
+        {user && !localStorage.getItem(`gfa-plan-invitation-${user.email}`) && (
+          <GFAPlanInvitation user={user} />
+        )}
+
+        {/* My GFA Plan Card */}
+        {user && (
+          <GFAPlanCard user={user} />
         )}
 
         {/* Daily Grace Check-In */}
