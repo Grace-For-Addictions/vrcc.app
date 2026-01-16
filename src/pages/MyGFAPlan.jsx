@@ -25,8 +25,8 @@ const sections = [
     title: 'Gratitude',
     icon: Sparkles,
     color: 'teal',
-    prompt: 'What strengths do you notice in yourself? What sources of hope light your path? What's going well, even if small?',
-    placeholder: 'Take your time... there's no rush. Even noticing one thing is beautiful.'
+    prompt: "What strengths do you notice in yourself? What sources of hope light your path? What's going well, even if small?",
+    placeholder: "Take your time... there's no rush. Even noticing one thing is beautiful."
   },
   {
     key: 'resilience',
@@ -34,7 +34,7 @@ const sections = [
     icon: Shield,
     color: 'blue',
     prompt: 'What skills, practices, or supports help you in tough moments? What has helped you get through hard times before?',
-    placeholder: 'Remember: resilience isn't about being perfect—it's about showing up for yourself.'
+    placeholder: "Remember: resilience isn't about being perfect—it's about showing up for yourself."
   },
   {
     key: 'acceptance',
@@ -42,7 +42,7 @@ const sections = [
     icon: Heart,
     color: 'rose',
     prompt: 'What are you gently noticing about where you are right now? What can you hold with compassion, without judgment?',
-    placeholder: 'Acceptance is a gift you give yourself. It's okay to just be where you are.'
+    placeholder: "Acceptance is a gift you give yourself. It's okay to just be where you are."
   },
   {
     key: 'connection',
