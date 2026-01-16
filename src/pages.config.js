@@ -16,6 +16,7 @@ import Gamification from './pages/Gamification';
 import GovDashPortal from './pages/GovDashPortal';
 import GraceChat from './pages/GraceChat';
 import GraceHouseManagement from './pages/GraceHouseManagement';
+import GracePorchGatherings from './pages/GracePorchGatherings';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
@@ -43,7 +44,7 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import GracePorchGatherings from './pages/GracePorchGatherings';
+import MyGFAPlan from './pages/MyGFAPlan';
 import __Layout from './Layout.jsx';
 
 
@@ -66,6 +67,7 @@ export const PAGES = {
     "GovDashPortal": GovDashPortal,
     "GraceChat": GraceChat,
     "GraceHouseManagement": GraceHouseManagement,
+    "GracePorchGatherings": GracePorchGatherings,
     "GrantWriter": GrantWriter,
     "Home": Home,
     "IBHRSReporting": IBHRSReporting,
@@ -93,7 +95,7 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "GracePorchGatherings": GracePorchGatherings,
+    "MyGFAPlan": MyGFAPlan,
 }
 
 export const pagesConfig = {
