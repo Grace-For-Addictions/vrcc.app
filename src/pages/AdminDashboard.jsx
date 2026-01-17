@@ -17,6 +17,8 @@ import TooltipWrapper from '@/components/rbac/TooltipWrapper';
 import AdvancedPredictiveAnalytics from '@/components/ai/AdvancedPredictiveAnalytics';
 import CustomReportBuilder from '@/components/admin/CustomReportBuilder';
 import ResourceDensityAnalytics from '@/components/admin/ResourceDensityAnalytics';
+import NeuroplasticityWorkshopGenerator from '@/components/admin/NeuroplasticityWorkshopGenerator';
+import GFARCMeetingTrackerDashboard from '@/components/admin/GFARCMeetingTrackerDashboard';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -915,7 +917,11 @@ export default function AdminDashboard() {
 
           {/* Custom Reports */}
           <TabsContent value="reports">
-            <CustomReportBuilder />
+            <div className="space-y-6">
+              <CustomReportBuilder />
+              <NeuroplasticityWorkshopGenerator />
+              <GFARCMeetingTrackerDashboard />
+            </div>
           </TabsContent>
 
           {/* Resource Gap Analysis */}
