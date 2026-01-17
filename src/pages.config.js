@@ -22,6 +22,7 @@ import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
 import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
+import MyGFAPlan from './pages/MyGFAPlan';
 import NarcanTracker from './pages/NarcanTracker';
 import NavigatorDashboard from './pages/NavigatorDashboard';
 import Neuroplasticity from './pages/Neuroplasticity';
@@ -44,7 +45,6 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import MyGFAPlan from './pages/MyGFAPlan';
 import __Layout from './Layout.jsx';
 
 
@@ -73,6 +73,7 @@ export const PAGES = {
     "IBHRSReporting": IBHRSReporting,
     "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
+    "MyGFAPlan": MyGFAPlan,
     "NarcanTracker": NarcanTracker,
     "NavigatorDashboard": NavigatorDashboard,
     "Neuroplasticity": Neuroplasticity,
@@ -95,7 +96,6 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "MyGFAPlan": MyGFAPlan,
 }
 
 export const pagesConfig = {
