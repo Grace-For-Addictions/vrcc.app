@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Calendar, DollarSign, TrendingUp, AlertTriangle, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
 import GraceCard from '@/components/common/GraceCard';
+import GenerateGrantReport from './GenerateGrantReport';
 
 export default function FunderRelationshipManager() {
   const queryClient = useQueryClient();
@@ -61,10 +62,13 @@ export default function FunderRelationshipManager() {
                 Track communications, deadlines, and funder preferences aligned with Polk County 5 Points
               </CardDescription>
             </div>
-            <Button onClick={() => analyzeMutation.mutate()} disabled={analyzeMutation.isPending}>
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Analyze Success Patterns
-            </Button>
+            <div className="flex gap-2">
+              <Button onClick={() => analyzeMutation.mutate()} disabled={analyzeMutation.isPending}>
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Analyze Success
+              </Button>
+              <GenerateGrantReport />
+            </div>
           </div>
         </CardHeader>
         <CardContent>

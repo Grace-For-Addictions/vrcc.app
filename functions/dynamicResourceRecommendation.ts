@@ -96,9 +96,30 @@ Return as structured JSON.`;
       }
     });
 
+    // Auto-generate resource requests for high-priority recommendations
+    if (recommendations.top_resources?.length > 0) {
+      const urgentResources = recommendations.top_resources.filter(r => 
+        r.urgency === 'immediate' || r.urgency === 'within_24h'
+      );
+
+      if (urgentResources.length > 0) {
+        try {
+          await base44.asServiceRole.functions.invoke('autoGenerateResourceRequest', {
+            participant_email,
+            recommended_resources: urgentResources
+          });
+        } catch (error) {
+          console.error('Failed to auto-generate resource requests:', error);
+        }
+      }
+    }
+
     return Response.json({ 
       success: true,
       recommendations,
+      auto_requests_generated: recommendations.top_resources?.filter(r => 
+        r.urgency === 'immediate' || r.urgency === 'within_24h'
+      ).length || 0,
       context_analyzed: {
         mood_trend: recentCheckIns.length > 0 ? (recentCheckIns.reduce((s, c) => s + (c.mood || 3), 0) / recentCheckIns.length).toFixed(1) : null,
         chat_sentiment: chatSentiment,
