@@ -20,6 +20,7 @@ import ResourceDensityAnalytics from '@/components/admin/ResourceDensityAnalytic
 import NeuroplasticityWorkshopGenerator from '@/components/admin/NeuroplasticityWorkshopGenerator';
 import GFARCMeetingTrackerDashboard from '@/components/admin/GFARCMeetingTrackerDashboard';
 import AutoGrantProposalGenerator from '@/components/admin/AutoGrantProposalGenerator';
+import ResourceRequestManager from '@/components/admin/ResourceRequestManager';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -920,6 +921,7 @@ export default function AdminDashboard() {
           <TabsContent value="reports">
             <div className="space-y-6">
               <AutoGrantProposalGenerator />
+              <ResourceRequestManager />
               <CustomReportBuilder />
               <NeuroplasticityWorkshopGenerator />
               <GFARCMeetingTrackerDashboard />
