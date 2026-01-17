@@ -19,6 +19,7 @@ import CustomReportBuilder from '@/components/admin/CustomReportBuilder';
 import ResourceDensityAnalytics from '@/components/admin/ResourceDensityAnalytics';
 import NeuroplasticityWorkshopGenerator from '@/components/admin/NeuroplasticityWorkshopGenerator';
 import GFARCMeetingTrackerDashboard from '@/components/admin/GFARCMeetingTrackerDashboard';
+import AutoGrantProposalGenerator from '@/components/admin/AutoGrantProposalGenerator';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -918,6 +919,7 @@ export default function AdminDashboard() {
           {/* Custom Reports */}
           <TabsContent value="reports">
             <div className="space-y-6">
+              <AutoGrantProposalGenerator />
               <CustomReportBuilder />
               <NeuroplasticityWorkshopGenerator />
               <GFARCMeetingTrackerDashboard />
