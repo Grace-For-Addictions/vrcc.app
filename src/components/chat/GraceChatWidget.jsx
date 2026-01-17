@@ -34,6 +34,12 @@ export default function GraceChatWidget() {
     setIsLoading(true);
 
     try {
+      // Real-time sentiment analysis
+      const sentimentResponse = await base44.functions.invoke('analyzeSentiment', {
+        message_text: userMessage
+      });
+      const sentiment = sentimentResponse.data;
+
       // Get user context for personalized responses
       const user = await base44.auth.me().catch(() => null);
       let contextData = {};
@@ -64,8 +70,19 @@ export default function GraceChatWidget() {
       
       Use this context to personalize your response, but keep it natural and peer-like.` : '';
 
+      // Tailor response based on sentiment
+      let toneGuidance = '';
+      if (sentiment.crisis_indicators) {
+        toneGuidance = 'CRISIS DETECTED - Immediately provide 988 Lifeline and urgent support options first.';
+      } else if (sentiment.recommended_tone) {
+        toneGuidance = `Use ${sentiment.recommended_tone} tone. Detected emotions: ${sentiment.emotion_tags?.join(', ')}.`;
+      }
+
       const response = await base44.integrations.Core.InvokeLLM({
         prompt: `You are AI Grace, a warm, encouraging recovery companion for Grace For Addictions (powered by GPT-5.2 on Wix/Base44). 
+
+      SENTIMENT ANALYSIS: ${sentiment.sentiment} - Emotions: ${sentiment.emotion_tags?.join(', ')}
+      ${toneGuidance}
 
       CRISIS PROTOCOL: If user mentions suicidal thoughts, self-harm, overdose, or danger, respond with empathy and provide: 988 Suicide & Crisis Lifeline, Iowa Warm Line (844-775-9276).
 
