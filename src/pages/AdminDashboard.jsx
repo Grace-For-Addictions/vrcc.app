@@ -21,6 +21,8 @@ import NeuroplasticityWorkshopGenerator from '@/components/admin/Neuroplasticity
 import GFARCMeetingTrackerDashboard from '@/components/admin/GFARCMeetingTrackerDashboard';
 import AutoGrantProposalGenerator from '@/components/admin/AutoGrantProposalGenerator';
 import ResourceRequestManager from '@/components/admin/ResourceRequestManager';
+import UnifiedCapacityDashboard from '@/components/admin/UnifiedCapacityDashboard';
+import FunderRelationshipManager from '@/components/admin/FunderRelationshipManager';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -920,7 +922,9 @@ export default function AdminDashboard() {
           {/* Custom Reports */}
           <TabsContent value="reports">
             <div className="space-y-6">
+              <UnifiedCapacityDashboard />
               <AutoGrantProposalGenerator />
+              <FunderRelationshipManager />
               <ResourceRequestManager />
               <CustomReportBuilder />
               <NeuroplasticityWorkshopGenerator />
