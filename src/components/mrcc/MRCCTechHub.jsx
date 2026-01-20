@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { 
   MapPin, Wifi, Calendar, Phone, Download, Navigation,
-  Monitor, Clock, CheckCircle2, AlertCircle
+  Monitor, Clock, CheckCircle2, AlertCircle, Radio
 } from 'lucide-react';
 import { toast } from 'sonner';
 import GraceCard from '@/components/common/GraceCard';
@@ -17,6 +17,8 @@ export default function MRCCTechHub() {
   const [user, setUser] = useState(null);
   const [offlineMode, setOfflineMode] = useState(!navigator.onLine);
   const [userLocation, setUserLocation] = useState(null);
+  const [routeDestination, setRouteDestination] = useState(null);
+  const [showHotspotRequest, setShowHotspotRequest] = useState(false);
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -90,6 +92,40 @@ export default function MRCCTechHub() {
     onSuccess: () => {
       queryClient.invalidateQueries(['telehealthBookings']);
       toast.success('Kiosk appointment requested! 📅');
+    }
+  });
+
+  const routeMutation = useMutation({
+    mutationFn: async (destination) => {
+      const response = await base44.functions.invoke('suggestOptimalRoute', {
+        destination_lat: destination.latitude || 41.5868,
+        destination_lng: destination.longitude || -93.6250,
+        destination_name: destination.name || destination.mrcc_location
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      setRouteDestination(data);
+      toast.success('Route optimized!');
+    }
+  });
+
+  const hotspotRequestMutation = useMutation({
+    mutationFn: async () => {
+      return await base44.entities.ResourceRequest.create({
+        requester_email: user.email,
+        requester_name: user.full_name,
+        resource_type: 'mobile_hotspot',
+        specific_resource: 'Mobile WiFi Hotspot Device',
+        urgency_level: 'high',
+        reason_for_request: 'Rural area internet access for telehealth and virtual services',
+        is_rural: true
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries(['resourceRequests']);
+      toast.success('Mobile hotspot requested! We\'ll contact you within 24 hours.');
+      setShowHotspotRequest(false);
     }
   });
 
@@ -347,6 +383,92 @@ export default function MRCCTechHub() {
             </GraceCard>
           </TabsContent>
         </Tabs>
+
+        {/* Transit Navigation & Hotspot Request */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <GraceCard>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Navigation className="w-5 h-5 text-blue-600" />
+                Get Directions to MRCC
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-sm text-gray-600">
+                AI-powered transit routing with real-time public transport data
+              </p>
+              <div className="space-y-2">
+                {[
+                  { name: 'Grace House MRCC', latitude: 41.5868, longitude: -93.6250 },
+                  { name: 'MRCC - Cedar Rapids', latitude: 42.0080, longitude: -91.6440 }
+                ].map(loc => (
+                  <Button 
+                    key={loc.name}
+                    size="sm"
+                    variant="outline"
+                    onClick={() => routeMutation.mutate(loc)}
+                    disabled={routeMutation.isPending || !user}
+                    className="w-full justify-start"
+                  >
+                    <MapPin className="w-4 h-4 mr-2" />
+                    {loc.name}
+                  </Button>
+                ))}
+              </div>
+              {routeDestination && (
+                <div className="p-3 bg-blue-50 rounded-lg border border-blue-200">
+                  <h4 className="font-semibold text-sm mb-2">Recommended Route</h4>
+                  <p className="text-sm text-gray-700">{routeDestination.route_suggestion?.route_details}</p>
+                  <div className="flex gap-2 mt-2 text-xs">
+                    <Badge variant="outline">{routeDestination.route_suggestion?.estimated_travel_time}</Badge>
+                    <Badge variant="outline">{routeDestination.route_suggestion?.estimated_cost}</Badge>
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </GraceCard>
+
+          <GraceCard>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Radio className="w-5 h-5 text-purple-600" />
+                Request Mobile Hotspot
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-sm text-gray-600 mb-3">
+                Need internet access in a rural area? Request a mobile hotspot device.
+              </p>
+              {!showHotspotRequest ? (
+                <Button 
+                  onClick={() => setShowHotspotRequest(true)} 
+                  className="w-full bg-purple-600 hover:bg-purple-700"
+                  disabled={!user}
+                >
+                  Request Hotspot Device
+                </Button>
+              ) : (
+                <div className="space-y-3">
+                  <Button 
+                    onClick={() => hotspotRequestMutation.mutate()}
+                    disabled={hotspotRequestMutation.isPending}
+                    className="w-full bg-purple-600 hover:bg-purple-700"
+                  >
+                    {hotspotRequestMutation.isPending ? 'Submitting...' : 'Submit Request'}
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    size="sm"
+                    onClick={() => setShowHotspotRequest(false)}
+                    className="w-full"
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </GraceCard>
+        </div>
 
         {/* Offline Resources */}
         {offlineMode && (
