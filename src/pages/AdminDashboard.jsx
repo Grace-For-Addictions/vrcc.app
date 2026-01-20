@@ -24,6 +24,7 @@ import ResourceRequestManager from '@/components/admin/ResourceRequestManager';
 import UnifiedCapacityDashboard from '@/components/admin/UnifiedCapacityDashboard';
 import FunderRelationshipManager from '@/components/admin/FunderRelationshipManager';
 import PreventionCampaignManager from '@/components/admin/PreventionCampaignManager';
+import VRCCMRCCIntegration from '@/components/unified/VRCCMRCCIntegration';
 
 export default function AdminDashboard() {
   const [user, setUser] = useState(null);
@@ -923,6 +924,7 @@ export default function AdminDashboard() {
           {/* Custom Reports */}
           <TabsContent value="reports">
             <div className="space-y-6">
+              <VRCCMRCCIntegration />
               <PreventionCampaignManager />
               <UnifiedCapacityDashboard />
               <AutoGrantProposalGenerator />

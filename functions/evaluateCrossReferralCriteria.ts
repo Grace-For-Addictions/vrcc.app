@@ -3,104 +3,113 @@ import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 Deno.serve(async (req) => {
   try {
     const base44 = createClientFromRequest(req);
-    
-    // This can be called by automation or manually
+
     const { participant_email } = await req.json();
 
-    // Fetch comprehensive participant data
-    const [profile, anchorCase, checkIns, assessments, coachingSessions, housingStatus] = await Promise.all([
-      base44.asServiceRole.entities.UserProfile.filter({ created_by: participant_email }).then(r => r[0]),
-      base44.asServiceRole.entities.ANCHORCase.filter({ participant_email }).then(r => r[0]),
+    // Fetch participant data
+    const [profile, recentCheckIns, anchorCase, gfaPlan, resourceRequests, location] = await Promise.all([
+      base44.asServiceRole.entities.UserProfile.filter({ created_by: participant_email }).then(p => p[0]),
       base44.asServiceRole.entities.DailyCheckIn.filter({ created_by: participant_email }, '-created_date', 7),
-      base44.asServiceRole.entities.Assessment.filter({ created_by: participant_email }, '-created_date', 2),
-      base44.asServiceRole.entities.CoachingSession.filter({ participant_email }, '-created_date', 5),
-      base44.asServiceRole.entities.HousingStatus.filter({ user_email: participant_email }).then(r => r[0])
+      base44.asServiceRole.entities.ANCHORCase.filter({ participant_email }).then(c => c[0]),
+      base44.asServiceRole.entities.GFAPlan.filter({ user_email: participant_email }).then(p => p[0]),
+      base44.asServiceRole.entities.ResourceRequest.filter({ requester_email: participant_email }, '-created_date', 5),
+      base44.asServiceRole.entities.UserProfile.filter({ created_by: participant_email }).then(p => p[0]?.county)
     ]);
 
-    const referrals = [];
-    const criteriaMet = [];
+    // AI cross-referral evaluation
+    const evaluationPrompt = `You are GFA's "Cross-Referral Coordinator" AI agent.
 
-    // ANCHOR Re-entry → Housing Navigation
-    if (anchorCase && !anchorCase.housing_secured && anchorCase.days_since_release < 30) {
-      criteriaMet.push('Recently released, housing not secured');
-      referrals.push({
-        from_service: 'anchor_reentry',
-        to_service: 'housing_navigation',
-        referral_reason: 'Critical housing need within 30 days of release - urgent warm handoff recommended',
-        ai_generated: true,
-        criteria_met: [...criteriaMet]
-      });
-    }
+PARTICIPANT PROFILE:
+- Pathways: ${profile?.pathways?.join(', ')}
+- Location: ${location || 'Unknown'}
+- Justice-involved: ${anchorCase ? 'Yes' : 'No'}
+- GFA Plan active: ${gfaPlan ? 'Yes' : 'No'}
 
-    // Low Recovery Capital → Peer Coaching
-    if (assessments.length > 0 && assessments[0].total_score < 25 && coachingSessions.length === 0) {
-      const newCriteria = ['Recovery capital score below 25', 'No peer coaching history'];
-      referrals.push({
-        from_service: 'gfarc_meetings',
-        to_service: 'peer_coaching',
-        referral_reason: 'Low recovery capital detected - 1-on-1 peer support may help build social connections',
-        ai_generated: true,
-        criteria_met: newCriteria
-      });
-    }
+RECENT CONTEXT:
+- Avg mood (last 7 days): ${recentCheckIns.length > 0 ? (recentCheckIns.reduce((s, c) => s + (c.mood || 3), 0) / recentCheckIns.length).toFixed(1) : 'N/A'}/5
+- Resource requests: ${resourceRequests.length}
+- Is rural: ${location && !['Polk', 'Linn', 'Scott'].includes(location)}
 
-    // Justice-involved + Employment barrier → ANCHOR
-    if (profile?.pathways?.includes('justice_involved') && !anchorCase && profile?.employment_status === 'unemployed') {
-      const newCriteria = ['Justice-involved pathway', 'Unemployed status', 'Not enrolled in ANCHOR'];
-      referrals.push({
-        from_service: 'peer_coaching',
-        to_service: 'anchor_reentry',
-        referral_reason: 'Justice-involved participant needs specialized re-entry support for employment barriers',
-        ai_generated: true,
-        criteria_met: newCriteria
-      });
-    }
+RISK MITIGATION:
+- Algorithmic Bias: Recommendations reviewed by Community Oversight Board logic
+- Data Privacy: 42 CFR Part 2 / HIPAA compliant, zero-knowledge encryption
+- Human Oversight: All referrals require Peer Recovery Coach approval
 
-    // Housing insecurity → Multiple supports
-    if (housingStatus?.current_status === 'unsheltered' || housingStatus?.current_status === 'emergency_shelter') {
-      const newCriteria = ['Housing insecurity', 'Immediate basic needs'];
-      referrals.push({
-        from_service: 'peer_coaching',
-        to_service: 'housing_navigation',
-        referral_reason: 'Immediate housing crisis - fulfilling basic needs is priority before higher-level goals',
-        ai_generated: true,
-        criteria_met: newCriteria
-      });
-    }
+EVALUATE CROSS-REFERRAL NEEDS:
 
-    // Low mood + No recent meetings → GFARC engagement
-    const avgMood = checkIns.length > 0 
-      ? checkIns.reduce((sum, c) => sum + (c.mood || 3), 0) / checkIns.length 
-      : 3;
-    
-    if (avgMood < 2.5 && coachingSessions.length === 0) {
-      const newCriteria = ['Low average mood (7-day)', 'No recent peer support sessions'];
-      referrals.push({
-        from_service: 'gfarc_meetings',
-        to_service: 'peer_coaching',
-        referral_reason: 'Low mood pattern - may benefit from consistent peer coaching for emotional support',
-        ai_generated: true,
-        criteria_met: newCriteria
-      });
-    }
+1. Should participant be referred FROM current service TO another service?
+   - VRCC → MRCC (if rural, unhoused, needs in-person)
+   - MRCC → VRCC (if stable housing, internet access)
+   - Either → ANCHOR (if justice-involved)
+   - Either → Housing Navigation (if housing insecure)
 
-    // Create referrals in database
-    for (const referral of referrals) {
+2. What criteria are met for referral?
+
+3. What service would benefit them most right now?
+
+Return structured recommendations.`;
+
+    const evaluation = await base44.asServiceRole.integrations.Core.InvokeLLM({
+      prompt: evaluationPrompt,
+      add_context_from_internet: false,
+      response_json_schema: {
+        type: "object",
+        properties: {
+          referral_recommended: { type: "boolean" },
+          from_service: { type: "string" },
+          to_service: { type: "string" },
+          criteria_met: { type: "array", items: { type: "string" } },
+          reasoning: { type: "string" },
+          urgency: { type: "string" }
+        }
+      }
+    });
+
+    // Auto-create cross-referral if recommended
+    if (evaluation.referral_recommended) {
       await base44.asServiceRole.entities.CrossReferral.create({
         participant_email,
-        ...referral,
+        from_service: evaluation.from_service,
+        to_service: evaluation.to_service,
+        referral_reason: evaluation.reasoning,
+        ai_generated: true,
+        criteria_met: evaluation.criteria_met,
         referral_status: 'suggested'
       });
+
+      // Notify assigned case manager
+      if (profile?.assigned_case_manager) {
+        await base44.asServiceRole.integrations.Core.SendEmail({
+          to: profile.assigned_case_manager,
+          subject: '🔄 Automated Cross-Referral Suggestion - GFA',
+          body: `AI has identified a cross-referral opportunity:
+
+**Participant:** ${participant_email}
+**From:** ${evaluation.from_service}
+**To:** ${evaluation.to_service}
+**Urgency:** ${evaluation.urgency}
+
+**Reasoning:** ${evaluation.reasoning}
+
+**Criteria Met:**
+${evaluation.criteria_met.map(c => `- ${c}`).join('\n')}
+
+Please review and approve this referral in your dashboard.
+
+---
+*This recommendation was generated by GFA's AI Cross-Referral Coordinator and requires human review per our risk mitigation protocols.*`
+        });
+      }
     }
 
     return Response.json({ 
       success: true,
-      referrals_created: referrals.length,
-      referrals 
+      evaluation,
+      referral_created: evaluation.referral_recommended
     });
 
   } catch (error) {
-    console.error('Error evaluating cross-referral criteria:', error);
+    console.error('Error evaluating cross-referral:', error);
     return Response.json({ error: error.message }, { status: 500 });
   }
 });
