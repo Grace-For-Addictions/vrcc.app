@@ -20,6 +20,7 @@ import GracePorchGatherings from './pages/GracePorchGatherings';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
+import MRCCHub from './pages/MRCCHub';
 import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
 import MyGFAPlan from './pages/MyGFAPlan';
@@ -45,7 +46,9 @@ import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import MRCCHub from './pages/MRCCHub';
+import VolunteerDashboard from './pages/VolunteerDashboard';
+import PeerCoachingDetail from './pages/PeerCoachingDetail';
+import VRCCDetail from './pages/VRCCDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -72,6 +75,7 @@ export const PAGES = {
     "GrantWriter": GrantWriter,
     "Home": Home,
     "IBHRSReporting": IBHRSReporting,
+    "MRCCHub": MRCCHub,
     "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
     "MyGFAPlan": MyGFAPlan,
@@ -97,7 +101,9 @@ export const PAGES = {
     "VideoLibrary": VideoLibrary,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "MRCCHub": MRCCHub,
+    "VolunteerDashboard": VolunteerDashboard,
+    "PeerCoachingDetail": PeerCoachingDetail,
+    "VRCCDetail": VRCCDetail,
 }
 
 export const pagesConfig = {
