@@ -30,6 +30,7 @@ import Neuroplasticity from './pages/Neuroplasticity';
 import ParticipantDashboard from './pages/ParticipantDashboard';
 import PeerCoachAnalytics from './pages/PeerCoachAnalytics';
 import PeerCoachTraining from './pages/PeerCoachTraining';
+import PeerCoachingDetail from './pages/PeerCoachingDetail';
 import PeerMatching from './pages/PeerMatching';
 import ProviderAnalytics from './pages/ProviderAnalytics';
 import ProviderHub from './pages/ProviderHub';
@@ -42,13 +43,12 @@ import SchoolPrevention from './pages/SchoolPrevention';
 import StaffOnboarding from './pages/StaffOnboarding';
 import StaffSOPs from './pages/StaffSOPs';
 import TeamChallenges from './pages/TeamChallenges';
+import VRCCDetail from './pages/VRCCDetail';
 import VRCheckoutHub from './pages/VRCheckoutHub';
 import VideoLibrary from './pages/VideoLibrary';
+import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import VolunteerDashboard from './pages/VolunteerDashboard';
-import PeerCoachingDetail from './pages/PeerCoachingDetail';
-import VRCCDetail from './pages/VRCCDetail';
 import __Layout from './Layout.jsx';
 
 
@@ -85,6 +85,7 @@ export const PAGES = {
     "ParticipantDashboard": ParticipantDashboard,
     "PeerCoachAnalytics": PeerCoachAnalytics,
     "PeerCoachTraining": PeerCoachTraining,
+    "PeerCoachingDetail": PeerCoachingDetail,
     "PeerMatching": PeerMatching,
     "ProviderAnalytics": ProviderAnalytics,
     "ProviderHub": ProviderHub,
@@ -97,13 +98,12 @@ export const PAGES = {
     "StaffOnboarding": StaffOnboarding,
     "StaffSOPs": StaffSOPs,
     "TeamChallenges": TeamChallenges,
+    "VRCCDetail": VRCCDetail,
     "VRCheckoutHub": VRCheckoutHub,
     "VideoLibrary": VideoLibrary,
+    "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "VolunteerDashboard": VolunteerDashboard,
-    "PeerCoachingDetail": PeerCoachingDetail,
-    "VRCCDetail": VRCCDetail,
 }
 
 export const pagesConfig = {

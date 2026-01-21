@@ -3,12 +3,14 @@ import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Send, Sparkles, Phone, Loader2, Heart, 
-  MapPin, Calendar, Users, Brain, RefreshCw
+  MapPin, Calendar, Users, Brain, RefreshCw, MessageCircle
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import GraceCard from '@/components/common/GraceCard';
 import ReactMarkdown from 'react-markdown';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import EnhancedGraceCapabilities from '@/components/chat/EnhancedGraceCapabilities';
 
 const quickPrompts = [
   { icon: Heart, text: "I need encouragement today", color: "bg-rose-100 text-rose-700" },
@@ -94,8 +96,28 @@ export default function GraceChat() {
             <Sparkles className="w-10 h-10" />
           </motion.div>
           <h1 className="text-3xl font-bold text-gray-900">Chat with Grace</h1>
-          <p className="text-gray-600 mt-2">Your 24/7 AI Recovery Companion</p>
+          <p className="text-gray-600 mt-2">
+            Your 24/7 AI Recovery Companion • Enhanced with therapeutic frameworks & 10,000+ knowledge entries
+          </p>
         </div>
+
+        <Tabs defaultValue="chat" className="mb-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="chat">
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Chat with Grace
+            </TabsTrigger>
+            <TabsTrigger value="capabilities">
+              <Brain className="w-4 h-4 mr-2" />
+              Grace's Capabilities
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="capabilities" className="mt-6">
+            <EnhancedGraceCapabilities />
+          </TabsContent>
+
+          <TabsContent value="chat" className="mt-0">
 
         {/* Chat Container */}
         <div className="bg-white rounded-3xl shadow-lg border border-gray-100 overflow-hidden">
@@ -213,6 +235,8 @@ export default function GraceChat() {
           Grace is an AI companion and cannot replace professional support. 
           Always reach out to qualified professionals for medical advice.
         </p>
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
