@@ -79,6 +79,31 @@ export default function ServiceCoordinationHub() {
     enabled: !!user
   });
 
+  // New Intake & Referral Workflow Data
+  const { data: intakeSubmissions = [] } = useQuery({
+    queryKey: ['intakeSubmissions'],
+    queryFn: () => base44.entities.IntakeSubmission.list('-submittedAt', 100),
+    enabled: !!user
+  });
+
+  const { data: intakeReviews = [] } = useQuery({
+    queryKey: ['intakeReviews'],
+    queryFn: () => base44.entities.IntakeReview.list('-created_date', 100),
+    enabled: !!user
+  });
+
+  const { data: internalReferrals = [] } = useQuery({
+    queryKey: ['internalReferrals'],
+    queryFn: () => base44.entities.InternalReferral.list('-created_date', 100),
+    enabled: !!user
+  });
+
+  const { data: externalReferrals = [] } = useQuery({
+    queryKey: ['externalReferrals'],
+    queryFn: () => base44.entities.ExternalReferral.list('-created_date', 100),
+    enabled: !!user
+  });
+
   // Mutations
   const createReferralMutation = useMutation({
     mutationFn: async (data) => base44.entities.Referral.create(data),
@@ -97,6 +122,47 @@ export default function ServiceCoordinationHub() {
     }
   });
 
+  const processIntakeMutation = useMutation({
+    mutationFn: async ({ intakeId, reviewData }) => {
+      const review = await base44.entities.IntakeReview.create({
+        ...reviewData,
+        intakeSubmissionId: intakeId,
+        reviewedBy: user.email,
+        reviewCompletedAt: new Date().toISOString()
+      });
+      
+      await base44.entities.IntakeSubmission.update(intakeId, {
+        status: reviewData.eligibilityStatus === 'eligible' ? 'converted' : 
+                reviewData.eligibilityStatus === 'referral_out' ? 'referred_out' : 'under_review'
+      });
+      
+      return review;
+    },
+    onSuccess: () => {
+      toast.success('Intake processed with grace');
+      queryClient.invalidateQueries(['intakeSubmissions', 'intakeReviews']);
+    }
+  });
+
+  const createInternalReferralMutation = useMutation({
+    mutationFn: async (data) => base44.entities.InternalReferral.create(data),
+    onSuccess: () => {
+      toast.success('Internal pathway created');
+      queryClient.invalidateQueries(['internalReferrals']);
+    }
+  });
+
+  const createExternalReferralMutation = useMutation({
+    mutationFn: async (data) => base44.entities.ExternalReferral.create({
+      ...data,
+      referredBy: user.email
+    }),
+    onSuccess: () => {
+      toast.success('External connection created');
+      queryClient.invalidateQueries(['externalReferrals']);
+    }
+  });
+
   // Computed values
   const myReferrals = allReferrals.filter(r => r.referred_by === user?.email);
   const incomingReferrals = allReferrals.filter(r => r.referral_type === 'resource_navigator');
@@ -106,6 +172,21 @@ export default function ServiceCoordinationHub() {
     twoDaysAgo.setDate(twoDaysAgo.getDate() - 2);
     return new Date(r.created_date) <= twoDaysAgo && r.status === 'accepted';
   });
+
+  // Intake workflow computed values
+  const newIntakes = intakeSubmissions.filter(i => i.status === 'new');
+  const crisisIntakes = intakeSubmissions.filter(i => i.urgencyLevel === 'crisis' && i.status !== 'closed');
+  const underReview = intakeSubmissions.filter(i => i.status === 'under_review');
+  const activeInternalReferrals = internalReferrals.filter(r => ['open', 'accepted', 'in_progress'].includes(r.status));
+  const pendingExternalReferrals = externalReferrals.filter(r => r.status === 'pending');
+  
+  // Conversion metrics (last 30 days)
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+  const recentIntakes = intakeSubmissions.filter(i => new Date(i.submittedAt) >= thirtyDaysAgo);
+  const convertedCount = recentIntakes.filter(i => i.status === 'converted').length;
+  const referredOutCount = recentIntakes.filter(i => i.status === 'referred_out').length;
+  const conversionRate = recentIntakes.length > 0 ? ((convertedCount / recentIntakes.length) * 100).toFixed(1) : 0;
 
   const filteredResources = allResources.filter(resource => {
     const matchesSearch = !searchQuery || 
@@ -412,31 +493,237 @@ export default function ServiceCoordinationHub() {
             )}
           </div>
 
+          {/* Conversion Metrics Snapshot */}
+          {(isIntakeRole || isNavigatorRole || user.role === 'admin') && (
+            <Card className="mb-8 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+              <CardHeader>
+                <CardTitle className="text-purple-900">Intake & Conversion Metrics (30 Days)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-purple-700">{recentIntakes.length}</p>
+                    <p className="text-sm text-gray-600">New Intakes</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-green-700">{conversionRate}%</p>
+                    <p className="text-sm text-gray-600">Conversion Rate</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-blue-700">{referredOutCount}</p>
+                    <p className="text-sm text-gray-600">Referred Out</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-red-700">{crisisIntakes.length}</p>
+                    <p className="text-sm text-gray-600">Crisis Cases</p>
+                  </div>
+                  <div className="text-center">
+                    <p className="text-3xl font-bold text-amber-700">{underReview.length}</p>
+                    <p className="text-sm text-gray-600">Under Review</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Main Tabs */}
-          <Tabs defaultValue={isIntakeRole ? "intake" : isNavigatorRole ? "navigation" : "coaching"} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-5">
-              {isIntakeRole && <TabsTrigger value="intake">Intake</TabsTrigger>}
+          <Tabs defaultValue={isIntakeRole ? "new_intakes" : isNavigatorRole ? "navigation" : "coaching"} className="space-y-6">
+            <TabsList className="grid w-full grid-cols-7">
+              {isIntakeRole && <TabsTrigger value="new_intakes">New Intakes</TabsTrigger>}
+              {isIntakeRole && <TabsTrigger value="under_review">Under Review</TabsTrigger>}
+              <TabsTrigger value="internal">Internal Referrals</TabsTrigger>
+              <TabsTrigger value="external">External Handoffs</TabsTrigger>
               {isNavigatorRole && <TabsTrigger value="navigation">Navigation</TabsTrigger>}
               {isCoachRole && <TabsTrigger value="coaching">Coaching Log</TabsTrigger>}
-              <TabsTrigger value="referrals">All Connections</TabsTrigger>
               <TabsTrigger value="resources">Resources</TabsTrigger>
             </TabsList>
 
-            {/* Intake Tab */}
+            {/* New Intakes Tab */}
             {isIntakeRole && (
-              <TabsContent value="intake" className="space-y-4">
+              <TabsContent value="new_intakes" className="space-y-4">
+                {crisisIntakes.length > 0 && (
+                  <div className="bg-red-50 border-2 border-red-300 rounded-lg p-4 mb-4">
+                    <div className="flex items-center gap-2">
+                      <AlertTriangle className="w-6 h-6 text-red-600" />
+                      <h3 className="font-bold text-red-900">Crisis Alert: {crisisIntakes.length} urgent cases need immediate tending</h3>
+                    </div>
+                  </div>
+                )}
                 <Card>
                   <CardHeader>
-                    <CardTitle>Welcome New Gardeners</CardTitle>
+                    <CardTitle>New Intake Submissions</CardTitle>
+                    <p className="text-sm text-gray-600">Gardeners seeking to enter the community</p>
                   </CardHeader>
                   <CardContent className="space-y-3">
-                    {recentGardeners.slice(0, 10).map((profile) => (
-                      <GardenerCard key={profile.id} profile={profile} />
-                    ))}
+                    {newIntakes.length === 0 ? (
+                      <p className="text-center text-gray-500 py-8">No new intakes at this moment</p>
+                    ) : (
+                      newIntakes.map((intake) => {
+                        const hoursSince = Math.floor((new Date() - new Date(intake.submittedAt)) / (1000 * 60 * 60));
+                        return (
+                          <GraceCard key={intake.id} className={intake.urgencyLevel === 'crisis' ? 'border-2 border-red-400' : ''}>
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-2 mb-2">
+                                  <h4 className="font-semibold text-gray-900">{intake.firstName} {intake.lastName}</h4>
+                                  <Badge className={
+                                    intake.urgencyLevel === 'crisis' ? 'bg-red-600 text-white' :
+                                    intake.urgencyLevel === 'urgent' ? 'bg-orange-600 text-white' :
+                                    'bg-green-100 text-green-700'
+                                  }>
+                                    {intake.urgencyLevel}
+                                  </Badge>
+                                </div>
+                                <p className="text-sm text-gray-600">📧 {intake.email} | 📞 {intake.phone}</p>
+                                <p className="text-sm text-gray-600 mt-1">Housing: {intake.housingStatus}</p>
+                                {intake.primaryConcern && (
+                                  <p className="text-sm text-gray-700 mt-2 p-2 bg-gray-50 rounded">{intake.primaryConcern}</p>
+                                )}
+                                <p className="text-xs text-gray-500 mt-2">Submitted {hoursSince} hours ago</p>
+                              </div>
+                              <Button size="sm" onClick={() => {
+                                setSelectedGardener(intake);
+                                setDialogOpen(true);
+                              }}>
+                                Review Intake
+                              </Button>
+                            </div>
+                          </GraceCard>
+                        );
+                      })
+                    )}
                   </CardContent>
                 </Card>
               </TabsContent>
             )}
+
+            {/* Under Review Tab */}
+            {isIntakeRole && (
+              <TabsContent value="under_review" className="space-y-4">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Intakes Under Review</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {underReview.length === 0 ? (
+                      <p className="text-center text-gray-500 py-8">All intakes have been processed</p>
+                    ) : (
+                      underReview.map((intake) => {
+                        const review = intakeReviews.find(r => r.intakeSubmissionId === intake.id);
+                        return (
+                          <GraceCard key={intake.id}>
+                            <div>
+                              <h4 className="font-semibold text-gray-900">{intake.firstName} {intake.lastName}</h4>
+                              {review && (
+                                <div className="mt-2 text-sm">
+                                  <p className="text-gray-600">Reviewed by: {review.reviewedBy}</p>
+                                  <p className="text-gray-600">Track: {review.recommendedTrack}</p>
+                                  <p className="text-gray-600">Coordinator: {review.assignedCoordinator}</p>
+                                </div>
+                              )}
+                            </div>
+                          </GraceCard>
+                        );
+                      })
+                    )}
+                  </CardContent>
+                </Card>
+              </TabsContent>
+            )}
+
+            {/* Internal Referrals Tab */}
+            <TabsContent value="internal" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Internal Service Referrals</CardTitle>
+                    <Button size="sm" onClick={() => setDialogOpen(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      New Internal Referral
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {activeInternalReferrals.length === 0 ? (
+                    <p className="text-center text-gray-500 py-8">No active internal referrals</p>
+                  ) : (
+                    activeInternalReferrals.map((ref) => (
+                      <GraceCard key={ref.id} className={ref.priority === 'crisis' ? 'border-2 border-red-400' : ''}>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-semibold text-gray-900">{ref.participantName}</h4>
+                              <Badge className={
+                                ref.priority === 'crisis' ? 'bg-red-600 text-white' :
+                                ref.priority === 'high' ? 'bg-orange-600 text-white' :
+                                ref.priority === 'medium' ? 'bg-yellow-600 text-white' :
+                                'bg-green-100 text-green-700'
+                              }>
+                                {ref.priority}
+                              </Badge>
+                              <Badge variant="outline">{ref.status}</Badge>
+                            </div>
+                            <p className="text-sm text-gray-600">Service: {ref.serviceType} | From: {ref.fromRole} → {ref.toRole}</p>
+                            {ref.referralNotes && <p className="text-sm text-gray-700 mt-2 p-2 bg-gray-50 rounded">{ref.referralNotes}</p>}
+                          </div>
+                          {ref.status === 'open' && (
+                            <Button size="sm" onClick={() => {
+                              updateReferralMutation.mutate({
+                                id: ref.id,
+                                entityName: 'InternalReferral',
+                                data: { status: 'accepted', acceptedBy: user.email, acceptedAt: new Date().toISOString() }
+                              });
+                            }}>
+                              Accept
+                            </Button>
+                          )}
+                        </div>
+                      </GraceCard>
+                    ))
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* External Referrals Tab */}
+            <TabsContent value="external" className="space-y-4">
+              <Card>
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>External Warm Handoffs</CardTitle>
+                    <Button size="sm" onClick={() => setDialogOpen(true)}>
+                      <Plus className="w-4 h-4 mr-2" />
+                      New External Referral
+                    </Button>
+                  </div>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  {pendingExternalReferrals.length === 0 ? (
+                    <p className="text-center text-gray-500 py-8">No pending external referrals</p>
+                  ) : (
+                    pendingExternalReferrals.map((ref) => (
+                      <GraceCard key={ref.id}>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-2">
+                              <h4 className="font-semibold text-gray-900">{ref.participantName}</h4>
+                              {ref.warmHandoff && <Badge className="bg-purple-100 text-purple-700">Warm Handoff</Badge>}
+                              <Badge variant="outline">{ref.status}</Badge>
+                            </div>
+                            <p className="text-sm text-gray-600">→ {ref.organizationName}</p>
+                            <p className="text-sm text-gray-600">Contact: {ref.contactName} | {ref.contactPhone}</p>
+                            {ref.referralReason && <p className="text-sm text-gray-700 mt-2 p-2 bg-gray-50 rounded">{ref.referralReason}</p>}
+                            {ref.followUpDate && (
+                              <p className="text-xs text-gray-500 mt-2">Follow-up: {new Date(ref.followUpDate).toLocaleDateString()}</p>
+                            )}
+                          </div>
+                        </div>
+                      </GraceCard>
+                    ))
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
 
             {/* Navigation Tab */}
             {isNavigatorRole && (
@@ -476,19 +763,7 @@ export default function ServiceCoordinationHub() {
               </TabsContent>
             )}
 
-            {/* All Referrals Tab */}
-            <TabsContent value="referrals" className="space-y-4">
-              <Card>
-                <CardHeader>
-                  <CardTitle>All Connection Pathways</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  {allReferrals.slice(0, 20).map((ref) => (
-                    <ReferralCard key={ref.id} referral={ref} showActions={ref.referred_by === user.email || ref.referred_to === user.email} />
-                  ))}
-                </CardContent>
-              </Card>
-            </TabsContent>
+
 
             {/* Resources Tab */}
             <TabsContent value="resources" className="space-y-4">
