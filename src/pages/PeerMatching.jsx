@@ -65,11 +65,11 @@ function MatchRequestForm({ onSubmit, isSubmitting }) {
 
   return (
     <GraceCard>
-      <h3 className="text-xl font-semibold text-gray-900 mb-6">Find Your Recovery Buddy</h3>
+      <h3 className="text-xl font-semibold text-gray-900 mb-6">Cultivate a Connection</h3>
 
       {/* Match Type */}
       <div className="mb-6">
-        <label className="text-sm font-medium text-gray-700 mb-3 block">What kind of connection?</label>
+        <label className="text-sm font-medium text-gray-700 mb-3 block">What kind of tending partnership?</label>
         <RadioGroup value={matchType} onValueChange={setMatchType}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Label
@@ -80,8 +80,8 @@ function MatchRequestForm({ onSubmit, isSubmitting }) {
             >
               <RadioGroupItem value="peer_buddy" id="peer_buddy" />
               <div>
-                <div className="font-medium">Peer Buddy</div>
-                <div className="text-sm text-gray-500">Someone walking a similar path</div>
+                <div className="font-medium">A fellow gardener</div>
+                <div className="text-sm text-gray-500">Tending a similar plot</div>
               </div>
             </Label>
             <Label
@@ -93,7 +93,7 @@ function MatchRequestForm({ onSubmit, isSubmitting }) {
               <RadioGroupItem value="anonymous_grace" id="anonymous_grace" />
               <div>
                 <div className="font-medium">Grace Match</div>
-                <div className="text-sm text-gray-500">Anonymous 1:1 connection</div>
+                <div className="text-sm text-gray-500">Nurturing one-on-one connections in your garden</div>
               </div>
             </Label>
           </div>
@@ -260,7 +260,7 @@ export default function PeerMatching() {
       <div className="max-w-4xl mx-auto px-4 py-8">
         <GraceHeader 
           title="Grace Match"
-          subtitle="Connect with peers who understand your journey. Find your recovery buddy through our AI-powered matching."
+          subtitle="Connect with fellow gardeners tending similar plots. Cultivate support through our AI-guided Grace Match."
           icon={Sparkles}
         />
 
@@ -268,15 +268,15 @@ export default function PeerMatching() {
         <div className="flex flex-wrap justify-center gap-4 mb-8">
           <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
             <Shield className="w-5 h-5 text-teal-500" />
-            <span className="text-sm text-gray-600">Safe & Confidential</span>
+            <span className="text-sm text-gray-600">Cultivated with Care & Trust</span>
           </div>
           <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
             <Heart className="w-5 h-5 text-rose-500" />
-            <span className="text-sm text-gray-600">Opt-In Only</span>
+            <span className="text-sm text-gray-600">Your Seed, Your Choice</span>
           </div>
           <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full shadow-sm">
             <Star className="w-5 h-5 text-amber-500" />
-            <span className="text-sm text-gray-600">AI-Powered Matching</span>
+            <span className="text-sm text-gray-600">AI-Guided Cultivation</span>
           </div>
         </div>
 
@@ -285,13 +285,13 @@ export default function PeerMatching() {
           <div className="flex items-start gap-3">
             <Shield className="w-6 h-6 text-purple-600 flex-shrink-0 mt-1" />
             <div>
-              <h4 className="font-semibold text-purple-900 mb-2">Your Privacy is Protected</h4>
+              <h4 className="font-semibold text-purple-900 mb-2">Your Garden, Your Privacy</h4>
               <ul className="text-sm text-purple-800 space-y-1">
-                <li>• You control what you share and when</li>
-                <li>• Matches require mutual consent to connect</li>
-                <li>• You can unmatch anytime, no questions asked</li>
-                <li>• Anonymous options keep your identity private</li>
-                <li>• Your contact info is never shared without permission</li>
+                <li>• You tend your plot, deciding what to share and when</li>
+                <li>• Connections flourish with mutual agreement</li>
+                <li>• You can shift your garden anytime, no questions asked</li>
+                <li>• Anonymous options protect your identity as you grow</li>
+                <li>• Your contact information is only shared with your explicit permission</li>
               </ul>
             </div>
           </div>
