@@ -98,6 +98,8 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import IntakeCoordinatorDashboard from './pages/IntakeCoordinatorDashboard';
+import ResourceNavigatorDashboard from './pages/ResourceNavigatorDashboard';
 import __Layout from './Layout.jsx';
 
 
@@ -153,6 +155,8 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
+    "IntakeCoordinatorDashboard": IntakeCoordinatorDashboard,
+    "ResourceNavigatorDashboard": ResourceNavigatorDashboard,
 }
 
 export const pagesConfig = {
