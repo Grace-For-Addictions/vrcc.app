@@ -69,6 +69,7 @@ import GracePorchGatherings from './pages/GracePorchGatherings';
 import GrantWriter from './pages/GrantWriter';
 import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
+import IntakeCoordinatorDashboard from './pages/IntakeCoordinatorDashboard';
 import MRCCHub from './pages/MRCCHub';
 import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
@@ -87,6 +88,7 @@ import Quizzes from './pages/Quizzes';
 import RecoveryCapitalCafe from './pages/RecoveryCapitalCafe';
 import RecoveryGarden from './pages/RecoveryGarden';
 import Residencies from './pages/Residencies';
+import ResourceNavigatorDashboard from './pages/ResourceNavigatorDashboard';
 import Resources from './pages/Resources';
 import SchoolPrevention from './pages/SchoolPrevention';
 import StaffOnboarding from './pages/StaffOnboarding';
@@ -98,8 +100,7 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import IntakeCoordinatorDashboard from './pages/IntakeCoordinatorDashboard';
-import ResourceNavigatorDashboard from './pages/ResourceNavigatorDashboard';
+import ServiceCoordinationHub from './pages/ServiceCoordinationHub';
 import __Layout from './Layout.jsx';
 
 
@@ -126,6 +127,7 @@ export const PAGES = {
     "GrantWriter": GrantWriter,
     "Home": Home,
     "IBHRSReporting": IBHRSReporting,
+    "IntakeCoordinatorDashboard": IntakeCoordinatorDashboard,
     "MRCCHub": MRCCHub,
     "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
@@ -144,6 +146,7 @@ export const PAGES = {
     "RecoveryCapitalCafe": RecoveryCapitalCafe,
     "RecoveryGarden": RecoveryGarden,
     "Residencies": Residencies,
+    "ResourceNavigatorDashboard": ResourceNavigatorDashboard,
     "Resources": Resources,
     "SchoolPrevention": SchoolPrevention,
     "StaffOnboarding": StaffOnboarding,
@@ -155,8 +158,7 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "IntakeCoordinatorDashboard": IntakeCoordinatorDashboard,
-    "ResourceNavigatorDashboard": ResourceNavigatorDashboard,
+    "ServiceCoordinationHub": ServiceCoordinationHub,
 }
 
 export const pagesConfig = {
