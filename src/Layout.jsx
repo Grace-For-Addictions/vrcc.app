@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, Users, MapPin, Heart, Calendar, Brain,
   Compass, MessageCircle, Sparkles, Menu, X,
-  Phone, LogOut, User, ChevronDown, Shield, Award } from
+  Phone, LogOut, User, ChevronDown, Shield, Award, Car } from
 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -202,6 +202,12 @@ export default function Layout({ children, currentPageName }) {
                       <Link to={createPageUrl('Assessment')} className="flex items-center">
                         <Award className="w-4 h-4 mr-2" />
                         My Assessment
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link to={createPageUrl('ServiceCoordinationHub')} className="flex items-center">
+                        <Car className="w-4 h-4 mr-2" />
+                        Request Transportation
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
