@@ -25,6 +25,8 @@ import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
 import RoleGuard from '@/components/navigation/RoleGuard';
 import { TraumaInformedTextarea } from '@/components/rbac/TraumaInformedInput';
 import CareAlertMonitor from '@/components/rbac/CareAlertMonitor';
+import TransportationRequestForm from '@/components/transportation/TransportationRequestForm';
+import TransportationCoordinator from '@/components/transportation/TransportationCoordinator';
 import { toast } from 'sonner';
 
 export default function ServiceCoordinationHub() {
@@ -104,6 +106,12 @@ export default function ServiceCoordinationHub() {
     enabled: !!user
   });
 
+  const { data: transportationRequests = [] } = useQuery({
+    queryKey: ['transportationRequests'],
+    queryFn: () => base44.entities.TransportationRequest.list('-created_date', 100),
+    enabled: !!user
+  });
+
   // Mutations
   const createReferralMutation = useMutation({
     mutationFn: async (data) => base44.entities.Referral.create(data),
@@ -179,6 +187,7 @@ export default function ServiceCoordinationHub() {
   const underReview = intakeSubmissions.filter(i => i.status === 'under_review');
   const activeInternalReferrals = internalReferrals.filter(r => ['open', 'accepted', 'in_progress'].includes(r.status));
   const pendingExternalReferrals = externalReferrals.filter(r => r.status === 'pending');
+  const pendingTransportation = transportationRequests.filter(r => r.status === 'pending');
   
   // Conversion metrics (last 30 days)
   const thirtyDaysAgo = new Date();
@@ -528,11 +537,12 @@ export default function ServiceCoordinationHub() {
 
           {/* Main Tabs */}
           <Tabs defaultValue={isIntakeRole ? "new_intakes" : isNavigatorRole ? "navigation" : "coaching"} className="space-y-6">
-            <TabsList className="grid w-full grid-cols-7">
+            <TabsList className="grid w-full grid-cols-8">
               {isIntakeRole && <TabsTrigger value="new_intakes">New Intakes</TabsTrigger>}
               {isIntakeRole && <TabsTrigger value="under_review">Under Review</TabsTrigger>}
               <TabsTrigger value="internal">Internal Referrals</TabsTrigger>
               <TabsTrigger value="external">External Handoffs</TabsTrigger>
+              <TabsTrigger value="transportation">Transportation</TabsTrigger>
               {isNavigatorRole && <TabsTrigger value="navigation">Navigation</TabsTrigger>}
               {isCoachRole && <TabsTrigger value="coaching">Coaching Log</TabsTrigger>}
               <TabsTrigger value="resources">Resources</TabsTrigger>
@@ -764,6 +774,15 @@ export default function ServiceCoordinationHub() {
             )}
 
 
+
+            {/* Transportation Tab */}
+            <TabsContent value="transportation" className="space-y-4">
+              {(user?.user_role === 'program_staff' || user?.role === 'admin') ? (
+                <TransportationCoordinator />
+              ) : (
+                <TransportationRequestForm user={user} />
+              )}
+            </TabsContent>
 
             {/* Resources Tab */}
             <TabsContent value="resources" className="space-y-4">
