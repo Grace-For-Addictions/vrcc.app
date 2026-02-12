@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, Users, MapPin, Heart, Calendar, Brain,
   Compass, MessageCircle, Sparkles, Menu, X,
-  Phone, LogOut, User, ChevronDown, Shield, Award, Car } from
+  Phone, LogOut, User, ChevronDown, Shield, Award, Car, Sprout } from
 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -205,9 +205,9 @@ export default function Layout({ children, currentPageName }) {
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link to={createPageUrl('ServiceCoordinationHub')} className="flex items-center">
-                        <Car className="w-4 h-4 mr-2" />
-                        Request Transportation
+                      <Link to={createPageUrl('MyServicePortal')} className="flex items-center">
+                        <Sprout className="w-4 h-4 mr-2" />
+                        My Service Portal
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />

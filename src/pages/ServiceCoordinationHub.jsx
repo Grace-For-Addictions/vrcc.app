@@ -27,6 +27,8 @@ import { TraumaInformedTextarea } from '@/components/rbac/TraumaInformedInput';
 import CareAlertMonitor from '@/components/rbac/CareAlertMonitor';
 import TransportationRequestForm from '@/components/transportation/TransportationRequestForm';
 import TransportationCoordinator from '@/components/transportation/TransportationCoordinator';
+import ROIMetricSelector from '@/components/referrals/ROIMetricSelector';
+import ROIMetricsDashboard from '@/components/dashboard/ROIMetricsDashboard';
 import { toast } from 'sonner';
 
 export default function ServiceCoordinationHub() {
@@ -109,6 +111,12 @@ export default function ServiceCoordinationHub() {
   const { data: transportationRequests = [] } = useQuery({
     queryKey: ['transportationRequests'],
     queryFn: () => base44.entities.TransportationRequest.list('-created_date', 100),
+    enabled: !!user
+  });
+
+  const { data: roiMetrics = [] } = useQuery({
+    queryKey: ['roiMetrics'],
+    queryFn: () => base44.entities.ROIMetric.list('-recorded_date', 200),
     enabled: !!user
   });
 
@@ -400,25 +408,16 @@ export default function ServiceCoordinationHub() {
                       Complete
                     </Button>
                   </DialogTrigger>
-                  <DialogContent>
+                  <DialogContent className="max-w-2xl">
                     <DialogHeader>
                       <DialogTitle>Complete Connection Pathway</DialogTitle>
                     </DialogHeader>
-                    <div className="space-y-4">
-                      <div>
-                        <Label>How did this connection grow?</Label>
-                        <TraumaInformedTextarea
-                          value={outcomeNotes}
-                          onChange={(e) => setOutcomeNotes(e.target.value)}
-                          placeholder="What connections were made? What roots were planted?"
-                          rows={4}
-                        />
-                      </div>
-                      <Button onClick={handleComplete} className="w-full bg-teal-600 hover:bg-teal-700">
-                        <CheckCircle2 className="w-4 h-4 mr-2" />
-                        Complete Pathway
-                      </Button>
-                    </div>
+                    <ROIMetricSelector
+                      referralId={referral.id}
+                      referralType={entityType === 'InternalReferral' ? 'internal' : 'external'}
+                      participantEmail={referral.participantId || referral.participant_email}
+                      onComplete={handleROIComplete}
+                    />
                   </DialogContent>
                 </Dialog>
               )}
@@ -504,35 +503,41 @@ export default function ServiceCoordinationHub() {
 
           {/* Conversion Metrics Snapshot */}
           {(isIntakeRole || isNavigatorRole || user.role === 'admin') && (
-            <Card className="mb-8 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
-              <CardHeader>
-                <CardTitle className="text-purple-900">Intake & Conversion Metrics (30 Days)</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-purple-700">{recentIntakes.length}</p>
-                    <p className="text-sm text-gray-600">New Intakes</p>
+            <>
+              <Card className="mb-6 bg-gradient-to-r from-purple-50 to-blue-50 border-purple-200">
+                <CardHeader>
+                  <CardTitle className="text-purple-900">Intake & Conversion Metrics (30 Days)</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+                    <div className="text-center">
+                      <p className="text-3xl font-bold text-purple-700">{recentIntakes.length}</p>
+                      <p className="text-sm text-gray-600">New Intakes</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-3xl font-bold text-green-700">{conversionRate}%</p>
+                      <p className="text-sm text-gray-600">Conversion Rate</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-3xl font-bold text-blue-700">{referredOutCount}</p>
+                      <p className="text-sm text-gray-600">Referred Out</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-3xl font-bold text-red-700">{crisisIntakes.length}</p>
+                      <p className="text-sm text-gray-600">Crisis Cases</p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-3xl font-bold text-amber-700">{underReview.length}</p>
+                      <p className="text-sm text-gray-600">Under Review</p>
+                    </div>
                   </div>
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-green-700">{conversionRate}%</p>
-                    <p className="text-sm text-gray-600">Conversion Rate</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-blue-700">{referredOutCount}</p>
-                    <p className="text-sm text-gray-600">Referred Out</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-red-700">{crisisIntakes.length}</p>
-                    <p className="text-sm text-gray-600">Crisis Cases</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-3xl font-bold text-amber-700">{underReview.length}</p>
-                    <p className="text-sm text-gray-600">Under Review</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+              
+              <div className="mb-8">
+                <ROIMetricsDashboard />
+              </div>
+            </>
           )}
 
           {/* Main Tabs */}
@@ -585,18 +590,33 @@ export default function ServiceCoordinationHub() {
                                   </Badge>
                                 </div>
                                 <p className="text-sm text-gray-600">📧 {intake.email} | 📞 {intake.phone}</p>
-                                <p className="text-sm text-gray-600 mt-1">Housing: {intake.housingStatus}</p>
+                                <p className="text-sm text-gray-600 mt-1">Housing: {intake.housingStatus} | Source: {intake.referralSource}</p>
                                 {intake.primaryConcern && (
                                   <p className="text-sm text-gray-700 mt-2 p-2 bg-gray-50 rounded">{intake.primaryConcern}</p>
                                 )}
                                 <p className="text-xs text-gray-500 mt-2">Submitted {hoursSince} hours ago</p>
                               </div>
-                              <Button size="sm" onClick={() => {
-                                setSelectedGardener(intake);
-                                setDialogOpen(true);
-                              }}>
-                                Review Intake
-                              </Button>
+                              <div className="flex gap-2">
+                                <Button 
+                                  size="sm" 
+                                  variant="outline"
+                                  onClick={async () => {
+                                    const result = await base44.functions.invoke('autoProcessIntake', { intakeId: intake.id });
+                                    if (result.data.success) {
+                                      toast.success('Intake auto-processed');
+                                      queryClient.invalidateQueries(['intakeSubmissions', 'intakeReviews']);
+                                    }
+                                  }}
+                                >
+                                  Auto Process
+                                </Button>
+                                <Button size="sm" onClick={() => {
+                                  setSelectedGardener(intake);
+                                  setDialogOpen(true);
+                                }}>
+                                  Manual Review
+                                </Button>
+                              </div>
                             </div>
                           </GraceCard>
                         );

@@ -101,6 +101,7 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
+import MyServicePortal from './pages/MyServicePortal';
 import __Layout from './Layout.jsx';
 
 
@@ -159,6 +160,7 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
+    "MyServicePortal": MyServicePortal,
 }
 
 export const pagesConfig = {
