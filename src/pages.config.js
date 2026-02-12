@@ -92,6 +92,7 @@ import Quizzes from './pages/Quizzes';
 import RecoveryCapitalCafe from './pages/RecoveryCapitalCafe';
 import RecoveryGarden from './pages/RecoveryGarden';
 import Residencies from './pages/Residencies';
+import ResourceModeration from './pages/ResourceModeration';
 import ResourceNavigatorDashboard from './pages/ResourceNavigatorDashboard';
 import Resources from './pages/Resources';
 import SchoolPrevention from './pages/SchoolPrevention';
@@ -106,7 +107,8 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import ResourceModeration from './pages/ResourceModeration';
+import DOMAINS from './pages/DOMAINS';
+import domainsMd from './pages/DOMAINS.md';
 import __Layout from './Layout.jsx';
 
 
@@ -156,6 +158,7 @@ export const PAGES = {
     "RecoveryCapitalCafe": RecoveryCapitalCafe,
     "RecoveryGarden": RecoveryGarden,
     "Residencies": Residencies,
+    "ResourceModeration": ResourceModeration,
     "ResourceNavigatorDashboard": ResourceNavigatorDashboard,
     "Resources": Resources,
     "SchoolPrevention": SchoolPrevention,
@@ -170,7 +173,8 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "ResourceModeration": ResourceModeration,
+    "DOMAINS": DOMAINS,
+    "DOMAINS.md": domainsMd,
 }
 
 export const pagesConfig = {
