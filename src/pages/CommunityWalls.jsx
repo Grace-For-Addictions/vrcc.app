@@ -251,6 +251,7 @@ export default function CommunityWalls() {
       const user = await base44.auth.me();
       return base44.entities.Post.create({
         ...postData,
+        author_email: user?.email || 'anonymous@gracefora.org',
         author_name: user?.full_name || 'Community Member'
       });
     },
