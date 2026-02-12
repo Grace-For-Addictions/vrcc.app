@@ -14,6 +14,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import GraceHeader from '@/components/common/GraceHeader';
+import VirtualMeetingLinks from '@/components/events/VirtualMeetingLinks';
 import { toast } from 'sonner';
 
 export default function ManageSessions() {
@@ -207,6 +208,9 @@ export default function ManageSessions() {
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-6">
+                
+                {/* Virtual Meeting Resources */}
+                <VirtualMeetingLinks />
                 
                 {/* Basic Info */}
                 <div className="space-y-4">
