@@ -103,6 +103,8 @@ import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
 import MyPathway from './pages/MyPathway';
+import GroupSessions from './pages/GroupSessions';
+import ManageSessions from './pages/ManageSessions';
 import __Layout from './Layout.jsx';
 
 
@@ -163,6 +165,8 @@ export const PAGES = {
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
     "MyPathway": MyPathway,
+    "GroupSessions": GroupSessions,
+    "ManageSessions": ManageSessions,
 }
 
 export const pagesConfig = {
