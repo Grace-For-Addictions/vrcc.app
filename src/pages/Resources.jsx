@@ -274,7 +274,6 @@ function ResourceDetail({ resource, onClose, user, isFavorited, onToggleFavorite
                     Report Issue or Give Feedback
                   </Button>
                 </>
-              )
               ) : (
                 <div className="space-y-3">
                   <h4 className="font-medium text-sm">Resource Feedback</h4>
