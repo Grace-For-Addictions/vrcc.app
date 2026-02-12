@@ -347,6 +347,9 @@ export default function Layout({ children, currentPageName }) {
 
       {/* Main Content */}
       <main>
+        <div className="max-w-7xl mx-auto px-4 pt-4">
+          <Breadcrumbs currentPageName={currentPageName} />
+        </div>
         {children}
       </main>
 
