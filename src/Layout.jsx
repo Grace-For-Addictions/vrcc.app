@@ -14,7 +14,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Home, Users, MapPin, Heart, Calendar, Brain,
   Compass, MessageCircle, Sparkles, Menu, X,
-  Phone, LogOut, User, ChevronDown, Shield, Award, Car, Sprout } from
+  Phone, LogOut, User, ChevronDown, Shield, Award, Car, Sprout, Flower2 } from
 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,17 +28,41 @@ import IntakeRequired from '@/components/intake/IntakeRequired';
 import MandatoryIntakeModal from '@/components/intake/MandatoryIntakeModal';
 import { getRoleNavItems } from '@/components/navigation/RoleBasedNav';
 
-const navItems = [
-  { name: 'Home', href: 'Home', icon: Home },
-  { name: 'Community', href: 'Community', icon: Users },
-  { name: 'Resources', href: 'Resources', icon: MapPin },
-  { name: 'Walls', href: 'CommunityWalls', icon: Heart },
-  { name: 'Events', href: 'Events', icon: Calendar },
-  { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
-  { name: 'Recovery Garden', href: 'RecoveryGarden', icon: Sparkles },
-  { name: 'Gamification', href: 'Gamification', icon: Award },
-  { name: 'Assessment', href: 'Assessment', icon: Compass }
-];
+// Domain-organized navigation
+const domainNavigation = {
+  participant: {
+    label: 'My Journey',
+    items: [
+      { name: 'Home', href: 'Home', icon: Home },
+      { name: 'My GFA Plan', href: 'MyGFAPlan', icon: Heart },
+      { name: 'My Services', href: 'MyServicePortal', icon: Sprout }
+    ]
+  },
+  community: {
+    label: 'Connect',
+    items: [
+      { name: 'Community', href: 'Community', icon: Users },
+      { name: 'Walls', href: 'CommunityWalls', icon: Heart },
+      { name: 'Events', href: 'Events', icon: Calendar },
+      { name: 'Grace Match', href: 'PeerMatching', icon: Sparkles }
+    ]
+  },
+  resources: {
+    label: 'Resources',
+    items: [
+      { name: 'Find Resources', href: 'Resources', icon: MapPin }
+    ]
+  },
+  learning: {
+    label: 'Learn & Grow',
+    items: [
+      { name: 'Brain Science', href: 'Neuroplasticity', icon: Brain },
+      { name: 'Recovery Garden', href: 'RecoveryGarden', icon: Flower2 },
+      { name: 'Progress', href: 'Gamification', icon: Award },
+      { name: 'Assessment', href: 'Assessment', icon: Compass }
+    ]
+  }
+};
 
 const adminNavItems = [
   { name: 'Admin Analytics', href: 'AdminDashboard', icon: Shield },
@@ -129,25 +153,36 @@ export default function Layout({ children, currentPageName }) {
               </div>
             </Link>
 
-            {/* Desktop Nav */}
-            <nav className="hidden lg:flex items-center gap-1">
-              {navItems
-                .filter(item => allowedNav.show === 'ALL' || 
-                               (allowedNav.show.includes(item.href) && !allowedNav.hide.includes(item.href)))
-                .map((item) =>
-              <Link
-                key={item.name}
-                to={createPageUrl(item.href)}
-                className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                currentPageName === item.href ?
-                'bg-teal-50 text-teal-700' :
-                'text-gray-600 hover:bg-gray-50 hover:text-gray-900'}`
-                }>
-
-                  <item.icon className="w-4 h-4" />
-                  {item.name}
-                </Link>
-              )}
+            {/* Desktop Nav - Domain Organized */}
+            <nav className="hidden lg:flex items-center gap-4">
+              {Object.entries(domainNavigation).map(([domainKey, domain]) => {
+                const visibleItems = domain.items.filter(item => 
+                  allowedNav.show === 'ALL' || 
+                  (allowedNav.show.includes(item.href) && !allowedNav.hide.includes(item.href))
+                );
+                
+                if (visibleItems.length === 0) return null;
+                
+                return (
+                  <div key={domainKey} className="flex items-center gap-1">
+                    {visibleItems.map((item, idx) => (
+                      <Link
+                        key={item.name}
+                        to={createPageUrl(item.href)}
+                        className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                          currentPageName === item.href ?
+                          'bg-teal-50 text-teal-700' :
+                          'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        }`}
+                      >
+                        <item.icon className="w-4 h-4" />
+                        {item.name}
+                      </Link>
+                    ))}
+                    {domainKey !== 'learning' && <div className="w-px h-6 bg-gray-200" />}
+                  </div>
+                );
+              })}
 
               {(user?.role === 'admin' || user?.user_role === 'administrator' || user?.user_role === 'executive') && 
                adminNavItems
@@ -256,25 +291,40 @@ export default function Layout({ children, currentPageName }) {
             exit={{ opacity: 0, height: 0 }}
             className="lg:hidden border-t border-gray-100 bg-white">
 
-              <nav className="px-4 py-4 space-y-1">
-                {navItems
-                  .filter(item => allowedNav.show === 'ALL' || 
-                                 (allowedNav.show.includes(item.href) && !allowedNav.hide.includes(item.href)))
-                  .map((item) =>
-              <Link
-                key={item.name}
-                to={createPageUrl(item.href)}
-                onClick={() => setMobileMenuOpen(false)}
-                className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
-                currentPageName === item.href ?
-                'bg-teal-50 text-teal-700' :
-                'text-gray-600 hover:bg-gray-50'}`
-                }>
-
-                    <item.icon className="w-5 h-5" />
-                    {item.name}
-                  </Link>
-              )}
+              <nav className="px-4 py-4 space-y-4">
+                {Object.entries(domainNavigation).map(([domainKey, domain]) => {
+                  const visibleItems = domain.items.filter(item => 
+                    allowedNav.show === 'ALL' || 
+                    (allowedNav.show.includes(item.href) && !allowedNav.hide.includes(item.href))
+                  );
+                  
+                  if (visibleItems.length === 0) return null;
+                  
+                  return (
+                    <div key={domainKey}>
+                      <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2 px-4">
+                        {domain.label}
+                      </p>
+                      <div className="space-y-1">
+                        {visibleItems.map((item) => (
+                          <Link
+                            key={item.name}
+                            to={createPageUrl(item.href)}
+                            onClick={() => setMobileMenuOpen(false)}
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-colors ${
+                              currentPageName === item.href ?
+                              'bg-teal-50 text-teal-700' :
+                              'text-gray-600 hover:bg-gray-50'
+                            }`}
+                          >
+                            <item.icon className="w-5 h-5" />
+                            {item.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
                 <div className="pt-4 space-y-2">
                   <Link to={createPageUrl('Crisis')} onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="outline" className="w-full text-orange-600 border-orange-200">
