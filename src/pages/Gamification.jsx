@@ -5,6 +5,13 @@
 // DEPENDENCIES: UserProfile entity, Badge entity, Challenge entity
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 8. Gamification & Engagement
+// PURPOSE: Points, badges, leaderboards, and challenge tracking. Includes
+//          AI-powered personalized challenge recommendations.
+// DEPENDENCIES: UserProfile entity, Badge entity, Challenge entity
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

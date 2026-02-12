@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 6. Neuroplasticity Education
+// PURPOSE: Video library with coach workshops, meditations, and skills content.
+//          AI safety screening ensures grace-based, neuroplasticity-focused content.
+// DEPENDENCIES: VideoContent entity, UploadFile integration, AI moderation
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

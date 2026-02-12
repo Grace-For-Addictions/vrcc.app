@@ -5,6 +5,13 @@
 // DEPENDENCIES: CrisisContact entity (for future enhancements)
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 7. Crisis & Safety
+// PURPOSE: 24/7 crisis resources, hotlines, grounding exercises, and immediate
+//          support access. Public-facing - no authentication required.
+// DEPENDENCIES: CrisisContact entity (for future enhancements)
+// ============================================================================
+
 import React from 'react';
 import { motion } from 'framer-motion';
 import { 

@@ -5,6 +5,13 @@
 // DEPENDENCIES: Post entity, Message entity
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 2. Peer Support & Community
+// PURPOSE: Community walls for celebrating wins (kudos, milestones, gratitude,
+//          memorial posts). Includes reactions and anonymous posting.
+// DEPENDENCIES: Post entity, Message entity
+// ============================================================================
+
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

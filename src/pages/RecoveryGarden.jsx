@@ -5,6 +5,13 @@
 // DEPENDENCIES: RecoveryGarden entity, UserProfile entity, GardenGift entity
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 8. Gamification & Engagement
+// PURPOSE: Visual recovery garden that grows with user engagement. Plants unlock
+//          at point milestones, includes gifting, leaderboards, and AI suggestions.
+// DEPENDENCIES: RecoveryGarden entity, UserProfile entity, GardenGift entity
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
