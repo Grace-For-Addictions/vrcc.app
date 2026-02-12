@@ -21,6 +21,7 @@ import GraceChatWidget from '@/components/chat/GraceChatWidget';
 import PersonalizedRecommendations from '@/components/resources/PersonalizedRecommendations';
 import CuratedResourceLists from '@/components/resources/CuratedResourceLists';
 import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
+import ResourceSuggestionForm from '@/components/resources/ResourceSuggestionForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Sparkles } from 'lucide-react';
 
