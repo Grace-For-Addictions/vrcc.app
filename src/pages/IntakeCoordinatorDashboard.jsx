@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 3. Intake & Triage
+// PURPOSE: Intake coordinator dashboard for welcoming new participants, creating
+//          connection pathways, and 48-hour follow-up tracking (warm handoffs).
+// DEPENDENCIES: UserProfile entity, Referral entity, IntakeReview entity
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

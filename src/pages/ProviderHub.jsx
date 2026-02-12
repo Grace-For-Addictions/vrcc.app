@@ -5,6 +5,13 @@
 // DEPENDENCIES: Provider entity, Referral entity, ProviderNotification entity
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 10. Provider Network & External Partnerships
+// PURPOSE: Provider portal for warm handoffs, referral tracking, collaboration,
+//          and shared reporting with treatment providers, housing, and services.
+// DEPENDENCIES: Provider entity, Referral entity, ProviderNotification entity
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

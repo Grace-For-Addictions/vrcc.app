@@ -5,6 +5,13 @@
 // DEPENDENCIES: NarcanLog entity
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 9. Harm Reduction & Prevention
+// PURPOSE: Narcan distribution tracking, reversal reporting, GPRA compliance.
+//          Supports opioid settlement reporting and public health metrics.
+// DEPENDENCIES: NarcanLog entity
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

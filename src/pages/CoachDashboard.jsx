@@ -1,3 +1,11 @@
+// ============================================================================
+// DOMAIN: 2. Peer Support & Community
+// PURPOSE: Peer coach dashboard for monitoring mentee progress, assigning goals,
+//          AI coaching prompts, and care team collaboration (consent-gated).
+// DEPENDENCIES: SponsorConnection, ProgressInsight, MenteeGoal, CareTeamMessage,
+//               DailyCheckIn, Assessment entities
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import RoleGuard from '@/components/navigation/RoleGuard';

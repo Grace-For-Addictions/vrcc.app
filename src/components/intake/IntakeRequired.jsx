@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 3. Intake & Triage
+// PURPOSE: Intake requirement gate component for new participants. Links to
+//          external FiveCRM intake form, manages completion status.
+// DEPENDENCIES: User entity (intake_completed field)
+// ============================================================================
+
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion } from 'framer-motion';

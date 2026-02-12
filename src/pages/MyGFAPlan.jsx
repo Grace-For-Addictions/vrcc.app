@@ -5,6 +5,13 @@
 // DEPENDENCIES: GFAPlan entity, MyGrowthGarden component
 // ============================================================================
 
+// ============================================================================
+// DOMAIN: 1. Participant Journey
+// PURPOSE: Grace-Filled Action Plan builder with GRACE framework (Gratitude,
+//          Resilience, Acceptance, Connection, Empowerment). Participant-led.
+// DEPENDENCIES: GFAPlan entity, MyGrowthGarden component
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient, useQuery } from '@tanstack/react-query';

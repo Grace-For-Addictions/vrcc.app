@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 4. Care Coordination & Navigation
+// PURPOSE: Resource navigator dashboard with prioritized caseload, AI summaries,
+//          referral management, and BeePurple sync for closed-loop coordination.
+// DEPENDENCIES: ProgressInsight, Referral, Resource, BeePurple sync function
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
