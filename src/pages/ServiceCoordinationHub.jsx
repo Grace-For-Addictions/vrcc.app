@@ -338,9 +338,8 @@ export default function ServiceCoordinationHub() {
     );
   };
 
-  const ReferralCard = ({ referral, showActions = true }) => {
+  const ReferralCard = ({ referral, showActions = true, entityType = 'Referral' }) => {
     const [completeDialogOpen, setCompleteDialogOpen] = useState(false);
-    const [outcomeNotes, setOutcomeNotes] = useState('');
 
     const handleAccept = () => {
       updateReferralMutation.mutate({
@@ -349,13 +348,12 @@ export default function ServiceCoordinationHub() {
       });
     };
 
-    const handleComplete = () => {
+    const handleROIComplete = () => {
       updateReferralMutation.mutate({
         id: referral.id,
         data: { 
           status: 'completed', 
-          completion_date: new Date().toISOString(), 
-          outcome_notes: outcomeNotes,
+          completion_date: new Date().toISOString(),
           follow_up_completed: true
         }
       });
