@@ -22,8 +22,9 @@ import PersonalizedRecommendations from '@/components/resources/PersonalizedReco
 import CuratedResourceLists from '@/components/resources/CuratedResourceLists';
 import AIResourceNavigator from '@/components/resources/AIResourceNavigator';
 import ResourceSuggestionForm from '@/components/resources/ResourceSuggestionForm';
+import ResourceEditForm from '@/components/resources/ResourceEditForm';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Sparkles } from 'lucide-react';
+import { Sparkles, Edit } from 'lucide-react';
 
 const categoryIcons = {
   treatment: Stethoscope,
@@ -131,6 +132,7 @@ function ResourceCard({ resource, onClick, isFavorited, onToggleFavorite, matchS
 
 function ResourceDetail({ resource, onClose, user, isFavorited, onToggleFavorite }) {
   const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [editFormOpen, setEditFormOpen] = useState(false);
   const [feedbackType, setFeedbackType] = useState('');
   const [feedbackText, setFeedbackText] = useState('');
   const [accuracyRating, setAccuracyRating] = useState(0);
@@ -243,19 +245,36 @@ function ResourceDetail({ resource, onClose, user, isFavorited, onToggleFavorite
             {resource.accepts_uninsured && <Badge variant="outline">Accepts Uninsured</Badge>}
           </div>
 
-          {/* Feedback Section */}
+          {/* Feedback and Edit Section */}
           {user && (
-            <div className="pt-4 border-t">
-              {!feedbackOpen ? (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setFeedbackOpen(true)}
-                  className="w-full"
-                >
-                  <MessageSquare className="w-4 h-4 mr-2" />
-                  Report Issue or Give Feedback
-                </Button>
+            <div className="pt-4 border-t space-y-2">
+              {editFormOpen ? (
+                <ResourceEditForm 
+                  resource={resource} 
+                  onClose={() => setEditFormOpen(false)} 
+                />
+              ) : !feedbackOpen ? (
+                <>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setEditFormOpen(true)}
+                    className="w-full"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Suggest Edit
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setFeedbackOpen(true)}
+                    className="w-full"
+                  >
+                    <MessageSquare className="w-4 h-4 mr-2" />
+                    Report Issue or Give Feedback
+                  </Button>
+                </>
+              )
               ) : (
                 <div className="space-y-3">
                   <h4 className="font-medium text-sm">Resource Feedback</h4>
