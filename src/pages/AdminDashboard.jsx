@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 11. Analytics & Reporting (Admin-only)
+// PURPOSE: Comprehensive admin analytics dashboard with engagement metrics,
+//          program outcomes, grant reporting, and predictive analytics.
+// DEPENDENCIES: All entity types, multiple admin components, RBAC
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';

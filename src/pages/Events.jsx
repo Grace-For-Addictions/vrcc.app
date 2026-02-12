@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 4. Events & Meetings
+// PURPOSE: Virtual recovery meetings, workshops, social events with RSVP,
+//          attendance tracking, and AI event recommendations.
+// DEPENDENCIES: Event entity, UserProfile entity, AIEventRecommendations
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

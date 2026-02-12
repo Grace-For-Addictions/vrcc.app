@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 5. Assessment & Progress Tracking
+// PURPOSE: BARC-10 recovery capital assessment with dimensional scoring,
+//          AI-generated insights, and progress history tracking.
+// DEPENDENCIES: Assessment entity, InvokeLLM integration, IBHRSLogger
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQuery } from '@tanstack/react-query';

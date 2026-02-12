@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 1. Participant Journey + 2. Peer Support & Community
+// PURPOSE: Full-page AI recovery companion chat with enhanced capabilities,
+//          crisis resources, and conversation persistence via grace_companion agent.
+// DEPENDENCIES: grace_companion agent, EnhancedGraceCapabilities component
+// ============================================================================
+
 import React, { useState, useRef, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { motion, AnimatePresence } from 'framer-motion';
