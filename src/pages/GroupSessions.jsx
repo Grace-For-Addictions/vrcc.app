@@ -6,18 +6,24 @@ import { Link } from 'react-router-dom';
 import { createPageUrl } from '@/utils';
 import {
   Video, Calendar, Clock, Users, MapPin, ExternalLink,
-  UserPlus, UserMinus, Tag, BookOpen, Loader2, Plus
+  UserPlus, UserMinus, Tag, BookOpen, Loader2, Plus, Search, Filter
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import GraceHeader from '@/components/common/GraceHeader';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 
 export default function GroupSessions() {
   const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [filterTopic, setFilterTopic] = useState('all');
+  const [filterDate, setFilterDate] = useState('all');
   const queryClient = useQueryClient();
 
   useEffect(() => {
@@ -72,15 +78,58 @@ export default function GroupSessions() {
   });
 
   const now = new Date();
-  const upcomingSessions = events.filter(e => 
-    new Date(e.start_time) > now && 
+  const allGroupSessions = events.filter(e => 
     e.session_status !== 'cancelled' &&
     (e.event_type === 'support_group' || e.event_type === 'peer_circle' || e.event_type === 'recovery_group' || e.event_type === 'meeting')
   );
-  
-  const mySessions = upcomingSessions.filter(e => 
-    e.attendee_ids?.includes(user?.email)
-  );
+
+  // Get all unique topics for filter
+  const allTopics = [...new Set(allGroupSessions.flatMap(e => e.session_topics || []))];
+
+  // Apply filters
+  let filteredSessions = allGroupSessions;
+
+  // Search filter
+  if (searchQuery) {
+    filteredSessions = filteredSessions.filter(e =>
+      e.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.description?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      e.session_topics?.some(t => t.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+  }
+
+  // Type filter
+  if (filterType !== 'all') {
+    filteredSessions = filteredSessions.filter(e => e.event_type === filterType);
+  }
+
+  // Topic filter
+  if (filterTopic !== 'all') {
+    filteredSessions = filteredSessions.filter(e => 
+      e.session_topics?.includes(filterTopic)
+    );
+  }
+
+  // Date filter
+  if (filterDate === 'today') {
+    filteredSessions = filteredSessions.filter(e => {
+      const sessionDate = new Date(e.start_time);
+      return sessionDate.toDateString() === now.toDateString();
+    });
+  } else if (filterDate === 'this_week') {
+    const weekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
+    filteredSessions = filteredSessions.filter(e => {
+      const sessionDate = new Date(e.start_time);
+      return sessionDate >= now && sessionDate <= weekFromNow;
+    });
+  } else if (filterDate === 'upcoming') {
+    filteredSessions = filteredSessions.filter(e => new Date(e.start_time) > now);
+  } else if (filterDate === 'past') {
+    filteredSessions = filteredSessions.filter(e => new Date(e.start_time) <= now);
+  }
+
+  const upcomingSessions = filteredSessions.filter(e => new Date(e.start_time) > now);
+  const mySessions = upcomingSessions.filter(e => e.attendee_ids?.includes(user?.email));
 
   const canModerate = (event) => {
     return user && (
@@ -109,13 +158,92 @@ export default function GroupSessions() {
             subtitle="Join peer support circles and recovery groups"
             icon={Users}
           />
-          <Link to={createPageUrl('ManageSessions')}>
-            <Button className="bg-teal-600 hover:bg-teal-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Session
-            </Button>
-          </Link>
+          {(user?.role === 'admin' || ['peer_coach', 'navigator', 'moderator', 'administrator'].includes(user?.user_role)) && (
+            <Link to={createPageUrl('ManageSessions')}>
+              <Button className="bg-teal-600 hover:bg-teal-700">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Session
+              </Button>
+            </Link>
+          )}
         </div>
+
+        {/* Search and Filters */}
+        <Card className="mb-6">
+          <CardContent className="pt-6">
+            <div className="grid md:grid-cols-2 lg:grid-cols-5 gap-4">
+              <div className="lg:col-span-2">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                  <Input
+                    placeholder="Search sessions, topics..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-10"
+                  />
+                </div>
+              </div>
+              
+              <Select value={filterType} onValueChange={setFilterType}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Session Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Types</SelectItem>
+                  <SelectItem value="support_group">Support Group</SelectItem>
+                  <SelectItem value="peer_circle">Peer Circle</SelectItem>
+                  <SelectItem value="recovery_group">Recovery Group</SelectItem>
+                  <SelectItem value="meeting">Meeting</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={filterTopic} onValueChange={setFilterTopic}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Topic" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Topics</SelectItem>
+                  {allTopics.map(topic => (
+                    <SelectItem key={topic} value={topic}>{topic}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+
+              <Select value={filterDate} onValueChange={setFilterDate}>
+                <SelectTrigger>
+                  <SelectValue placeholder="When" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Time</SelectItem>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="this_week">This Week</SelectItem>
+                  <SelectItem value="upcoming">Upcoming</SelectItem>
+                  <SelectItem value="past">Past Sessions</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {(searchQuery || filterType !== 'all' || filterTopic !== 'all' || filterDate !== 'all') && (
+              <div className="mt-4 flex items-center gap-2">
+                <Badge variant="outline">
+                  {filteredSessions.length} results
+                </Badge>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => {
+                    setSearchQuery('');
+                    setFilterType('all');
+                    setFilterTopic('all');
+                    setFilterDate('all');
+                  }}
+                >
+                  Clear filters
+                </Button>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
         <Tabs defaultValue="upcoming" className="space-y-6">
           <TabsList>

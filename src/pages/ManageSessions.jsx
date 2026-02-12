@@ -43,6 +43,18 @@ export default function ManageSessions() {
     const loadUser = async () => {
       try {
         const currentUser = await base44.auth.me();
+        
+        // Check if user has permission to create sessions
+        const canCreate = 
+          currentUser.role === 'admin' ||
+          ['peer_coach', 'navigator', 'moderator', 'administrator'].includes(currentUser.user_role);
+        
+        if (!canCreate) {
+          toast.error('You do not have permission to create sessions');
+          window.location.href = createPageUrl('GroupSessions');
+          return;
+        }
+        
         setUser(currentUser);
       } catch (e) {
         base44.auth.redirectToLogin();

@@ -67,13 +67,16 @@ import GraceChat from './pages/GraceChat';
 import GraceHouseManagement from './pages/GraceHouseManagement';
 import GracePorchGatherings from './pages/GracePorchGatherings';
 import GrantWriter from './pages/GrantWriter';
+import GroupSessions from './pages/GroupSessions';
 import Home from './pages/Home';
 import IBHRSReporting from './pages/IBHRSReporting';
 import IntakeCoordinatorDashboard from './pages/IntakeCoordinatorDashboard';
 import MRCCHub from './pages/MRCCHub';
+import ManageSessions from './pages/ManageSessions';
 import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
 import MyGFAPlan from './pages/MyGFAPlan';
+import MyPathway from './pages/MyPathway';
 import MyServicePortal from './pages/MyServicePortal';
 import NarcanTracker from './pages/NarcanTracker';
 import NavigatorDashboard from './pages/NavigatorDashboard';
@@ -102,9 +105,7 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import MyPathway from './pages/MyPathway';
-import GroupSessions from './pages/GroupSessions';
-import ManageSessions from './pages/ManageSessions';
+import SessionSummary from './pages/SessionSummary';
 import __Layout from './Layout.jsx';
 
 
@@ -129,13 +130,16 @@ export const PAGES = {
     "GraceHouseManagement": GraceHouseManagement,
     "GracePorchGatherings": GracePorchGatherings,
     "GrantWriter": GrantWriter,
+    "GroupSessions": GroupSessions,
     "Home": Home,
     "IBHRSReporting": IBHRSReporting,
     "IntakeCoordinatorDashboard": IntakeCoordinatorDashboard,
     "MRCCHub": MRCCHub,
+    "ManageSessions": ManageSessions,
     "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
     "MyGFAPlan": MyGFAPlan,
+    "MyPathway": MyPathway,
     "MyServicePortal": MyServicePortal,
     "NarcanTracker": NarcanTracker,
     "NavigatorDashboard": NavigatorDashboard,
@@ -164,9 +168,7 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "MyPathway": MyPathway,
-    "GroupSessions": GroupSessions,
-    "ManageSessions": ManageSessions,
+    "SessionSummary": SessionSummary,
 }
 
 export const pagesConfig = {
