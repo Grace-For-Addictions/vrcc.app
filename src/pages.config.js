@@ -74,6 +74,7 @@ import MRCCHub from './pages/MRCCHub';
 import MeetingManagement from './pages/MeetingManagement';
 import MeetingsHub from './pages/MeetingsHub';
 import MyGFAPlan from './pages/MyGFAPlan';
+import MyServicePortal from './pages/MyServicePortal';
 import NarcanTracker from './pages/NarcanTracker';
 import NavigatorDashboard from './pages/NavigatorDashboard';
 import Neuroplasticity from './pages/Neuroplasticity';
@@ -101,7 +102,7 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import MyServicePortal from './pages/MyServicePortal';
+import MyPathway from './pages/MyPathway';
 import __Layout from './Layout.jsx';
 
 
@@ -133,6 +134,7 @@ export const PAGES = {
     "MeetingManagement": MeetingManagement,
     "MeetingsHub": MeetingsHub,
     "MyGFAPlan": MyGFAPlan,
+    "MyServicePortal": MyServicePortal,
     "NarcanTracker": NarcanTracker,
     "NavigatorDashboard": NavigatorDashboard,
     "Neuroplasticity": Neuroplasticity,
@@ -160,7 +162,7 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "MyServicePortal": MyServicePortal,
+    "MyPathway": MyPathway,
 }
 
 export const pagesConfig = {
