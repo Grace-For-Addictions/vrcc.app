@@ -96,6 +96,7 @@ import ResourceNavigatorDashboard from './pages/ResourceNavigatorDashboard';
 import Resources from './pages/Resources';
 import SchoolPrevention from './pages/SchoolPrevention';
 import ServiceCoordinationHub from './pages/ServiceCoordinationHub';
+import SessionSummary from './pages/SessionSummary';
 import StaffOnboarding from './pages/StaffOnboarding';
 import StaffSOPs from './pages/StaffSOPs';
 import TeamChallenges from './pages/TeamChallenges';
@@ -105,7 +106,6 @@ import VideoLibrary from './pages/VideoLibrary';
 import VolunteerDashboard from './pages/VolunteerDashboard';
 import VolunteerHub from './pages/VolunteerHub';
 import WorkforceDevelopment from './pages/WorkforceDevelopment';
-import SessionSummary from './pages/SessionSummary';
 import __Layout from './Layout.jsx';
 
 
@@ -159,6 +159,7 @@ export const PAGES = {
     "Resources": Resources,
     "SchoolPrevention": SchoolPrevention,
     "ServiceCoordinationHub": ServiceCoordinationHub,
+    "SessionSummary": SessionSummary,
     "StaffOnboarding": StaffOnboarding,
     "StaffSOPs": StaffSOPs,
     "TeamChallenges": TeamChallenges,
@@ -168,7 +169,6 @@ export const PAGES = {
     "VolunteerDashboard": VolunteerDashboard,
     "VolunteerHub": VolunteerHub,
     "WorkforceDevelopment": WorkforceDevelopment,
-    "SessionSummary": SessionSummary,
 }
 
 export const pagesConfig = {
