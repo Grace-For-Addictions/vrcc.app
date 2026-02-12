@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 1. Participant Journey (Primary) + Cross-Cutting Dashboard
+// PURPOSE: Main dashboard/homepage displaying personalized participant experience,
+//          onboarding flow, daily check-ins, goals, and navigation to all domains.
+// DEPENDENCIES: All domains (serves as central hub)
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery } from '@tanstack/react-query';
