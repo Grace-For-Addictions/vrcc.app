@@ -1,3 +1,12 @@
+// ============================================================================
+// DOMAIN: 3. Recovery Resources
+// PURPOSE: Browse, search, favorite, and provide feedback on community resources.
+//          Includes AI-powered search, personalized recommendations, and crowdsourced
+//          resource suggestions.
+// DEPENDENCIES: Resource entity, FavoriteResource entity, ResourceFeedback entity,
+//               aiResourceSearch function
+// ============================================================================
+
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';

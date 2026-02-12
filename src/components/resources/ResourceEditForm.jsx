@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 3. Recovery Resources
+// PURPOSE: Crowdsourced resource editing. Enables users to suggest corrections
+//          to existing resource information for navigator review.
+// DEPENDENCIES: ResourceEditSuggestion entity
+// ============================================================================
+
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';

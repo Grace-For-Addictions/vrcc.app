@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 3. Recovery Resources
+// PURPOSE: AI-powered natural language resource search. Interprets user queries,
+//          analyzes intent, and returns ranked resource matches with explanations.
+// DEPENDENCIES: Resource entity, InvokeLLM integration
+// ============================================================================
+
 import { createClientFromRequest } from 'npm:@base44/sdk@0.8.6';
 
 Deno.serve(async (req) => {

@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: Cross-Cutting Infrastructure
+// PURPOSE: Global application layout with navigation, authentication state,
+//          and role-based access control. Serves all domains.
+// DEPENDENCIES: All domains (provides navigation shell)
+// ============================================================================
+
 import React, { useState, useEffect } from 'react';
 import { useBeepurpleSync } from '@/components/beepurple/BeepurpleSync';
 import { Link } from 'react-router-dom';

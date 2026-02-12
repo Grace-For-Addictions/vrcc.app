@@ -1,6 +1,13 @@
+// ============================================================================
+// DOMAIN: 3. Recovery Resources
+// PURPOSE: Community-driven resource suggestion form. Allows users to recommend
+//          new resources for review and verification by navigators.
+// DEPENDENCIES: ResourceSuggestion entity
+// ============================================================================
+
 import React, { useState } from 'react';
 import { base44 } from '@/api/base44Client';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tantml/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
