@@ -1,3 +1,10 @@
+// ============================================================================
+// DOMAIN: 6. Neuroplasticity Education
+// PURPOSE: Educational content about brain science, daily exercises, and quizzes
+//          teaching how connection rewires the brain for recovery.
+// DEPENDENCIES: UserProfile entity (readiness gating), Quiz entity
+// ============================================================================
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
