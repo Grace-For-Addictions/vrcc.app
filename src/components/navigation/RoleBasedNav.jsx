@@ -3,7 +3,7 @@ export const getRoleNavItems = (userRole, isAdmin, readinessLevel = 1, consentAc
   // Public/Anonymous users
   if (!userRole) {
     return {
-      show: ['Home', 'Community', 'Crisis', 'Resources'],
+      show: ['Home', 'Community', 'Crisis', 'Resources', 'Neuroplasticity', 'Events', 'CommunityWalls', 'RecoveryGarden', 'Assessment', 'Gamification', 'PeerMatching', 'GraceChat'],
       hide: ['AdminDashboard', 'CoachDashboard', 'NavigatorDashboard', 'BeePurpleReporting', 'GovDashPortal']
     };
   }
