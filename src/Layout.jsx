@@ -74,7 +74,6 @@ export default function Layout({ children, currentPageName }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [needsIntake, setNeedsIntake] = useState(false);
   const [allowedNav, setAllowedNav] = useState({ show: [], hide: [] });
 
   useEffect(() => {
