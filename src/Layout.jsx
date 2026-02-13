@@ -24,8 +24,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger } from
 "@/components/ui/dropdown-menu";
-import IntakeRequired from '@/components/intake/IntakeRequired';
-import MandatoryIntakeModal from '@/components/intake/MandatoryIntakeModal';
 import Breadcrumbs from '@/components/navigation/Breadcrumbs';
 import { getRoleNavItems } from '@/components/navigation/RoleBasedNav';
 
