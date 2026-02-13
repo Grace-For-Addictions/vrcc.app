@@ -124,13 +124,7 @@ export default function Home() {
       href: 'CommunityWalls',
       color: 'rose'
     },
-    {
-      title: 'Recovery Assessment',
-      description: 'Track your recovery capital with the BARC-10 and watch your garden grow',
-      icon: Compass,
-      href: 'Assessment',
-      color: 'purple'
-    },
+
     {
       title: 'Brain Science',
       description: 'Learn how connection literally rewires your brain for healing',
@@ -329,8 +323,7 @@ export default function Home() {
               }, 100);
             }}
             onStartAssessment={() => {
-              setShowCelebration(false);
-              navigate(createPageUrl('Assessment'));
+              // Assessment removed from home, just close welcome card
             }}
             onDismiss={() => {
               // Show gentle reminder toast after dismissal
