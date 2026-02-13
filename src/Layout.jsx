@@ -98,11 +98,6 @@ export default function Layout({ children, currentPageName }) {
           userProfile?.consent_acknowledged || false
         );
         setAllowedNav(nav);
-        
-        // Check if intake is required
-        if (!currentUser.intake_completed) {
-          setNeedsIntake(true);
-        }
       } catch (e) {
         // Not logged in - show public nav
         setAllowedNav(getRoleNavItems(null, false));
@@ -114,19 +109,6 @@ export default function Layout({ children, currentPageName }) {
   const handleLogout = async () => {
     await base44.auth.logout();
   };
-
-  // Block access if intake not completed
-  if (user && needsIntake) {
-    return (
-      <MandatoryIntakeModal
-        user={user} 
-        onComplete={() => {
-          setNeedsIntake(false);
-          setUser({ ...user, intake_completed: true });
-        }} 
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
