@@ -10,7 +10,7 @@ export default function GraceChatWidget() {
   const [messages, setMessages] = useState([
     {
       role: 'assistant',
-      content: "Hey there! 💚 I'm Grace, your 24/7 recovery companion powered by GPT-5.2 on Wix/Base44. I'm here to chat, celebrate wins, find resources, proactively check in on your journey, or just listen. What's on your mind today?"
+      content: "Hey there! 💚 I'm Grace, your 24/7 recovery companion. I'm here to chat, celebrate wins, find resources, proactively check in on your journey, or just listen. What's on your mind today?"
     }
   ]);
   const [input, setInput] = useState('');

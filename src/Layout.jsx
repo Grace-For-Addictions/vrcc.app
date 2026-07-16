@@ -127,9 +127,9 @@ export default function Layout({ children, currentPageName }) {
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-teal-600 flex items-center justify-center shadow-md">
                 <Sparkles className="w-5 h-5 text-white" />
               </div>
-              <div className="hidden sm:block">
-                <div className="text-gray-900 mt-12 font-bold rounded">Grace For Addictions</div>
-                <div className="text-teal-600 pt-5 text-xs">Powered by Wix/Base44</div>
+              <div className="hidden sm:block leading-tight">
+                <div className="text-gray-900 font-bold">Grace For Addictions</div>
+                <div className="text-teal-600 text-xs">Virtual Recovery Community Center</div>
               </div>
             </Link>
 
@@ -396,7 +396,7 @@ export default function Layout({ children, currentPageName }) {
 
           <div className="border-t border-gray-100 mt-8 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-gray-500">
-              © {new Date().getFullYear()} Grace For Addictions. Powered by Wix/Base44.
+              © {new Date().getFullYear()} Grace For Addictions. No Fees. No Stigma. Just Grace.
             </p>
             <p className="text-sm text-gray-400">
               Community Rewires the Brain • Recovery is Possible 💚

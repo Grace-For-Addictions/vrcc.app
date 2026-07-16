@@ -1,8 +1,11 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from '@/App.jsx'
+import MvpRoot from '@/mvp/MvpRoot.jsx'
 import '@/index.css'
 
+// GFA VRCC — focused MVP on Supabase v6 (no Base44).
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <App />
+  <React.StrictMode>
+    <MvpRoot />
+  </React.StrictMode>
 )

@@ -62,7 +62,7 @@ Format as JSON:`,
         </div>
         <div>
           <h3 className="font-semibold text-gray-900">AI Goal-Setting Assistant</h3>
-          <p className="text-xs text-gray-600">Powered by GPT-5.2 on Wix/Base44</p>
+          <p className="text-xs text-gray-600">Your AI recovery companion</p>
         </div>
       </div>
 
