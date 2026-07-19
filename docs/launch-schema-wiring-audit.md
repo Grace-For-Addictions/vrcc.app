@@ -1,194 +1,133 @@
 # Launch Schema Wiring Audit
 
 **Scope:** Resolve the six wiring questions for the launch continuity loop
-(session close → next action → participant home → coach attention → overdue return)
-against the *actual* repository, and correct the assumed live-schema model.
+(session close → next action → participant home → coach attention → overdue return),
+reconciled across **both** live backends.
 
-**Method:** Traced every read/write of the coaching-session entities, the
-goal/next-action entities, and the follow-up fields across `src/`. All claims
-below cite `file:line`.
-
----
-
-## TL;DR — the assumed schema does not match the repo
-
-The planning note assumed `gfa_engagement.sessions.follow_up_due` and
-`gfa_ui.goals.small_step` exist as live fields. **Neither exists in this
-codebase.** The real model is more fragmented, and the loop is blocked by
-*wiring* defects, not missing schema:
-
-1. There is **no follow-up field on any coaching-session entity.** The only
-   `follow_up_*` fields live on **referrals and communication logs**, where they
-   are already both read *and* written. So "read but never written" does not
-   describe this repo — the follow-up concept is simply **not wired into the
-   session lifecycle at all.**
-2. There are **two split-brain session entities** (`CoachingSession` vs
-   `CoachingSessionLog`); one is canonical, one is a legacy read path feeding
-   empty data to five AI features.
-3. There are **four unrelated representations of a "goal / next action,"** none
-   named `small_step`, and the participant-facing one is broken by a **three-way
-   `status` vocabulary mismatch** plus a render-crashing missing import.
-
-**Recommendation stands and strengthens:** prefer wiring over new schema — but
-the minimum real work is (a) unifying goal `status`, (b) fixing the participant
-goal surface, and (c) deciding *where* a session-set `follow_up_due` should live
-(it has to be added to `CoachingSessionLog`; it cannot simply be "reused").
+> **CORRECTION (supersedes the first revision of this doc).** The first revision
+> concluded that `follow_up_due` / `small_step` "do not exist." That was true only
+> of *this repository's code* and was misleading. **They do exist** — in the live
+> **Supabase "Grace For Addictions"** database. This repo (`vrcc.app`) is a
+> *separate* base44 stack that does not connect to Supabase. Decision on record:
+> **the launch target is the Supabase `gfa_*` stack**, not this base44 app.
 
 ---
 
-## Entity map (the real constructs)
+## The two-stack reality
 
-### Session records — two entities, one canonical
+| | **base44 (`vrcc.app`, this repo)** | **Supabase "Grace For Addictions"** (`ykykeioydvtxpyreshhs`) |
+|---|---|---|
+| Frontend SDK | `@base44/sdk` | none in this repo — consumed by a *different* repo (candidate: `GFAVRCC/grace-harbor-16`) |
+| Session record | `CoachingSessionLog` entity | `gfa_engagement.sessions` (27 rows) + `gfa_ui.coaching_sessions` (0 rows) |
+| Goal / next action | `MenteeGoal` / `UserProfile.current_goal` / `GFAPlan` | `gfa_ui.goals` (1 row) |
+| `follow_up_due` | ❌ no such field | ✅ `gfa_engagement.sessions.follow_up_due` (`date`, 6/27 populated) |
+| `small_step` | ❌ no such field | ✅ `gfa_ui.goals.small_step` (`text`, 1/1 populated) |
+| Attention queue | `ProgressInsight.severity` | `gfa_ui.coach_alerts` (built, not fed by follow_up_due) |
+| icare | none | `gfa_icare.icare_steps` (canonical) + `gfa_ui.icare_step_entries` (+ `ztest.icare_steps`, test dupe) |
 
-| Entity | Role | Key fields | Written by | Read by |
-|---|---|---|---|---|
-| **`CoachingSessionLog`** | **CANONICAL live session record** | `activity_date`, `client_email`, `contact_email`, `coach_name`, `activity_notes`, `personal_goal`, `goal_set`, `personal_affirmation`, `referral_*`, `ai_generated_summary` | `SessionEntryForm` (`src/components/coaching/SessionEntryForm.jsx:43`), `UniversalActivityForm`, `MobileOutreachTracker`, `AIResourceNavigator`, `BeepurpleSync` | 15+ readers: `ParticipantDashboard`, all `govdash/*`, analytics, reporting |
-| **`CoachingSession`** | **LEGACY / split-brain** | `scenario_id`, `empathy_score`, `mi_skills_score`, `resource_accuracy` (VR training scores) | **Only** `PeerCoachTraining.jsx:376` (VR training simulator) | 5 AI features: `RecoveryCapitalOptimizer`, `PersonalizedContentEngine`, `AIRecoveryJourney`, `ProactiveNudges`, `ProactiveOutreach` |
-
-The `CoachingSession` readers filter on `client_email` / `created_by` and sort by
-`session_date` (e.g. `PersonalizedContentEngine.jsx:34`,
-`ProactiveOutreach.jsx:37`) — **none of which the only writer sets.** The training
-writer stores scenario scores with no `client_email` and no `session_date`
-(`PeerCoachTraining.jsx:376-386`). Result: those five AI personalization features
-read **empty or wrong-shaped data** and silently degrade.
-
-### Goal / "next action" — four representations, none called `small_step`
-
-| Representation | Where it lives | Written by | Read by | On the *home* surface? |
-|---|---|---|---|---|
-| **`MenteeGoal`** (`goal_title`, `goal_description`, `goal_type`, `target_date`, `status`, `progress_percentage`) | coach-assigned goal | `CoachDashboard.jsx:99` (create) | `ParticipantDashboard.jsx:43`, `CoachDashboard.jsx:91`, `BeePurpleReporting.jsx:48` | Only on `ParticipantDashboard` (a secondary route) |
-| **`UserProfile.current_goal`** (single free-text string) | profile field | `Home.jsx:423` (`auth.updateMe`) via `GoalSettingAssistant` | AI nudges/analyzers (`GoalProgressNudges.jsx:14`, `SessionAnalyzer.jsx:43`) | **Yes — on the real home (`Home.jsx`)** |
-| **`GFAPlan`** (5-section GRACE plan) | structured plan | `MyGFAPlan.jsx:171`, `MyGrowthGarden.jsx:42` | `GFAPlanCard.jsx:18`, `Home.jsx` | **Yes — primary card on `Home.jsx`** |
-| **`ResidentGoal`** | sober-living residency subsystem | `ResidentGoals.jsx:31` | `ResidentGoals`, `RecoveryPlanAI` | No (residency portal only) |
-
-`next_step` / `next_steps` appear only as **ephemeral AI output that is never
-persisted** — `BudgetingVRModule.jsx:140`, `PersonalizedRecommendations.jsx:102`,
-`ParticipantJourneyMap.jsx:192`. There is no durable `small_step` field anywhere.
+**`vrcc.app` is the legacy stack.** The normalized `gfa_*` schema (and the sibling
+Supabase projects "VRCC-10x Project", "GRAVRCC-dev") is the "10x" rebuild the
+launch runs on. Everything below answers the six questions against **Supabase**.
 
 ---
 
-## Answers to the six audit questions
+## The internal split that orphans `follow_up_due`
 
-### 1. Which implementation does the production frontend *read*?
-- **Sessions:** primarily **`CoachingSessionLog`** (15+ readers, including the
-  participant surface). `CoachingSession` is read only by 5 AI features, on
-  fields its writer never populates.
-- **Goals on the real home (`Home.jsx`, `mainPage: "Home"` in
-  `pages.config.js:177`):** reads **`GFAPlan`** (`GFAPlanCard`) and
-  **`UserProfile.current_goal`** (`GoalSettingAssistant`). It does **not** read
-  `MenteeGoal`.
-- **`MenteeGoal`** is read only by `ParticipantDashboard` — a registered but
-  **secondary** route (`/ParticipantDashboard`), not the landing page.
+Supabase itself has two session tables:
 
-### 2. Which implementation does it *write*?
-- **Sessions:** **`CoachingSessionLog`** is the sole real write target at session
-  close (`SessionEntryForm.jsx:43`). `CoachingSession` is written only by the VR
-  training simulator.
-- **Goals:** `CoachDashboard` writes `MenteeGoal`; `Home` writes
-  `UserProfile.current_goal`; `MyGFAPlan` writes `GFAPlan`. Three separate write
-  paths that never converge.
+- **`gfa_engagement.sessions`** — normalized reporting/grant-billing layer.
+  Integer-keyed. Holds `follow_up_due`, `icare_phase_id`, `grant_billable`,
+  `exhibit_e_activity_code`, `goals_reviewed`, strengths/growth, `lifecycle_status`,
+  `note_tier`. **27 rows; 6 have `follow_up_due` set.** Grants: `authenticated`
+  CRUD. RLS: `p_staff_all[ALL]`, `p_participant_own[SELECT]`, `p_session_request_own[INSERT]`.
+- **`gfa_ui.coaching_sessions`** — frontend UI surface. UUID-keyed. Has `status`,
+  `scheduled_at`, `session_notes`, `coach_internal_notes` — **but no follow-up
+  field, and 0 rows.** Grants: `anon`+`authenticated` CRUD.
 
-### 3. Which are dead / legacy?
-- **`CoachingSession` is legacy/orphaned** as a *coaching* record: its only writer
-  is the training simulator, yet 5 AI features read it as if it held real session
-  history. Effectively a dead read path.
-- **`ParticipantDashboard`'s "Next Session" card is dead** — it reads
-  `session_date` / `coach_email` (`ParticipantDashboard.jsx:75, 255-258`) from
-  `CoachingSessionLog`, which stores `activity_date` / `coach_name` and only *past*
-  activity. It can never resolve a future session.
-- `ResidentGoal` is not dead but is a **separate subsystem** (residency), not part
-  of the participant→coach loop.
+They are **independent** (no FK, no trigger, no view links them). So a UI that
+writes sessions through `gfa_ui.coaching_sessions` can never populate
+`gfa_engagement.sessions.follow_up_due` — which is exactly why the field reads but
+is not written. The 6 populated rows are seed/backfill on the engagement layer.
 
-### 4. Why is `follow_up_due` read but never written?
-**It isn't — the premise doesn't hold in this repo.** There is no `follow_up_due`
-(or any follow-up field) on either session entity. The follow-up fields that exist
-—`follow_up_needed`, `follow_up_date`, `follow_up_notes`, `follow_up_completed`—
-live on **`CommunicationLog`** and **`Referral` / `ClosedLoopReferral`**, and on
-those entities they are **both written and read**:
-- `CommunicationLogger.jsx:23-24, 145` (write) and `179-193` (read)
-- `IntakeCoordinatorDashboard.jsx:101-103` (write) / `:80` (read)
-- `ServiceCoordinationHub.jsx:357` (write) / `:186` (read)
-- `ClosedLoopCoordination.jsx:75` (write) / `:230` (read)
-
-So the follow-up infrastructure is fully wired — just in the **referral/comms**
-subsystem, not the coaching session. The coach "attention queue" on
-`CoachDashboard` ("Needs Attention", `CoachDashboard.jsx:223`) is driven by
-**`ProgressInsight.severity`** (`:189-191`), **not** by any follow-up date.
-
-### 5. Can session close safely write `follow_up_due`?
-**Only by adding a field — it cannot be "reused."** `SessionEntryForm` already
-`create`s a `CoachingSessionLog` with arbitrary fields (`:43`, `:222`), so writing
-a new `follow_up_due` there is low-risk and requires no migration on a schemaless
-base44 entity. But there is **no existing session-level follow-up field to reuse**;
-the referral/comms `follow_up_date` belongs to different entities and workflows.
-The honest conclusion: this is a **small, additive** change to `CoachingSessionLog`,
-not pure reuse.
-
-### 6. Can participant home safely surface `small_step` as the primary next action?
-**Not as-is — three blockers, and a "which home / which goal" decision.**
-
-- **There is no `small_step` field.** The nearest durable construct is
-  `MenteeGoal` (`goal_description` + `target_date` + `status`).
-- **The real home (`Home.jsx`) does not read `MenteeGoal` at all** — it surfaces
-  `GFAPlan` and `UserProfile.current_goal`. The page that *does* surface
-  `MenteeGoal` (`ParticipantDashboard`) is a secondary route. Surfacing a
-  coach-set goal on the actual landing page is **new wiring**, not a toggle.
-- **`MenteeGoal` is broken by a three-way `status` vocabulary mismatch** (see
-  below), so even where it is surfaced, coach-assigned goals don't show.
+Identity bridge for the loop's join: `gfa_ui.goals.participant_id` is `uuid`,
+`gfa_engagement.sessions.participant_id` is `integer`; they reconcile through
+**`gfa_identity.participant_crosswalk`** (`participant_id uuid ↔ core_participant_id int`,
+with `match_method`/`confidence`). The loop must route participant identity through
+this crosswalk.
 
 ---
 
-## Concrete wiring defects blocking the loop
+## The six questions — answered against Supabase (the launch target)
 
-### A. Goal `status` vocabulary is inconsistent (highest priority)
-- Create path sets **no status**: `CoachDashboard.jsx:492-496` mutates
-  `{ ...newGoal, mentee_email, coach_email }` — `newGoal` has no `status`.
-- Participant reads `status === 'in_progress'` / `'achieved'`
-  (`ParticipantDashboard.jsx:65-66`).
-- Coach + reporting read `status === 'active'` / `'completed'`
-  (`CoachDashboard.jsx:516-517`, `BeePurpleReporting.jsx:75-76`).
+1. **Which implementation does the frontend read?** The `gfa_ui.*` schema is the
+   frontend API surface (anon/authenticated grants, RLS). Participant-facing next
+   action = `gfa_ui.goals` (`goals_self[SELECT]` policy). This repo's base44
+   frontend reads base44 entities instead and is not the launch frontend.
 
-**Effect:** a coach-assigned `MenteeGoal` has `status === undefined`, so it is
-**invisible** in the participant's "Active Goals" and renders as an unknown/gray
-badge on the coach side. The core "coach sets goal → participant sees it" hop is
-broken today. Fix by standardizing one vocabulary and defaulting `status` on create.
+2. **Which does it write?** `gfa_ui.*` (goals, coaching_sessions, coach_alerts…).
+   `gfa_engagement.sessions` is written by staff/back-office paths, not the UI
+   session surface. Nothing — no DB routine, trigger, or view — writes
+   `follow_up_due` or `small_step`; those are direct-table writes only.
 
-### B. `ParticipantDashboard` crashes on the goals card — missing import
-`<Plus>` is used at `ParticipantDashboard.jsx:183` but is **not imported**
-(imports at `:10-13` omit it). The "Active Goals" section always renders, so this
-is a `ReferenceError: Plus is not defined` at render. The participant goal surface
-is effectively non-functional until this is fixed.
+3. **Dead / legacy?** The whole **base44 stack (this repo) is the legacy stack.**
+   Within Supabase: `ztest.*` (incl. `ztest.icare_steps`) is a test schema — ignore.
+   `gfa_ui.coaching_sessions` is an unpopulated stub (0 rows) — not yet wired.
 
-### C. "Next Session" card reads the wrong fields (dead)
-`ParticipantDashboard.jsx:75` selects a future session by `session_date`, and
-`:255-258` renders `coach_email`. `CoachingSessionLog` uses `activity_date` and
-`coach_name` and records only past activity. The card never appears.
+4. **Why is `follow_up_due` read but never written?** Because it lives on the
+   normalized `gfa_engagement.sessions` layer, while the UI session surface is the
+   separate `gfa_ui.coaching_sessions` table that lacks the field. No trigger/view
+   bridges them. The write path simply isn't wired across the two layers.
 
-### D. `CoachingSession` split-brain starves 5 AI features
-See Entity map. Either repoint those readers at `CoachingSessionLog` (with field
-renames `activity_date`/`coach_name`) or retire the legacy entity.
+5. **Can session close safely write `follow_up_due`?** Yes — the column is nullable,
+   RLS already permits staff writes (`p_staff_all`), no constraints/triggers to
+   violate. The open question is *architectural, not safety*: should session close
+   write `gfa_engagement.sessions.follow_up_due` directly, or should `follow_up_due`
+   be surfaced onto `gfa_ui.coaching_sessions` (the UI layer) and synced down? Reuse
+   the engagement column; decide the sync direction.
+
+6. **Can participant home surface `small_step` as the primary next action?** Yes —
+   `gfa_ui.goals.small_step` is purpose-built for it, on the UI schema, and RLS
+   already grants the participant read of their own goals (`goals_self`). No schema
+   work needed for the read; the surface just needs a frontend that queries it.
 
 ---
 
-## Recommended sequencing (implementation gate, not planning)
+## Loop wiring: what exists vs. what's missing (Supabase)
 
-The loop the plan wants —
-`session close → next action → participant home → attention queue → overdue return`
-— maps onto existing infrastructure with **mostly wiring fixes plus one additive
-field**:
+| Loop step | Existing infrastructure | Gap to wire |
+|---|---|---|
+| Coach records agreed `small_step` | `gfa_ui.goals.small_step` + `goals_coach[INSERT/UPDATE]` RLS | frontend write in session-close UI |
+| Coach sets `follow_up_due` | `gfa_engagement.sessions.follow_up_due` + `p_staff_all` RLS | UI session table lacks the field → decide layer/sync |
+| Participant home surfaces `small_step` | `gfa_ui.goals` + `goals_self[SELECT]` RLS | frontend read on participant home |
+| Attention queue watches `follow_up_due` | `gfa_ui.coach_alerts` (priority, response-window, ack/resolve) | **no producer**: nothing turns overdue `follow_up_due` into a `coach_alert` |
+| Overdue returns participant to attention | `coach_alerts.status` lifecycle | the scheduled job/view that scans `follow_up_due <= today` |
 
-1. **Unify goal `status`** (defect A). Pick `active`/`completed` (already used by
-   two of three readers) and default it on create. *Wiring only.*
-2. **Fix the participant goal surface** (defects B, C) and decide whether the
-   canonical participant next-action is `MenteeGoal`, `UserProfile.current_goal`,
-   or `GFAPlan`. Recommend consolidating on `MenteeGoal` and surfacing it on
-   `Home.jsx` (the real landing page). *Wiring + one product decision.*
-3. **Add `follow_up_due` to `CoachingSessionLog`** and write it from
-   `SessionEntryForm` at session close (question 5). *One additive field.*
-4. **Point the coach attention queue at `follow_up_due`** alongside the existing
-   `ProgressInsight.severity` signal (question 4 / defect). *Wiring only.*
-5. **Retire or repoint `CoachingSession`** (defect D). *Cleanup.*
+**Net:** the launch loop needs **almost no new schema** — `follow_up_due`,
+`small_step`, `coach_alerts`, `participant_crosswalk`, and the RLS for all of it
+already exist. The real work is (a) a **frontend** (not this repo) that reads/writes
+`gfa_ui.goals` + a session surface, (b) resolving the `gfa_engagement.sessions` vs
+`gfa_ui.coaching_sessions` layer split so `follow_up_due` is writable from session
+close, and (c) a **producer** that converts overdue `follow_up_due` into
+`gfa_ui.coach_alerts`. That is an implementation gate, in the `gfa_*` frontend repo.
 
-No new conceptual architecture is required. The single genuinely new piece of
-schema is a session-level `follow_up_due`; everything else is reconciling
-vocabularies and repointing reads at the entity that already holds the data.
+---
+
+## Note on the smoke test
+Do not paste console snippets that read auth tokens from `localStorage`. On the
+Supabase stack, exercise the loop through the app's Supabase client (respecting
+RLS as the real `authenticated` role) or a scoped service-role test harness — never
+a hand-extracted bearer token.
+
+---
+
+## Appendix — base44 (`vrcc.app`) internal audit (legacy stack, for reference)
+
+Retained because it documents the stack being replaced. On base44 the loop would
+be blocked by: a three-way `MenteeGoal.status` vocabulary mismatch (create sets
+none; `ParticipantDashboard` reads `in_progress`/`achieved`; `CoachDashboard` +
+`BeePurpleReporting` read `active`/`completed`); a missing `Plus` import crashing
+`ParticipantDashboard`'s goals card (`ParticipantDashboard.jsx:183`); a dead "Next
+Session" card reading `session_date`/`coach_email` from a log storing
+`activity_date`/`coach_name`; and a split-brain `CoachingSession` (written only by
+the VR training simulator) feeding empty data to 5 AI features. These matter only
+if base44 remains in service during transition.
