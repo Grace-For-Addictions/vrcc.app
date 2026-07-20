@@ -1,6 +1,14 @@
 # Gate 19A — Participant + Coach Launch Readiness Report
 
-**Mode:** Participant + Coach Launch Readiness. **Audit only — no implementation.**
+> **STATUS UPDATE — Gate 19B APPROVED & IMPLEMENTED.** The minimum continuity loop
+> from Part K is implemented on branch `claude/vrcc-refine` (commit `00a7801`) and its
+> migration has been **applied** to project `ykykeioydvtxpyreshhs`. Verified: `eslint
+> src/mvp` clean, `vite build` passes. **Two security items below remain OPEN and
+> launch-blocking** — RLS on the `mvp_*` surface (I) and the `gfa_*` org-wide read
+> policies (I2) — because live DB access stayed permission-denied; ready-to-run
+> verification SQL is in the new "Open security verification" section at the end.
+
+**Mode:** Participant + Coach Launch Readiness. **Audit + approved Gate 19B.**
 **Invariant target:** every participant has a next step; every required next step has
 an owner; every human follow-up has a due state; every overdue/missed connection
 returns to someone's attention.
@@ -221,8 +229,54 @@ tables.
 A ✅ · B ✅ · C ✅ · D ✅ · E ✅ (none — required) · F ✅ (none — required) · G ✅ · H ✅ ·
 I ✅ (2 items [VERIFY IN DB]) · J ✅ · K ✅.
 
-**Remaining to fully close:** restore Supabase read access to (a) enumerate `mvp_*` +
-`participants` RLS quals and (b) re-confirm the `gfa_*` org-wide read-policy quals.
-These are the only open items; everything else is answered from the launch code.
+## Gate 19B — implemented (branch `claude/vrcc-refine`, commit `00a7801`)
 
-**No implementation performed. Gate 19B not started — awaiting explicit approval.**
+| Part K item | Delivered |
+|---|---|
+| Participant "What should I do next?" | `ParticipantApp.jsx` — always-answered next-step card (default when unset) |
+| Coach attention queue | `CoachApp.jsx` — "Needs attention" tab + badges (overdue / never-contacted / quiet / no-follow-up) |
+| Onboarding-incomplete visibility (H4) | `CoachApp.jsx` — "Onboarding" tab |
+| Agreed next step + follow-up capture | `CoachApp.jsx` — panel form → `participants` rollup |
+| Session close = contact | `CoachApp.jsx` — "Mark done" → `mvp_sessions.status='completed'` + `last_contact_at` |
+| Support Now / crisis (G3) | `SupportNow.jsx` mounted globally in `MvpRoot.jsx` |
+| DB (no new tables) | `supabase/migrations/20260720000000_gate_19b_continuity_loop.sql` — **applied** |
+
+Frontend degrades gracefully if the migration is absent (next-step falls back to
+default; the coach form surfaces a save error).
+
+## Open security verification (still launch-blocking — needs DB access)
+
+Live DB access remained permission-denied throughout, so these could not be run.
+Run as a project admin **before onboarding real participants**:
+
+```sql
+-- I1 — the mvp_* surface must not be world-readable to any authenticated user.
+select n.nspname||'.'||c.relname as tbl, c.relrowsecurity as rls_on,
+       coalesce(string_agg(distinct p.polname||'['||
+         case p.polcmd when 'r' then 'SELECT' when 'a' then 'INSERT'
+              when 'w' then 'UPDATE' when 'd' then 'DELETE' else 'ALL' end||']', ', '),'(no policies)') as policies
+from pg_class c join pg_namespace n on n.oid=c.relnamespace
+left join pg_policy p on p.polrelid=c.oid
+where n.nspname='public'
+  and c.relname in ('participants','mvp_sessions','mvp_session_requests',
+                    'mvp_messages','participant_intakes','barc10_assessments','peer_coaches')
+group by 1,2 order by 1;
+-- Then, for each, confirm SELECT policies scope rows to the caller
+-- (participant: supabase_user_id/email = auth; coach: assigned/coach_email = auth),
+-- NOT `USING (true)`. mvp_messages and participant_intakes are the highest risk.
+
+-- I2 — gfa_* tables reachable by any participant JWT via PostgREST.
+select n.nspname||'.'||c.relname as tbl,
+       p.polname, pg_get_expr(p.polqual, p.polrelid) as using_qual,
+       array_to_string(array(select rolname from pg_roles where oid=any(p.polroles)),',') as roles
+from pg_policy p join pg_class c on c.oid=p.polrelid join pg_namespace n on n.oid=c.relnamespace
+where c.relname in ('icare_plans','outcomes','peer_circles','resource_referrals','slogan_practices')
+  and p.polcmd in ('r','*');
+-- Any `USING (true)` for anon/authenticated on tables holding participant data
+-- is a cross-participant exposure; tighten before launch.
+```
+
+Also run the Gate 19B loop tests (report §K.6): invariant next-step, coach save →
+participant home, overdue → attention, never-contacted/quiet → attention, RLS
+negatives (participant A cannot read B's `mvp_sessions`/`mvp_messages`/`participant_intakes`),
+and Support Now reachable pre-auth.
