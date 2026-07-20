@@ -244,39 +244,47 @@ I ✅ (2 items [VERIFY IN DB]) · J ✅ · K ✅.
 Frontend degrades gracefully if the migration is absent (next-step falls back to
 default; the coach form surfaces a save error).
 
-## Open security verification (still launch-blocking — needs DB access)
+## Security verification — RESULTS (run against `ykykeioydvtxpyreshhs`)
 
-Live DB access remained permission-denied throughout, so these could not be run.
-Run as a project admin **before onboarding real participants**:
+Live DB access was restored; both items are now verified. **Two launch blockers.**
 
-```sql
--- I1 — the mvp_* surface must not be world-readable to any authenticated user.
-select n.nspname||'.'||c.relname as tbl, c.relrowsecurity as rls_on,
-       coalesce(string_agg(distinct p.polname||'['||
-         case p.polcmd when 'r' then 'SELECT' when 'a' then 'INSERT'
-              when 'w' then 'UPDATE' when 'd' then 'DELETE' else 'ALL' end||']', ', '),'(no policies)') as policies
-from pg_class c join pg_namespace n on n.oid=c.relnamespace
-left join pg_policy p on p.polrelid=c.oid
-where n.nspname='public'
-  and c.relname in ('participants','mvp_sessions','mvp_session_requests',
-                    'mvp_messages','participant_intakes','barc10_assessments','peer_coaches')
-group by 1,2 order by 1;
--- Then, for each, confirm SELECT policies scope rows to the caller
--- (participant: supabase_user_id/email = auth; coach: assigned/coach_email = auth),
--- NOT `USING (true)`. mvp_messages and participant_intakes are the highest risk.
+### 🔴 Finding 1 — core MVP tables are `RLS ENABLED` with ZERO policies → deny-all
+`participant_intakes`, `barc10_assessments`, `mvp_sessions` (only the Gate 19B
+`mvp_sessions_coach_update` exists), `mvp_session_requests`, `mvp_messages` all have
+RLS **on** but **no SELECT/INSERT policies** → authenticated users are **denied
+everything**. They also grant full CRUD (incl. DELETE/TRUNCATE) to **`anon`**.
+**Evidence it's already biting:** `participants` = 16 rows, but
+`participant_intakes` / `barc10_assessments` / `mvp_sessions` / `mvp_session_requests`
+/ `mvp_messages` = **0 rows each**. People sign up (the `participants` insert has a
+working policy), then onboarding's first write (`participant_intakes` insert) is
+**denied** — so **no one can finish onboarding.** Almost certainly a side effect of
+the Gate 18C RLS lockdown enabling RLS without adding policies here. **The Gate 19B
+loop cannot function until this is fixed.** *Functionally the app is broken for real
+users; security-wise the data is currently deny-all (safe but non-functional), and
+the broad `anon` grants are a latent risk.*
 
--- I2 — gfa_* tables reachable by any participant JWT via PostgREST.
-select n.nspname||'.'||c.relname as tbl,
-       p.polname, pg_get_expr(p.polqual, p.polrelid) as using_qual,
-       array_to_string(array(select rolname from pg_roles where oid=any(p.polroles)),',') as roles
-from pg_policy p join pg_class c on c.oid=p.polrelid join pg_namespace n on n.oid=c.relnamespace
-where c.relname in ('icare_plans','outcomes','peer_circles','resource_referrals','slogan_practices')
-  and p.polcmd in ('r','*');
--- Any `USING (true)` for anon/authenticated on tables holding participant data
--- is a cross-participant exposure; tighten before launch.
-```
+### 🟠 Finding 2 — legacy `public.*` tables expose org-wide reads (empty, latent)
+`public.{outcomes, icare_plans, resource_referrals, peer_circles, slogan_practices}`
+each have `org_read_*` = `SELECT` to **any `authenticated` user** where
+`org_id='gfa'` (no per-participant scope). They carry participant columns
+(`participant_id`, `participant_quote`, …) but are **currently 0 rows**. The properly
+scoped copies live in `gfa_icare` / `gfa_community` / `gfa_ui`
+(`participant_id = my_*participant_id()` / staff / admin). So the `public.*`
+duplicates are loose legacy tables — a cross-participant leak the moment they're
+populated. Not breached today (empty), but must be closed before use.
 
-Also run the Gate 19B loop tests (report §K.6): invariant next-step, coach save →
-participant home, overdue → attention, never-contacted/quiet → attention, RLS
-negatives (participant A cannot read B's `mvp_sessions`/`mvp_messages`/`participant_intakes`),
-and Support Now reachable pre-auth.
+### ✅ Confirmed healthy
+- `participants` (16 rows): own-select (`supabase_user_id=auth.uid()`), coach-select
+  (assigned / `my_assigned_participant_ids()`), coach-claim, admin — correctly scoped.
+- `peer_coaches`: own + org-read + admin — scoped.
+- Gate 19B columns and both guarded UPDATE policies applied correctly.
+
+### Remediation (proposed, NOT applied — awaiting approval)
+See `docs/rls-remediation-proposed.sql`: scoped SELECT/INSERT/UPDATE policies for the
+five deny-all tables (participant-own + assigned-coach + admin), revokes the `anon`
+grants, and drops the five `org_read_*` policies on the empty legacy tables. **I have
+not changed any policy** (per the standing "do not change policies yet" instruction);
+this needs your approval to apply as a migration on `claude/vrcc-refine`.
+
+Remaining Gate 19B loop tests (report §K.6) can only pass **after** Finding 1 is
+fixed — until then every onboarding/session/message write is denied.
