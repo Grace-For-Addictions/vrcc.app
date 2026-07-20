@@ -28,8 +28,9 @@ Since the domain is already on Cloudflare, DNS is configured automatically.
 
 ## What's in the repo for this
 
-- `public/_redirects` — SPA fallback (`/* -> /index.html 200`).
-- `.nvmrc` — pins Node 20 for the build.
+- `wrangler.jsonc` — Workers static-assets config (serves `./dist`, SPA fallback
+  via `not_found_handling`). Used by the "Deploy command" `npx wrangler deploy`.
+- `.nvmrc` — pins Node 22 for the build.
 - Frontend entry: `src/main.jsx` → `src/mvp/MvpRoot.jsx`.
 - Supabase client + project ref: `src/mvp/supabase.js`.
 
