@@ -1,6 +1,8 @@
 -- ============================================================================
--- PROPOSED — RLS remediation for the VRCC MVP surface.  *** NOT YET APPLIED ***
--- Project: ykykeioydvtxpyreshhs.  Requires explicit approval before applying.
+-- RLS remediation for the VRCC MVP surface.
+-- *** APPLIED 2026-07-20 to ykykeioydvtxpyreshhs as migration
+--     `gate_19b_mvp_rls_remediation`, and VERIFIED (see gate-19a report). ***
+-- In-repo copy: supabase/migrations/20260720020000_gate_19b_mvp_rls_remediation.sql
 -- ============================================================================
 -- Fixes two findings from Gate 19A security verification:
 --

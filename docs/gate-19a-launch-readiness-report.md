@@ -279,12 +279,26 @@ populated. Not breached today (empty), but must be closed before use.
 - `peer_coaches`: own + org-read + admin — scoped.
 - Gate 19B columns and both guarded UPDATE policies applied correctly.
 
-### Remediation (proposed, NOT applied — awaiting approval)
-See `docs/rls-remediation-proposed.sql`: scoped SELECT/INSERT/UPDATE policies for the
-five deny-all tables (participant-own + assigned-coach + admin), revokes the `anon`
-grants, and drops the five `org_read_*` policies on the empty legacy tables. **I have
-not changed any policy** (per the standing "do not change policies yet" instruction);
-this needs your approval to apply as a migration on `claude/vrcc-refine`.
+### Remediation — ✅ APPLIED & VERIFIED
+Applied to `ykykeioydvtxpyreshhs` as migration `gate_19b_mvp_rls_remediation`
+(mirrored in-repo at `supabase/migrations/20260720020000_gate_19b_mvp_rls_remediation.sql`
+on `claude/vrcc-refine`; source also in `docs/rls-remediation-proposed.sql`). Scoped
+SELECT/INSERT/UPDATE policies added to the five deny-all tables (participant-own +
+assigned-coach + admin), `anon` grants revoked, and the five `org_read_*` policies
+dropped.
 
-Remaining Gate 19B loop tests (report §K.6) can only pass **after** Finding 1 is
-fixed — until then every onboarding/session/message write is denied.
+**Verification (live, against real + simulated JWTs):**
+
+| Test | Result |
+|---|---|
+| Policy inventory on 5 tables | SELECT/INSERT(/UPDATE)/admin present on each ✅ |
+| `org_read_*` policies remaining | none ✅ |
+| `anon` grants remaining | none ✅ |
+| Stranger JWT (owns nothing) | sees **0** rows everywhere incl. `participants` (0/16), `outcomes`, `icare_plans` ✅ |
+| Plain participant (`is_admin/is_coach=false`) | sees **only their own** participant row (1), and **can insert their own intake** — onboarding write un-blocked ✅ |
+| Participant forging another email's intake | **blocked** by RLS (`42501`) ✅ |
+| Admin account | sees all 16 (correct RBAC) ✅ |
+
+**Finding 1 (the launch blocker) is resolved:** onboarding writes now succeed and are
+scoped per participant. Remaining app-level loop tests (report §K.6) should be run via
+a real signup in the app, but the DB layer that was blocking them is fixed.
