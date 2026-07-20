@@ -1,5 +1,13 @@
 # Launch Schema Wiring Audit
 
+> **SUPERSEDED (read `gate-19a-launch-readiness-report.md` first).** This document
+> analyzed the base44 stack and the `gfa_*` Supabase schema. The **actual launch app**
+> is the MVP on branch `claude/vrcc-refine` (`src/mvp/`), which uses its own `mvp_*` /
+> `participants` tables and does **not** touch `gfa_*`. The `gfa_engagement.sessions.follow_up_due`
+> and `gfa_ui.goals.small_step` findings below are real but **irrelevant to the launch
+> loop**, which must be built on the `mvp_*` model. Kept for historical context only.
+
+
 **Scope:** Resolve the six wiring questions for the launch continuity loop
 (session close → next action → participant home → coach attention → overdue return),
 reconciled across **both** live backends.
