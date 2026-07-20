@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from './supabase';
-import { ensureMyParticipant, soilForScore, displayName } from './lib';
+import { ensureMyParticipant, soilForScore, displayName, participantNextStep } from './lib';
 import Intake from './Intake';
 import Barc10 from './Barc10';
 import Messaging from './Messaging';
@@ -100,6 +100,19 @@ function ParticipantHome({ user, participant, onSignOut }) {
     <div className="min-h-screen bg-gradient-to-b from-teal-50/60 via-white to-white">
       <Header title="My Recovery" subtitle={`Welcome back, ${displayName(participant)}`} onSignOut={onSignOut} />
       <div className="max-w-3xl mx-auto px-4 py-8 space-y-6">
+        {/* Primary next action — the home always answers "what should I do next?" */}
+        <section className="bg-gradient-to-br from-teal-600 to-teal-700 rounded-2xl shadow-sm p-6 text-white">
+          <div className="flex items-center gap-1.5 text-teal-50/90 text-xs font-medium uppercase tracking-wide mb-1.5">
+            <Sparkles className="w-4 h-4" /> Your next step
+          </div>
+          <p className="text-lg font-semibold leading-snug">{participantNextStep(participant)}</p>
+          {participant.next_follow_up_due && (
+            <p className="text-sm text-teal-50/80 mt-2 flex items-center gap-1.5">
+              <Clock className="w-4 h-4" /> Your coach will check in around {new Date(participant.next_follow_up_due).toLocaleDateString()}.
+            </p>
+          )}
+        </section>
+
         {/* Recovery capital snapshot */}
         {soil && (
           <div className="bg-white rounded-2xl border border-teal-100/60 shadow-sm p-5 flex items-center gap-4">

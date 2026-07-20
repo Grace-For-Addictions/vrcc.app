@@ -5,6 +5,7 @@ import Landing from './Landing';
 import SignIn from './SignIn';
 import ParticipantApp from './ParticipantApp';
 import CoachApp from './CoachApp';
+import SupportNow from './SupportNow';
 import { Loader2 } from 'lucide-react';
 
 export default function MvpRoot() {
@@ -44,21 +45,28 @@ export default function MvpRoot() {
     setView('landing');
   };
 
+  let content;
   if (loading) {
-    return (
+    content = (
       <div className="min-h-screen flex items-center justify-center bg-teal-50">
         <Loader2 className="w-8 h-8 text-teal-600 animate-spin" />
       </div>
     );
+  } else if (!session) {
+    content = view === 'signin'
+      ? <SignIn onBack={() => setView('landing')} />
+      : <Landing onGetStarted={() => setView('signin')} />;
+  } else if (isCoachRole(role) || isAdminRole(role)) {
+    content = <CoachApp user={session.user} onSignOut={signOut} />;
+  } else {
+    content = <ParticipantApp user={session.user} onSignOut={signOut} />;
   }
 
-  if (!session) {
-    if (view === 'signin') return <SignIn onBack={() => setView('landing')} />;
-    return <Landing onGetStarted={() => setView('signin')} />;
-  }
-
-  if (isCoachRole(role) || isAdminRole(role)) {
-    return <CoachApp user={session.user} onSignOut={signOut} />;
-  }
-  return <ParticipantApp user={session.user} onSignOut={signOut} />;
+  // Support Now is always available — before and after sign-in.
+  return (
+    <>
+      {content}
+      <SupportNow />
+    </>
+  );
 }

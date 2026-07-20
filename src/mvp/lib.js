@@ -129,3 +129,43 @@ export function displayName(p) {
   if (!p) return 'Friend';
   return p.preferred_name || p.first_name || 'Friend';
 }
+
+// ---------------------------------------------------------------------------
+// Gate 19B — continuity-of-connection helpers
+// Invariant: every participant always has a next step; every follow-up has a
+// due state; every overdue/quiet connection surfaces to a coach.
+// ---------------------------------------------------------------------------
+
+// The participant home is never a dead end — there is always an answer to
+// "what should I do next?", even before a coach sets one.
+export function defaultNextStep(participant) {
+  if (!participant) return 'Take a breath. You showed up — that matters. 💚';
+  if (!participant.assigned_coach_email)
+    return 'You’re being matched with a peer recovery coach. They’ll reach out here soon — no rush.';
+  return 'Say hello to your coach, or request a session when you’re ready.';
+}
+
+export function participantNextStep(participant) {
+  const s = participant?.current_next_step;
+  return s && s.trim() ? s.trim() : defaultNextStep(participant);
+}
+
+// Classify a participant for the coach attention queue. Returns null when
+// nothing needs attention. Urgency order: overdue follow-up > never contacted
+// > gone quiet > no follow-up planned.
+export function attentionFor(p, opts = {}) {
+  const staleDays = opts.staleDays ?? 10;
+  const now = Date.now();
+  const last = p.last_contact_at ? new Date(p.last_contact_at).getTime() : null;
+  const due = p.next_follow_up_due ? new Date(`${p.next_follow_up_due}T23:59:59`).getTime() : null;
+
+  if (due != null && due < now)
+    return { level: 'overdue', label: 'Follow-up overdue', tone: 'red' };
+  if (last == null)
+    return { level: 'new', label: 'Never contacted', tone: 'amber' };
+  if (now - last > staleDays * 864e5)
+    return { level: 'quiet', label: `No contact in ${staleDays}+ days`, tone: 'amber' };
+  if (due == null)
+    return { level: 'no_followup', label: 'No follow-up set', tone: 'gray' };
+  return null;
+}

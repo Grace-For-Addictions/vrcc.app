@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { supabase } from './supabase';
-import { soilForScore } from './lib';
+import { soilForScore, attentionFor } from './lib';
 import Messaging from './Messaging';
 import { Header, FullSpinner } from './ParticipantApp';
 import { Button } from '@/components/ui/button';
@@ -8,8 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Users, UserPlus, Inbox, CalendarDays, Loader2, ArrowLeft, MessageCircle,
-  CheckCircle2, Clock,
+  CheckCircle2, Clock, AlertCircle, ClipboardList, Save, Target,
 } from 'lucide-react';
+
+const TONE = {
+  red: 'bg-red-100 text-red-700',
+  amber: 'bg-amber-100 text-amber-700',
+  gray: 'bg-gray-100 text-gray-600',
+};
+const ORDER = { overdue: 0, new: 1, quiet: 2, no_followup: 3 };
 
 function fmtWhen(ts) {
   try {
@@ -22,29 +29,42 @@ const pName = (p) => `${p.first_name || ''} ${p.last_name || ''}`.replace(/—/g
 
 export default function CoachApp({ user, onSignOut }) {
   const [coach, setCoach] = useState(null);
-  const [tab, setTab] = useState('unmatched');
+  const [tab, setTab] = useState('attention');
   const [unmatched, setUnmatched] = useState([]);
   const [mine, setMine] = useState([]);
   const [requests, setRequests] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [onboarding, setOnboarding] = useState([]);
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(null); // participant detail panel
 
   const coachName = coach?.name || user.user_metadata?.first_name || user.email;
 
   const load = useCallback(async () => {
-    const [{ data: um }, { data: mn }, { data: rq }, { data: ss }] = await Promise.all([
+    const [{ data: um }, { data: mn }, { data: rq }, { data: ss }, { data: ob }] = await Promise.all([
       supabase.from('participants').select('*').is('assigned_coach_email', null).eq('intake_complete', true).order('created_at', { ascending: true }),
       supabase.from('participants').select('*').eq('assigned_coach_email', user.email).order('first_name', { ascending: true }),
       supabase.from('mvp_session_requests').select('*').eq('coach_email', user.email).order('created_date', { ascending: false }),
       supabase.from('mvp_sessions').select('*').eq('coach_email', user.email).order('scheduled_at', { ascending: true }),
+      // Signups who haven't finished onboarding — otherwise invisible to everyone.
+      supabase.from('participants').select('*').is('assigned_coach_email', null).eq('intake_complete', false).order('created_at', { ascending: false }),
     ]);
     setUnmatched(um || []);
     setMine(mn || []);
     setRequests(rq || []);
     setSessions(ss || []);
+    setOnboarding(ob || []);
     setLoading(false);
   }, [user.email]);
+
+  // Mark a scheduled session complete; completing it counts as a contact.
+  const markComplete = async (s) => {
+    await supabase.from('mvp_sessions').update({ status: 'completed' }).eq('id', s.id);
+    if (s.participant_id) {
+      await supabase.from('participants').update({ last_contact_at: new Date().toISOString() }).eq('participant_id', s.participant_id);
+    }
+    load();
+  };
 
   useEffect(() => {
     // Resolve coach display name from peer_coaches if present.
@@ -85,13 +105,19 @@ export default function CoachApp({ user, onSignOut }) {
   }
 
   const pendingReqs = requests.filter((r) => r.status === 'pending');
-  const upcoming = sessions.filter((s) => s.status !== 'cancelled');
+  const upcoming = sessions.filter((s) => s.status !== 'cancelled' && s.status !== 'completed');
+  const attentionList = mine
+    .map((p) => ({ p, a: attentionFor(p) }))
+    .filter((x) => x.a)
+    .sort((x, y) => ORDER[x.a.level] - ORDER[y.a.level]);
 
   const tabs = [
-    { key: 'unmatched', label: 'Unmatched', icon: UserPlus, count: unmatched.length },
+    { key: 'attention', label: 'Needs attention', icon: AlertCircle, count: attentionList.length },
     { key: 'mine', label: 'My participants', icon: Users, count: mine.length },
+    { key: 'unmatched', label: 'Unmatched', icon: UserPlus, count: unmatched.length },
     { key: 'requests', label: 'Requests', icon: Inbox, count: pendingReqs.length },
     { key: 'upcoming', label: 'Upcoming', icon: CalendarDays, count: upcoming.length },
+    { key: 'onboarding', label: 'Onboarding', icon: ClipboardList, count: onboarding.length },
   ];
 
   return (
@@ -116,6 +142,25 @@ export default function CoachApp({ user, onSignOut }) {
           ))}
         </div>
 
+        {tab === 'attention' && (
+          <List empty="Everyone’s connection is current. Beautiful work. 🌱">
+            {attentionList.map(({ p, a }) => {
+              const soil = p.barc10_score != null ? soilForScore(p.barc10_score) : null;
+              return (
+                <Row key={p.participant_id}
+                  title={pName(p)}
+                  subtitle={<span className="flex items-center gap-2">
+                    <span className={`text-xs font-medium rounded-full px-2 py-0.5 ${TONE[a.tone]}`}>{a.label}</span>
+                    {soil && <span className="text-gray-400">{soil.emoji} {p.barc10_score}/60</span>}
+                    {p.next_follow_up_due && <span className="text-gray-400">due {new Date(p.next_follow_up_due).toLocaleDateString()}</span>}
+                  </span>}
+                  action={<Button size="sm" variant="outline" onClick={() => setActive(p)}><MessageCircle className="w-4 h-4 mr-1.5" /> Open</Button>}
+                />
+              );
+            })}
+          </List>
+        )}
+
         {tab === 'unmatched' && (
           <List empty="No one is waiting to be matched right now. 🌱">
             {unmatched.map((p) => {
@@ -135,10 +180,14 @@ export default function CoachApp({ user, onSignOut }) {
           <List empty="Claim a participant from the Unmatched tab to start walking with them.">
             {mine.map((p) => {
               const soil = p.barc10_score != null ? soilForScore(p.barc10_score) : null;
+              const a = attentionFor(p);
               return (
                 <Row key={p.participant_id}
                   title={pName(p)}
-                  subtitle={soil ? `${soil.emoji} ${soil.label} · ${p.barc10_score}/60` : 'Recovery check-in pending'}
+                  subtitle={<span className="flex items-center gap-2">
+                    {a && <span className={`text-xs font-medium rounded-full px-2 py-0.5 ${TONE[a.tone]}`}>{a.label}</span>}
+                    <span className="text-gray-500">{soil ? `${soil.emoji} ${soil.label} · ${p.barc10_score}/60` : 'Recovery check-in pending'}</span>
+                  </span>}
                   action={<Button size="sm" variant="outline" onClick={() => setActive(p)}><MessageCircle className="w-4 h-4 mr-1.5" /> Open</Button>}
                 />
               );
@@ -160,7 +209,21 @@ export default function CoachApp({ user, onSignOut }) {
               <Row key={s.id}
                 title={s.participant_name || s.participant_email}
                 subtitle={s.scheduled_at ? fmtWhen(s.scheduled_at) : 'Time to be confirmed'}
-                action={<span className="text-xs font-medium text-teal-700 bg-teal-50 rounded-full px-2.5 py-1 capitalize">{s.status || 'scheduled'}</span>}
+                action={<Button size="sm" variant="outline" onClick={() => markComplete(s)}>
+                  <CheckCircle2 className="w-4 h-4 mr-1.5" /> Mark done
+                </Button>}
+              />
+            ))}
+          </List>
+        )}
+
+        {tab === 'onboarding' && (
+          <List empty="No one is mid-signup right now.">
+            {onboarding.map((p) => (
+              <Row key={p.participant_id}
+                title={pName(p)}
+                subtitle={`Signed up ${p.created_at ? new Date(p.created_at).toLocaleDateString() : ''} · hasn’t finished intake`}
+                action={<span className="text-xs font-medium text-amber-700 bg-amber-50 rounded-full px-2.5 py-1">In progress</span>}
               />
             ))}
           </List>
@@ -230,6 +293,36 @@ function RequestRow({ req, coachEmail, coachName, onDone }) {
 
 function ParticipantPanel({ participant, coachEmail, coachName, onChange }) {
   const soil = participant.barc10_score != null ? soilForScore(participant.barc10_score) : null;
+  const [nextStep, setNextStep] = useState(participant.current_next_step || '');
+  const [followUp, setFollowUp] = useState(participant.next_follow_up_due || '');
+  const [busy, setBusy] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [err, setErr] = useState('');
+  const [lastContact, setLastContact] = useState(participant.last_contact_at || null);
+
+  const save = async () => {
+    setBusy(true);
+    setSaved(false);
+    setErr('');
+    const nowIso = new Date().toISOString();
+    const { error } = await supabase
+      .from('participants')
+      .update({
+        current_next_step: nextStep.trim() || null,
+        next_follow_up_due: followUp || null,
+        last_contact_at: nowIso,
+      })
+      .eq('participant_id', participant.participant_id);
+    setBusy(false);
+    if (error) {
+      setErr(error.message || 'Could not save. Is the Gate 19B migration applied?');
+      return;
+    }
+    setSaved(true);
+    setLastContact(nowIso);
+    if (onChange) onChange();
+  };
+
   return (
     <div className="space-y-5">
       <div className="bg-white rounded-2xl border border-teal-100/60 shadow-sm p-6">
@@ -250,6 +343,29 @@ function ParticipantPanel({ participant, coachEmail, coachName, onChange }) {
             <div className="text-sm"><span className="font-medium text-gray-900">{soil.label}</span> · {participant.barc10_score}/60 recovery capital</div>
           </div>
         )}
+      </div>
+
+      {/* Agreed next step & follow-up — powers the participant's home + the attention queue */}
+      <div className="bg-white rounded-2xl border border-teal-100/60 shadow-sm p-6">
+        <h3 className="font-semibold text-gray-900 flex items-center gap-2 mb-1">
+          <Target className="w-5 h-5 text-teal-600" /> Agreed next step & follow-up
+        </h3>
+        <p className="text-xs text-gray-400 mb-4">
+          Saving logs today as your last contact and shows this step on {participant.first_name && participant.first_name !== '—' ? participant.first_name : 'their'}’s home.
+        </p>
+        <label className="text-sm font-medium text-gray-700">Next step you agreed on</label>
+        <Textarea value={nextStep} onChange={(e) => setNextStep(e.target.value)} rows={2}
+          placeholder="e.g., Call the housing navigator on Tuesday" className="mt-1 mb-3" />
+        <label className="text-sm font-medium text-gray-700">Follow up by</label>
+        <Input type="date" value={followUp} onChange={(e) => setFollowUp(e.target.value)} className="mt-1 mb-4 sm:max-w-xs" />
+        <div className="flex items-center gap-3 flex-wrap">
+          <Button onClick={save} disabled={busy} className="bg-teal-600 hover:bg-teal-700">
+            {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Save className="w-4 h-4 mr-1.5" /> Save &amp; log contact</>}
+          </Button>
+          {saved && <span className="text-sm text-teal-700 flex items-center gap-1"><CheckCircle2 className="w-4 h-4" /> Saved</span>}
+          {lastContact && <span className="text-xs text-gray-400 ml-auto">Last contact {new Date(lastContact).toLocaleDateString()}</span>}
+        </div>
+        {err && <p className="text-sm text-red-600 mt-3">{err}</p>}
       </div>
 
       <div className="bg-white rounded-2xl border border-teal-100/60 shadow-sm p-6">
