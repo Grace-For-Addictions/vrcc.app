@@ -374,7 +374,28 @@ alter table public.v2_housing_applications enable row level security;
 alter table public.v2_resources            enable row level security;
 alter table public.v2_notifications        enable row level security;
 
-revoke all on all tables in schema public from anon;
+-- Scope grants to v2 tables only — never touch the MVP surface's grants.
+revoke all on
+  public.v2_profiles, public.v2_session_requests, public.v2_session_feedback,
+  public.v2_daily_checkins, public.v2_housing_programs, public.v2_housing_beds,
+  public.v2_housing_applications, public.v2_resources, public.v2_notifications,
+  public.v2_checkin_trends, public.v2_bed_availability
+from anon;
+
+grant select, insert, update, delete on
+  public.v2_profiles, public.v2_session_requests, public.v2_session_feedback,
+  public.v2_daily_checkins, public.v2_housing_programs, public.v2_housing_beds,
+  public.v2_housing_applications, public.v2_resources, public.v2_notifications
+to authenticated;
+grant select on public.v2_checkin_trends, public.v2_bed_availability to authenticated;
+
+-- SECURITY DEFINER functions in public are callable by anyone by default.
+-- v2_notify and the trigger bodies must only ever run via triggers.
+revoke execute on function
+  public.v2_notify(uuid, public.v2_notification_kind, text, text, text),
+  public.v2_session_request_notify(),
+  public.v2_application_notify()
+from public, anon, authenticated;
 
 -- profiles: everyone authenticated can read basic profiles (needed for names);
 -- users update only their own row; role/coach changes are staff-only.

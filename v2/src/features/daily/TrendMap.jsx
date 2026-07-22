@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { supabase } from '../../lib/supabase'
 import { useQuantumMotion } from '../../hooks/useQuantumMotion'
 
@@ -19,6 +19,13 @@ const DAYS = 30
 export default function TrendMap({ profile }) {
   const [rows, setRows] = useState([])
   const phase = useQuantumMotion(8000)
+  const scrollRef = useRef(null)
+
+  // On narrow screens the map scrolls horizontally; start at the newest days.
+  useEffect(() => {
+    const el = scrollRef.current
+    if (el) el.scrollLeft = el.scrollWidth
+  }, [rows])
 
   useEffect(() => {
     supabase
@@ -77,7 +84,7 @@ export default function TrendMap({ profile }) {
         days; the gold rings are days you spoke your declaration.
       </p>
 
-      <div className="card overflow-x-auto p-2">
+      <div ref={scrollRef} className="card overflow-x-auto p-2">
         <svg
           viewBox={`0 0 ${W} ${H}`}
           className="min-w-[560px]"
@@ -109,7 +116,7 @@ export default function TrendMap({ profile }) {
             if (!r) {
               return <circle key={n.iso} cx={n.x} cy={n.y} r="3" fill="#c5d9c6" opacity="0.6" />
             }
-            const size = 5 + (r.barc_pulse || 3) * 1.2
+            const size = 3.5 + (r.barc_pulse || 3) * 0.8
             return (
               <g key={n.iso}>
                 {r.moved_body && (

@@ -18,33 +18,40 @@ Virginia (spotty connections, phones-first, 48px+ touch targets).
 React 18 + Vite + Tailwind, Supabase (Postgres + RLS + Realtime + Storage +
 Edge Functions). No other runtime dependencies beyond `lucide-react`.
 
-## Going live
+## Backend status: LIVE
+
+The backend is deployed to the **Grace For Addictions** Supabase project
+(`ykykeioydvtxpyreshhs`) and verified end-to-end in a real browser:
+
+- ✅ Migrations applied: `v2_foundation`, `v2_go_live`, `v2_advisor_hardening`
+  (tables, views, triggers, RLS, Grace House seed, signup-profile trigger,
+  Realtime publication, private `voice-notes` bucket with owner-only policies)
+- ✅ Edge Functions deployed: `create-meeting`, `notify-fanout`
+- ✅ Security advisors clean for all v2 objects
+
+Demo accounts (password `VrccDemo!2026`): `demo-participant@vrcc-v2.test`,
+`demo-coach@vrcc-v2.test`, `demo-manager@vrcc-v2.test`,
+`demo-navigator@vrcc-v2.test`.
+
+## Running the frontend
 
 1. `npm install`
-2. Create `.env` with your project keys:
-   ```
-   VITE_SUPABASE_URL=https://<project>.supabase.co
-   VITE_SUPABASE_ANON_KEY=<anon key>
-   ```
-3. Apply the schema: `supabase db push` (runs
-   `supabase/migrations/20260722000000_v2_foundation.sql` — tables, views,
-   triggers, RLS, and the Grace House seed).
-4. Deploy the functions:
-   ```
-   supabase functions deploy create-meeting
-   supabase functions deploy notify-fanout
-   ```
-   Optional secrets: `ZOOM_ACCOUNT_ID/ZOOM_CLIENT_ID/ZOOM_CLIENT_SECRET`
-   (otherwise a vendor-free meet link is used), `RESEND_API_KEY`,
-   `TWILIO_ACCOUNT_SID/TWILIO_AUTH_TOKEN/TWILIO_FROM_NUMBER`, `APP_URL`,
-   `NOTIFY_FROM_EMAIL`. Add a database webhook on INSERT into
-   `v2_notifications` → `notify-fanout`.
-5. Create a **private** Storage bucket named `voice-notes` (add owner-only
-   storage policies: path prefix = the uploader's `auth.uid()`).
-6. Enable Realtime on `v2_notifications`, `v2_session_requests`,
-   `v2_housing_beds` (and `v2_housing_applications` for the staff board).
-7. `npm run build` → deploy `dist/` anywhere static (Cloudflare, Netlify…).
-   Serve `index.html` for unknown routes (SPA fallback).
+2. `cp .env.example .env` (already pointed at the live project; the
+   publishable key is safe client-side — RLS enforces access)
+3. `npm run dev` — or `npm run build` and host `dist/` anywhere static
+   (serve `index.html` for unknown routes).
+
+## Optional integrations (not yet configured)
+
+- **Zoom**: set `ZOOM_ACCOUNT_ID/ZOOM_CLIENT_ID/ZOOM_CLIENT_SECRET` as
+  function secrets; until then `create-meeting` issues a vendor-free
+  meet.jit.si room per session.
+- **Email/SMS fan-out**: set `RESEND_API_KEY` and/or
+  `TWILIO_ACCOUNT_SID/TWILIO_AUTH_TOKEN/TWILIO_FROM_NUMBER` (plus `APP_URL`,
+  `NOTIFY_FROM_EMAIL`), then add a database webhook on INSERT into
+  `v2_notifications` → `notify-fanout`. In-app notifications already work
+  without any of this, and external sends are consent-gated per user
+  (`notify_email` / `notify_sms` metadata flags).
 
 ## Privacy model
 
