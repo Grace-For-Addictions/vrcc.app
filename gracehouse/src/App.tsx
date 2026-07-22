@@ -3,6 +3,7 @@ import { CANON } from './lib/canonical';
 import Home from './routes/Home';
 import HouseInfo from './routes/HouseInfo';
 import Placeholder from './routes/Placeholder';
+import ResidentOnboarding from './routes/ResidentOnboarding';
 
 function Shell({ children }: { children: React.ReactNode }) {
   const link = (to: string, label: string) => (
@@ -38,7 +39,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/house" element={<HouseInfo />} />
-        <Route path="/resident" element={<Placeholder title="Resident portal" note="Onboarding, daily check-in, recovery plan, fees, passes, documents, grievance — building next." />} />
+        <Route path="/resident" element={<ResidentOnboarding />} />
         <Route path="/staff" element={<Placeholder title="Staff portal" note="Beds & waitlist, intake, drug screening, incidents, discharge workflow, curfew/pass queue — building next." />} />
         <Route path="*" element={<Placeholder title="Not found" note="That page doesn't exist yet." />} />
       </Routes>
