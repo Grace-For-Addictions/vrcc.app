@@ -31,8 +31,16 @@ the Quantum app at 06:10, but the vrcc.app domain is not routed to that Worker**
 production is served by some other deployment (different Cloudflare account/zone,
 a Pages project, or third-party hosting), whose source is STILL unlocated.
 Deployment registry must now track: (a) what the vrcc.app DNS/zone actually points
-to; (b) where the gfa_ui-generation app's source lives. Brain Atlas / Recovering
-the Mind / The Tapes We Carry remain unlocated in any inspected code.
+to (note: the Cloudflare MCP used here lists Workers only — a Pages project in the
+same account is possible and was not visible); (b) where the gfa_ui-generation
+app's source lives. **OWNER-CONFIRMED 2026-07-23:** vrcc.app serves the flagship
+"VRCC Center" app — landing page with ICARE path, slogans, Grace AI companion,
+explorable center ("world to explore"), Residences nav, "77+ Iowans served",
+JUST GRACE 2026 branding — matching the gfa_ui fingerprint feature-for-feature.
+This is where the signature IP (ICARE, slogans, Grace companion) lives. Its source
+remains the #1 recovery priority: it was built in another of the owner's Claude
+conversations and must be committed and recovered exactly as the Quantum app was.
+Brain Atlas / Recovering the Mind / The Tapes We Carry remain unlocated.
 
 **Consequence:** the ecosystem has **four** sessions implementations (session-engine
 booking_requests = live, mvp_*, mvp_*+quantum-bridge, v2_*) and the "live app" seat
