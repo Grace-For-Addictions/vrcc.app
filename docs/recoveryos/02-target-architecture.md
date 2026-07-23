@@ -16,16 +16,23 @@ modified 06:10 today) is **not built from this repository**. It queries the
 `provision_coach_from_access_request`, `my_core_participant_id`). No `mvp_*`
 references exist in the bundle.
 
-**INFERENCE — REVISED 2026-07-23 after auditing grace-harbor-16:** grace-harbor-16
-is **ruled out** (verified: it is a dormant Lovable marketing site on a separate
-Supabase project `kmvlkvfxrjqrfxsljvxl`, sharing branding but none of the live
-bundle's data surface). Production's source repo remains **unlocated**. Best
-remaining candidates: **`rcoiowa/GFA-ECO`** (private; pushed 2026-07-19 — timing
-matches the June/July `session_engine` + `coach_identity_provisioning` migrations
-the live bundle depends on) or an **unpushed local working tree** belonging to
-whoever deployed at 06:10 (decision D-5). The live app remains the likely home of
-the ICARE/slogans/journey UI; Brain Atlas / Recovering the Mind / The Tapes We
-Carry are still unlocated in any inspected code.
+**REVISED 2026-07-23 (third pass — recovered source in hand):** grace-harbor-16 is
+ruled out (dormant Lovable marketing site, separate Supabase project
+`kmvlkvfxrjqrfxsljvxl`). The owner recovered the 06:10 deploy's source from their
+parallel Claude session; it is now branch **`claude/live-app-source`** (commit
+`13b64be`, "gfa-vrcc-quantum") — **verified to be the Quantum Bridge frontend**
+(`mvp_session_requests`, `grow_*`, `meeting_provider`, `residence_beds`,
+`housing_applications`; its build produces a ~585 KB bundle containing those
+markers). **However, the bundle actually served at vrcc.app (cache-busted fetch,
+same day) is a different, ~2 MB app** querying the `gfa_ui` generation
+(`participant_profiles`, `journey_events`, `icare_plans`, `slogans`,
+`materialize_booking_request`). **Conclusion: the `virtualrecovery` Worker received
+the Quantum app at 06:10, but the vrcc.app domain is not routed to that Worker** —
+production is served by some other deployment (different Cloudflare account/zone,
+a Pages project, or third-party hosting), whose source is STILL unlocated.
+Deployment registry must now track: (a) what the vrcc.app DNS/zone actually points
+to; (b) where the gfa_ui-generation app's source lives. Brain Atlas / Recovering
+the Mind / The Tapes We Carry remain unlocated in any inspected code.
 
 **Consequence:** the ecosystem has **four** sessions implementations (session-engine
 booking_requests = live, mvp_*, mvp_*+quantum-bridge, v2_*) and the "live app" seat
