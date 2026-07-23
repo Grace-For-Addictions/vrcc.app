@@ -1,0 +1,10 @@
+{
+  // Deploys the built SPA onto your existing Cloudflare Worker.
+  // Run: npm run build && npx wrangler deploy
+  "name": "virtualrecovery",
+  "compatibility_date": "2026-07-01",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  }
+}

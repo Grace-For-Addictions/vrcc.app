@@ -1,0 +1,13 @@
+{
+  "name": "GFA Virtual Recovery Community Center",
+  "short_name": "GFA VRCC",
+  "description": "No Fees. No Stigma. Just Grace. A peer-led virtual recovery community.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0714",
+  "theme_color": "#0a0714",
+  "icons": [
+    { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}
