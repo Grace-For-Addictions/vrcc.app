@@ -16,12 +16,16 @@ modified 06:10 today) is **not built from this repository**. It queries the
 `provision_coach_from_access_request`, `my_core_participant_id`). No `mvp_*`
 references exist in the bundle.
 
-**INFERENCE (strong):** production is the `GFAVRCC/grace-harbor-16` app — the
-June-era generation whose migrations (`expose_gfa_schemas_to_postgrest`,
-`session_engine_phase2b`, `coach_identity_provisioning`) match its query surface,
-and the likely home of ICARE, the slogan engine UI, and possibly Brain Atlas /
-Recovering the Mind / The Tapes We Carry. It cannot be read from this session
-(different GitHub org).
+**INFERENCE — REVISED 2026-07-23 after auditing grace-harbor-16:** grace-harbor-16
+is **ruled out** (verified: it is a dormant Lovable marketing site on a separate
+Supabase project `kmvlkvfxrjqrfxsljvxl`, sharing branding but none of the live
+bundle's data surface). Production's source repo remains **unlocated**. Best
+remaining candidates: **`rcoiowa/GFA-ECO`** (private; pushed 2026-07-19 — timing
+matches the June/July `session_engine` + `coach_identity_provisioning` migrations
+the live bundle depends on) or an **unpushed local working tree** belonging to
+whoever deployed at 06:10 (decision D-5). The live app remains the likely home of
+the ICARE/slogans/journey UI; Brain Atlas / Recovering the Mind / The Tapes We
+Carry are still unlocated in any inspected code.
 
 **Consequence:** the ecosystem has **four** sessions implementations (session-engine
 booking_requests = live, mvp_*, mvp_*+quantum-bridge, v2_*) and the "live app" seat
