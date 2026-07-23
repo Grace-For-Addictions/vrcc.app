@@ -121,15 +121,18 @@ seam.* Where they conflict, production wins short-term and the seam wins long-te
 
 ## 5. Governance findings this morning's events make unavoidable
 
-1. **Deployment freeze / single release owner:** production was *replaced* at 06:10
-   today with no corresponding commit in this repository. Whoever holds the wrangler
-   token is a de-facto release channel. All deploys should go through one Git-connected
-   pipeline per shell.
-2. **Schema freeze except through the consolidation plan** (Phase 0): three streams
-   wrote to prod inside 48h — quantum bridge, v2, gracehouse. All feature work pauses
-   until D-1 is ratified.
-3. **Migration provenance:** repo-committed migrations for every applied change
-   (quantum bridge exists only in the DB today).
+1. **The root cause is now known:** every workstream in this audit — quantum bridge,
+   v2, gracehouse, the live app, the deploys — is the same owner running parallel
+   Claude conversations, each without a shared map. The fix is procedural, not
+   personnel: **one active build conversation at a time**, and every conversation
+   starts by reading `docs/recoveryos/` and ends by pushing to git.
+2. **Everything through git, nothing only in a container:** AI session workspaces
+   are ephemeral. Any code that reached production (or a database) must be pushed
+   to a branch in the same session that wrote it. Deploys go through one
+   Git-connected pipeline per shell — never `wrangler deploy` from a working tree.
+3. **Schema freeze except through the consolidation plan** (Phase 0), and
+   repo-committed migrations for every applied change (quantum bridge exists only
+   in the DB today).
 
 ---
 
@@ -140,7 +143,7 @@ seam.* Where they conflict, production wins short-term and the seam wins long-te
 | D-1 | Ratify per-capability canon (§2) | As tabled above |
 | D-2 | GH-D100 (residence frontend stack) / GH-D101 (dev-branch discipline) | Adopt gracehouse plan; extend D101 to all streams |
 | **D-4 (new)** | **Audit `grace-harbor-16` before touching sessions/check-ins canon** — it is production and unreadable from here | Start a GFAVRCC-scoped session; run the same audit prompt; reconcile with this doc |
-| D-5 (new) | Who deployed at 06:10 today, and via what pipeline? | Identify the stream owner; route future deploys through Git |
+| D-5 | ~~Who deployed at 06:10 today?~~ **RESOLVED 2026-07-23: the owner, deploying from a parallel Claude conversation.** All "streams" in this audit are parallel AI sessions run by one person — the root cause of the five-generation sprawl. Production's source likely exists only in that session's ephemeral workspace (not GFA-ECO, per owner). | **URGENT: recover the live app's source** — have that conversation push its working tree to `claude/live-app-source` before its container is reclaimed. Then adopt the single-stream rule below. |
 
 **Sequence from here:** D-4 audit → ratify D-1 → Deliverables 3/4 finalized → seven-area
 navigation + journeys (D-6/7) → migration plan (D-9) → build.
