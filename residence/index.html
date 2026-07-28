@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recovery Residence — Universal Recovery Housing Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1E2B23;
+  --pine:#1E3A2F;
+  --pine-deep:#142921;
+  --sage:#5F7A6A;
+  --mist:#E8EDE8;
+  --cream:#F7F4EC;
+  --paper:#FFFFFF;
+  --clay:#C4552D;
+  --clay-soft:#F3E0D6;
+  --amber:#D4A017;
+  --amber-soft:#F6ECD2;
+  --ok:#2E7D4F;
+  --ok-soft:#DEF0E4;
+  --warn:#B7791F;
+  --warn-soft:#FBF0DA;
+  --bad:#B3402E;
+  --bad-soft:#F8E2DD;
+  --radius:14px;
+  --shadow:0 2px 6px rgba(20,41,33,.07),0 12px 32px rgba(20,41,33,.09);
+  --shadow-sm:0 1px 3px rgba(20,41,33,.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{font-size:16px}
+body{
+  font-family:'Karla',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,.serif{font-family:'Fraunces',serif}
+button{font-family:'Karla',sans-serif;cursor:pointer;border:none}
+input,select,textarea{
+  font-family:'Karla',sans-serif;font-size:.95rem;
+  width:100%;padding:.65rem .8rem;border:1.5px solid #D8DED6;border-radius:9px;
+  background:var(--paper);color:var(--ink);transition:border-color .15s, box-shadow .15s;
+}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--pine);box-shadow:0 0 0 3px rgba(30,58,47,.12)}
+label{display:block;font-size:.8rem;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--sage);margin-bottom:.35rem}
+.field{margin-bottom:1rem}
+.hidden{display:none!important}
+
+/* ============ LANDING / ONBOARDING ============ */
+#landing{
+  min-height:100vh;display:flex;flex-direction:column;
+  background:
+    radial-gradient(1200px 600px at 85% -10%, rgba(212,160,23,.16), transparent 60%),
+    radial-gradient(900px 500px at -10% 110%, rgba(196,85,45,.12), transparent 55%),
+    var(--pine-deep);
+  color:var(--cream);
+}
+.landing-nav{display:flex;align-items:center;justify-content:space-between;padding:1.4rem 2.5rem}
+.brand{display:flex;align-items:center;gap:.7rem;font-family:'Fraunces',serif;font-weight:700;font-size:1.25rem;letter-spacing:.01em}
+.brand-mark{
+  width:38px;height:38px;border-radius:11px;background:var(--amber);
+  display:grid;place-items:center;color:var(--pine-deep);font-size:1.15rem;
+}
+.hero{flex:1;display:grid;grid-template-columns:1.1fr 1fr;gap:3rem;align-items:center;padding:2rem 4rem 4rem;max-width:1300px;margin:0 auto;width:100%}
+.hero h1{font-size:clamp(2.4rem,4.5vw,3.8rem);line-height:1.08;font-weight:600;margin-bottom:1.2rem}
+.hero h1 em{font-style:italic;color:var(--amber)}
+.hero p{font-size:1.1rem;line-height:1.65;color:rgba(247,244,236,.78);max-width:32rem;margin-bottom:2rem}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.8rem 1.5rem;border-radius:11px;font-weight:700;font-size:.95rem;
+  transition:transform .12s, box-shadow .12s, background .12s;
+}
+.btn:active{transform:translateY(1px)}
+.btn-amber{background:var(--amber);color:var(--pine-deep)}
+.btn-amber:hover{background:#E3B02E;box-shadow:0 6px 18px rgba(212,160,23,.35)}
+.btn-ghost{background:rgba(247,244,236,.1);color:var(--cream);border:1.5px solid rgba(247,244,236,.3)}
+.btn-ghost:hover{background:rgba(247,244,236,.18)}
+.btn-pine{background:var(--pine);color:var(--cream)}
+.btn-pine:hover{background:#2A4E40}
+.btn-clay{background:var(--clay);color:#fff}
+.btn-clay:hover{background:#A94523}
+.btn-line{background:transparent;color:var(--pine);border:1.5px solid var(--pine)}
+.btn-line:hover{background:var(--mist)}
+.btn-sm{padding:.45rem .9rem;font-size:.85rem;border-radius:8px}
+.hero-card{
+  background:rgba(247,244,236,.06);border:1px solid rgba(247,244,236,.14);
+  border-radius:20px;padding:1.8rem;backdrop-filter:blur(4px);
+}
+.hero-card h3{font-size:1.05rem;color:var(--amber);margin-bottom:1.1rem;font-weight:600}
+.feat{display:flex;gap:.85rem;padding:.7rem 0;border-bottom:1px solid rgba(247,244,236,.09);font-size:.95rem;color:rgba(247,244,236,.85)}
+.feat:last-child{border-bottom:none}
+.feat-ico{width:30px;height:30px;flex:none;border-radius:8px;background:rgba(212,160,23,.18);display:grid;place-items:center;font-size:.9rem}
+
+/* ============ ONBOARDING WIZARD ============ */
+.overlay{
+  position:fixed;inset:0;background:rgba(20,41,33,.55);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;z-index:100;padding:1.2rem;
+  animation:fadeIn .18s ease;
+}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.modal{
+  background:var(--paper);border-radius:18px;max-width:640px;width:100%;
+  max-height:90vh;overflow-y:auto;box-shadow:0 24px 80px rgba(20,41,33,.35);
+  animation:slideUp .22s cubic-bezier(.2,.9,.3,1);
+}
+@keyframes slideUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.modal-head{padding:1.5rem 1.8rem 0}
+.modal-head h2{font-size:1.5rem;font-weight:600;color:var(--pine)}
+.modal-head p{color:var(--sage);font-size:.92rem;margin-top:.3rem}
+.modal-body{padding:1.4rem 1.8rem 1.8rem}
+.modal-foot{display:flex;justify-content:flex-end;gap:.7rem;padding:0 1.8rem 1.6rem}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 1rem}
+.steps{display:flex;gap:.4rem;padding:1rem 1.8rem 0}
+.step-dot{height:5px;flex:1;border-radius:99px;background:var(--mist);transition:background .2s}
+.step-dot.on{background:var(--amber)}
+.chipset{display:flex;flex-wrap:wrap;gap:.5rem}
+.chip{
+  padding:.45rem .9rem;border-radius:99px;border:1.5px solid #D8DED6;background:var(--paper);
+  font-size:.87rem;font-weight:600;color:var(--sage);transition:all .12s;
+}
+.chip.on{background:var(--pine);border-color:var(--pine);color:var(--cream)}
+
+/* ============ APP SHELL ============ */
+#app{display:none;min-height:100vh}
+#app.active{display:grid;grid-template-columns:250px 1fr}
+.sidebar{
+  background:var(--pine-deep);color:var(--cream);padding:1.3rem 0;
+  display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;
+}
+.side-brand{display:flex;align-items:center;gap:.6rem;padding:0 1.3rem 1.1rem;font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem}
+.side-brand .brand-mark{width:32px;height:32px;border-radius:9px;font-size:1rem}
+.org-switch{margin:0 1rem 1.2rem;position:relative}
+.org-switch select{
+  background:rgba(247,244,236,.08);border:1px solid rgba(247,244,236,.2);color:var(--cream);
+  font-weight:600;font-size:.88rem;appearance:none;padding-right:2rem;
+}
+.org-switch::after{content:"▾";position:absolute;right:.8rem;top:50%;transform:translateY(-50%);pointer-events:none;font-size:.8rem;opacity:.7}
+.nav-label{font-size:.68rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(247,244,236,.4);padding:.9rem 1.3rem .4rem}
+.nav-item{
+  display:flex;align-items:center;gap:.75rem;padding:.62rem 1.3rem;color:rgba(247,244,236,.75);
+  font-size:.92rem;font-weight:600;cursor:pointer;border-left:3px solid transparent;transition:all .13s;
+}
+.nav-item:hover{background:rgba(247,244,236,.06);color:var(--cream)}
+.nav-item.on{background:rgba(212,160,23,.13);color:var(--amber);border-left-color:var(--amber)}
+.nav-ico{width:20px;text-align:center;font-size:1rem}
+.nav-badge{margin-left:auto;background:var(--clay);color:#fff;font-size:.68rem;font-weight:700;padding:.1rem .45rem;border-radius:99px}
+.side-foot{margin-top:auto;padding:1rem 1.3rem;font-size:.75rem;color:rgba(247,244,236,.4);border-top:1px solid rgba(247,244,236,.08)}
+
+.main{padding:1.8rem 2.2rem;max-width:1200px;width:100%}
+.page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;margin-bottom:1.6rem;flex-wrap:wrap}
+.page-head h1{font-size:1.8rem;font-weight:600;color:var(--pine)}
+.page-head .sub{color:var(--sage);font-size:.95rem;margin-top:.25rem}
+
+/* cards, stats */
+.stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-bottom:1.6rem}
+.stat{
+  background:var(--paper);border-radius:var(--radius);padding:1.1rem 1.2rem;box-shadow:var(--shadow-sm);
+  border-top:3px solid var(--pine);
+}
+.stat.amber{border-top-color:var(--amber)}
+.stat.clay{border-top-color:var(--clay)}
+.stat.ok{border-top-color:var(--ok)}
+.stat .num{font-family:'Fraunces',serif;font-size:2rem;font-weight:700;color:var(--pine);line-height:1.1}
+.stat .lbl{font-size:.8rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--sage);margin-top:.2rem}
+.card{background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:1.3rem 1.4rem;margin-bottom:1.3rem}
+.card h3{font-size:1.1rem;font-weight:600;color:var(--pine);margin-bottom:.9rem}
+.card-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.9rem}
+.card-head h3{margin-bottom:0}
+
+/* tables */
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th{text-align:left;font-size:.72rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--sage);padding:.55rem .7rem;border-bottom:2px solid var(--mist)}
+td{padding:.7rem;border-bottom:1px solid var(--mist);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+tbody tr{transition:background .1s}
+tbody tr:hover{background:#FAFBF8}
+.tag{display:inline-block;padding:.22rem .65rem;border-radius:99px;font-size:.75rem;font-weight:700}
+.tag.ok{background:var(--ok-soft);color:var(--ok)}
+.tag.warn{background:var(--warn-soft);color:var(--warn)}
+.tag.bad{background:var(--bad-soft);color:var(--bad)}
+.tag.pine{background:var(--mist);color:var(--pine)}
+.tag.amber{background:var(--amber-soft);color:#8A6A0D}
+.tag.clay{background:var(--clay-soft);color:var(--clay)}
+
+/* bed grid */
+.bed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.9rem}
+.bed{
+  border-radius:12px;padding:.95rem;border:1.5px solid var(--mist);background:var(--paper);
+  transition:transform .12s, box-shadow .12s;cursor:pointer;
+}
+.bed:hover{transform:translateY(-2px);box-shadow:var(--shadow-sm)}
+.bed .bed-no{font-family:'Fraunces',serif;font-weight:700;font-size:1.05rem;color:var(--pine)}
+.bed .bed-res{font-size:.82rem;color:var(--sage);margin-top:.2rem;min-height:1.1em}
+.bed .tag{margin-top:.55rem}
+.bed.occupied{border-color:rgba(30,58,47,.35);background:linear-gradient(180deg,#FFF, #F2F6F1)}
+.bed.available{border-color:rgba(46,125,79,.4);background:linear-gradient(180deg,#FFF,#EFF7F1)}
+.bed.reserved{border-color:rgba(212,160,23,.5)}
+.bed.maintenance{border-color:rgba(179,64,46,.4);opacity:.8}
+
+/* checkin mood */
+.mood-row{display:flex;gap:.6rem;justify-content:space-between}
+.mood{
+  flex:1;text-align:center;padding:.7rem .3rem;border-radius:11px;border:1.5px solid #D8DED6;
+  background:var(--paper);font-size:1.4rem;transition:all .12s;
+}
+.mood span{display:block;font-size:.66rem;font-weight:700;color:var(--sage);margin-top:.25rem;text-transform:uppercase;letter-spacing:.03em}
+.mood.on{border-color:var(--pine);background:var(--mist);transform:scale(1.05)}
+
+/* announcements feed */
+.ann{border-left:3px solid var(--amber);padding:.7rem 1rem;background:#FDFBF5;border-radius:0 10px 10px 0;margin-bottom:.8rem}
+.ann .ann-meta{font-size:.75rem;color:var(--sage);font-weight:600;margin-bottom:.2rem}
+.ann .ann-body{font-size:.93rem}
+.ann.urgent{border-left-color:var(--clay);background:#FCF3EF}
+
+/* alert list */
+.alert-item{display:flex;gap:.8rem;align-items:flex-start;padding:.75rem;border-radius:10px;margin-bottom:.55rem;background:#FAFBF8;border:1px solid var(--mist)}
+.alert-item .a-ico{width:32px;height:32px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:.95rem}
+.alert-item.high .a-ico{background:var(--bad-soft)}
+.alert-item.med .a-ico{background:var(--warn-soft)}
+.alert-item.low .a-ico{background:var(--mist)}
+.alert-item .a-txt{font-size:.9rem}
+.alert-item .a-sub{font-size:.78rem;color:var(--sage);margin-top:.1rem}
+
+/* toast */
+#toast{
+  position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--pine-deep);color:var(--cream);padding:.8rem 1.4rem;border-radius:11px;
+  font-weight:600;font-size:.92rem;box-shadow:var(--shadow);z-index:200;opacity:0;
+  transition:all .25s cubic-bezier(.2,.9,.3,1);
+}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+.empty{
+  text-align:center;padding:2.4rem 1rem;color:var(--sage);
+}
+.empty .e-ico{font-size:2rem;margin-bottom:.5rem}
+.empty p{font-size:.95rem}
+
+.two-col{display:grid;grid-template-columns:1.4fr 1fr;gap:1.3rem;align-items:start}
+@media(max-width:980px){
+  #app.active{grid-template-columns:1fr}
+  .sidebar{position:fixed;left:-260px;transition:left .2s;z-index:60;width:250px}
+  .sidebar.open{left:0}
+  .hero{grid-template-columns:1fr;padding:1.5rem 1.6rem 3rem}
+  .two-col{grid-template-columns:1fr}
+  .main{padding:1.2rem 1rem}
+  .menu-btn{display:inline-flex!important}
+}
+.menu-btn{display:none;background:var(--pine);color:var(--cream);border-radius:9px;padding:.5rem .8rem;font-weight:700;margin-bottom:1rem}
+.helper{font-size:.8rem;color:var(--sage);margin-top:.3rem}
+.divider{height:1px;background:var(--mist);margin:1.1rem 0}
+.mini-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--sage)}
+</style>
+</head>
+<body>
+
+<!-- ================= LANDING ================= -->
+<div id="landing">
+  <div class="landing-nav">
+    <div class="brand"><div class="brand-mark">⌂</div> Recovery Residence</div>
+    <button class="btn btn-ghost btn-sm" onclick="enterDemo()">View Live Demo</button>
+  </div>
+  <div class="hero">
+    <div>
+      <h1>Every recovery house deserves <em>great operations</em>.</h1>
+      <p>Recovery Residence is the universal platform for recovery housing organizations. Create a residence profile and get bed management, waitlists, daily check-ins, payments, grievances, furloughs, and messaging — built on trauma-informed, MAT/MOUD-affirming practice standards.</p>
+      <div class="hero-actions">
+        <button class="btn btn-amber" onclick="openWizard()">＋ Create Your Residence Profile</button>
+        <button class="btn btn-ghost" onclick="enterDemo()">Explore Demo Residence →</button>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3>What every residence profile includes</h3>
+      <div class="feat"><div class="feat-ico">🛏</div> Real-time bed availability &amp; waitlist queue</div>
+      <div class="feat"><div class="feat-ico">🌤</div> Resident daily check-ins with staff flagging</div>
+      <div class="feat"><div class="feat-ico">💳</div> Program fee tracking, receipts &amp; balances</div>
+      <div class="feat"><div class="feat-ico">🕊</div> Grievance workflow with response deadlines</div>
+      <div class="feat"><div class="feat-ico">🎒</div> Furlough requests &amp; return tracking</div>
+      <div class="feat"><div class="feat-ico">📣</div> House-wide announcements &amp; expectations</div>
+      <div class="feat"><div class="feat-ico">🤝</div> Roles: Executive Director, House Lead, Residents</div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= ONBOARDING WIZARD ================= -->
+<div class="overlay hidden" id="wizardOverlay">
+  <div class="modal">
+    <div class="steps"><div class="step-dot on" id="dot0"></div><div class="step-dot" id="dot1"></div><div class="step-dot" id="dot2"></div></div>
+
+    <!-- step 1 -->
+    <div id="wstep0">
+      <div class="modal-head">
+        <h2>Your organization</h2>
+        <p>Tell us about the business or nonprofit operating this residence.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field"><label>Organization name *</label><input id="w_org" placeholder="e.g., Grace For Addictions"></div>
+        <div class="grid2">
+          <div class="field"><label>Org type</label>
+            <select id="w_orgtype"><option>501(c)(3) Nonprofit</option><option>LLC / Private Operator</option><option>Faith-Based Organization</option><option>Government / County</option><option>Other</option></select>
+          </div>
+          <div class="field"><label>Contact phone</label><input id="w_phone" placeholder="(515) 555-0100"></div>
+        </div>
+        <div class="field"><label>Contact email</label><input id="w_email" placeholder="director@yourorg.org"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-line btn-sm" onclick="closeWizard()">Cancel</button>
+        <button class="btn btn-pine btn-sm" onclick="wizNext(1)">Next →</button>
+      </div>
+    </div>
+
+    <!-- step 2 -->
+    <div id="wstep1" class="hidden">
+      <div class="modal-head">
+        <h2>The residence</h2>
+        <p>Each profile manages one house. You can add more houses later.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field"><label>Residence name *</label><input id="w_res" placeholder="e.g., Jerry's House"></div>
+        <div class="grid2">
+          <div class="field"><label>Population served</label>
+            <select id="w_pop"><option>Men</option><option>Women</option><option>All genders</option><option>Women & children</option><option>Veterans</option><option>Young adults (18–25)</option></select>
+          </div>
+          <div class="field"><label>Bed capacity *</label><input id="w_beds" type="number" min="1" max="60" value="8"></div>
+        </div>
+        <div class="grid2">
+          <div class="field"><label>Weekly fee ($)</label><input id="w_fee" type="number" min="0" value="175"></div>
+          <div class="field"><label>Level of support</label>
+            <select id="w_level"><option>Level I — Peer-Run</option><option selected>Level II — Monitored</option><option>Level III — Supervised</option><option>Level IV — Service Provider</option></select>
+          </div>
+        </div>
+        <div class="field"><label>City / State</label><input id="w_city" placeholder="Des Moines, Iowa"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-line btn-sm" onclick="wizNext(0)">← Back</button>
+        <button class="btn btn-pine btn-sm" onclick="wizNext(2)">Next →</button>
+      </div>
+    </div>
+
+    <!-- step 3 -->
+    <div id="wstep2" class="hidden">
+      <div class="modal-head">
+        <h2>House standards</h2>
+        <p>Select the commitments this residence operates under. These display to residents and referral partners.</p>
+      </div>
+      <div class="modal-body">
+        <div class="field"><label>Practice commitments</label>
+          <div class="chipset" id="w_chips">
+            <div class="chip on" data-v="MAT/MOUD-affirming">MAT/MOUD-affirming</div>
+            <div class="chip on" data-v="Trauma-informed">Trauma-informed</div>
+            <div class="chip on" data-v="Multiple pathways">Multiple pathways</div>
+            <div class="chip" data-v="NARR-aligned">NARR-aligned</div>
+            <div class="chip" data-v="Faith-welcoming">Faith-welcoming</div>
+            <div class="chip" data-v="Pet-friendly">Pet-friendly</div>
+            <div class="chip" data-v="Reentry-supportive">Reentry-supportive</div>
+          </div>
+        </div>
+        <div class="field"><label>Curfew (weeknights)</label>
+          <select id="w_curfew"><option>9:00 PM</option><option selected>10:00 PM</option><option>11:00 PM</option><option>Midnight</option><option>Phase-based</option></select>
+        </div>
+        <div class="field"><label>Head of House / House Lead name</label><input id="w_lead" placeholder="e.g., Peer resident house lead"></div>
+        <div class="field"><label>Executive Director name</label><input id="w_ed" placeholder="e.g., Executive Director"></div>
+      </div>
+      <div class="modal-foot">
+        <button class="btn btn-line btn-sm" onclick="wizNext(1)">← Back</button>
+        <button class="btn btn-amber btn-sm" onclick="finishWizard()">Launch Residence ✓</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= APP SHELL ================= -->
+<div id="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="side-brand"><div class="brand-mark">⌂</div> Recovery Residence</div>
+    <div class="org-switch">
+      <select id="resSwitch" onchange="switchResidence(this.value)"></select>
+    </div>
+    <div class="nav-label">Operations</div>
+    <div class="nav-item on" data-page="dashboard" onclick="nav('dashboard')"><span class="nav-ico">◫</span> Dashboard <span class="nav-badge hidden" id="alertBadge"></span></div>
+    <div class="nav-item" data-page="residents" onclick="nav('residents')"><span class="nav-ico">👥</span> Residents</div>
+    <div class="nav-item" data-page="beds" onclick="nav('beds')"><span class="nav-ico">🛏</span> Beds</div>
+    <div class="nav-item" data-page="waitlist" onclick="nav('waitlist')"><span class="nav-ico">⏳</span> Waitlist</div>
+    <div class="nav-label">Daily Life</div>
+    <div class="nav-item" data-page="checkins" onclick="nav('checkins')"><span class="nav-ico">🌤</span> Check-Ins</div>
+    <div class="nav-item" data-page="payments" onclick="nav('payments')"><span class="nav-ico">💳</span> Payments</div>
+    <div class="nav-item" data-page="furloughs" onclick="nav('furloughs')"><span class="nav-ico">🎒</span> Furloughs</div>
+    <div class="nav-label">Community & Voice</div>
+    <div class="nav-item" data-page="messages" onclick="nav('messages')"><span class="nav-ico">📣</span> Messages</div>
+    <div class="nav-item" data-page="grievances" onclick="nav('grievances')"><span class="nav-ico">🕊</span> Grievances</div>
+    <div class="nav-item" data-page="profile" onclick="nav('profile')"><span class="nav-ico">⚙</span> House Profile</div>
+    <div class="side-foot">Trauma-informed · MAT/MOUD-affirming<br>Recovery Residence Platform v1.0</div>
+  </aside>
+
+  <main class="main">
+    <button class="menu-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">☰ Menu</button>
+    <div id="pageRoot"></div>
+  </main>
+</div>
+
+<div id="toast"></div>
+
+<!-- Generic modal root -->
+<div class="overlay hidden" id="modalOverlay">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script>
+/* =========================================================
+   RECOVERY RESIDENCE — Universal MVP
+   Multi-tenant data store. Each "residence" is a tenant
+   profile carrying its own residents/beds/etc.
+   Persists to localStorage; the data layer is deliberately
+   isolated (store/persist/restore) so it can be swapped for
+   the canonical Supabase gfa_residence backend.
+========================================================= */
+
+const uid = () => Math.random().toString(36).slice(2,10);
+const today = () => new Date().toISOString().slice(0,10);
+const fmt$ = n => '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:0});
+const daysAgo = d => { const x=new Date(); x.setDate(x.getDate()-d); return x.toISOString().slice(0,10); };
+
+const store = { residences: [], activeId: null };
+const STORE_KEY = 'recovery-residence-v1';
+function persist(){ try{ localStorage.setItem(STORE_KEY, JSON.stringify(store)); }catch(e){} }
+function restore(){
+  try{
+    const s = JSON.parse(localStorage.getItem(STORE_KEY));
+    if(s && Array.isArray(s.residences)){ store.residences = s.residences; store.activeId = s.activeId; }
+  }catch(e){}
+}
+
+/* ---------- Seed demo residence ---------- */
+function seedDemo(){
+  const r = blankResidence({
+    org:'Grace For Addictions', orgType:'501(c)(3) Nonprofit', email:'contact@rcoiowa.org', phone:'515-220-8771',
+    name:'Demo House — Maplewood', pop:'Women', capacity:8, fee:175,
+    level:'Level II — Monitored', city:'Des Moines, Iowa',
+    commitments:['MAT/MOUD-affirming','Trauma-informed','Multiple pathways','NARR-aligned'],
+    curfew:'10:00 PM', lead:'Dana R. (Peer House Lead)', ed:'Executive Director'
+  });
+  // residents
+  const res = [
+    {name:'Alicia M.', phase:'Integration', admitted:daysAgo(64), bed:'B2', status:'good', balance:0, mat:true},
+    {name:'Jordan K.', phase:'Stabilization', admitted:daysAgo(12), bed:'B1', status:'good', balance:175, mat:false},
+    {name:'Sam T.', phase:'Preparation', admitted:daysAgo(148), bed:'B4', status:'good', balance:0, mat:true},
+    {name:'Renee W.', phase:'Integration', admitted:daysAgo(41), bed:'B5', status:'concern', balance:350, mat:false},
+    {name:'Priya D.', phase:'Stabilization', admitted:daysAgo(6), bed:'B7', status:'good', balance:0, mat:true},
+  ];
+  res.forEach(x=>{
+    const id = uid();
+    r.residents.push({id, name:x.name, phase:x.phase, admitted:x.admitted, bed:x.bed, status:x.status, balance:x.balance, mat:x.mat, notes:''});
+  });
+  // beds
+  for(let i=1;i<=8;i++){
+    const bn = 'B'+i;
+    const occ = r.residents.find(x=>x.bed===bn);
+    r.beds.push({no:bn, room:'Room '+Math.ceil(i/2), status: occ?'occupied':(i===3?'reserved':(i===8?'maintenance':'available')), resident: occ?occ.id:null});
+  }
+  // waitlist
+  r.waitlist = [
+    {id:uid(), name:'C. Alvarez', phone:'(515) 555-0141', added:daysAgo(9), priority:'high', note:'Referred by treatment provider; discharge next week'},
+    {id:uid(), name:'M. Okafor', phone:'(515) 555-0177', added:daysAgo(21), priority:'standard', note:'Currently in shelter; MAT patient'},
+    {id:uid(), name:'T. Nguyen', phone:'(515) 555-0163', added:daysAgo(30), priority:'standard', note:'Awaiting callback'},
+  ];
+  // checkins
+  const r0=r.residents;
+  r.checkins = [
+    {id:uid(), resident:r0[0].id, date:today(), mood:4, cravings:'no', support:false, note:'Job interview tomorrow — feeling ready.'},
+    {id:uid(), resident:r0[1].id, date:today(), mood:3, cravings:'somewhat', support:false, note:'A little restless.'},
+    {id:uid(), resident:r0[3].id, date:daysAgo(1), mood:1, cravings:'yes', support:true, note:'Rough contact with family.'},
+    {id:uid(), resident:r0[2].id, date:daysAgo(1), mood:5, cravings:'no', support:false, note:'150 days tomorrow!'},
+  ];
+  // payments
+  r.payments = [
+    {id:uid(), resident:r0[0].id, date:daysAgo(2), amount:175, method:'card', type:'Program fee'},
+    {id:uid(), resident:r0[2].id, date:daysAgo(3), amount:175, method:'cash', type:'Program fee'},
+    {id:uid(), resident:r0[4].id, date:daysAgo(5), amount:175, method:'ACH', type:'Program fee'},
+  ];
+  // grievances
+  r.grievances = [
+    {id:uid(), from:'Anonymous', date:daysAgo(4), type:'Living conditions', desc:'Upstairs bathroom exhaust fan broken for two weeks.', status:'under_investigation', due:daysAgo(-6)},
+  ];
+  // furloughs
+  r.furloughs = [
+    {id:uid(), resident:r0[2].id, start:daysAgo(-3), end:daysAgo(-5), reason:'Family visit', detail:'Daughter\'s birthday in Cedar Rapids.', status:'pending'},
+  ];
+  // announcements
+  r.messages = [
+    {id:uid(), date:daysAgo(1), from:'House Lead', urgent:false, body:'House meeting moved to Thursday 7 PM this week. Pizza after — bring your goals sheet.'},
+    {id:uid(), date:daysAgo(3), from:'Executive Director', urgent:true, body:'Reminder: naloxone kits restocked in hallway cabinet and kitchen drawer. Take 2 minutes to note both locations.'},
+  ];
+  store.residences.push(r);
+}
+
+function blankResidence(p){
+  return {
+    id: uid(),
+    org:p.org||'', orgType:p.orgType||'', email:p.email||'', phone:p.phone||'',
+    name:p.name||'New Residence', pop:p.pop||'All genders', capacity:p.capacity||8, fee:p.fee||150,
+    level:p.level||'Level II — Monitored', city:p.city||'', commitments:p.commitments||[],
+    curfew:p.curfew||'10:00 PM', lead:p.lead||'', ed:p.ed||'',
+    residents:[], beds:[], waitlist:[], checkins:[], payments:[], grievances:[], furloughs:[], messages:[]
+  };
+}
+
+const R = () => store.residences.find(x=>x.id===store.activeId);
+const resName = id => { const x=R().residents.find(r=>r.id===id); return x?x.name:'—'; };
+
+/* ---------- landing / wizard ---------- */
+let wizStep=0;
+function openWizard(){ wizStep=0; showWiz(); document.getElementById('wizardOverlay').classList.remove('hidden'); }
+function closeWizard(){ document.getElementById('wizardOverlay').classList.add('hidden'); }
+function wizNext(n){
+  if(n===1 && !document.getElementById('w_org').value.trim()){ toast('Organization name is required'); return; }
+  if(n===2 && (!document.getElementById('w_res').value.trim()||!document.getElementById('w_beds').value)){ toast('Residence name and bed capacity required'); return; }
+  wizStep=n; showWiz();
+}
+function showWiz(){
+  [0,1,2].forEach(i=>{
+    document.getElementById('wstep'+i).classList.toggle('hidden', i!==wizStep);
+    document.getElementById('dot'+i).classList.toggle('on', i<=wizStep);
+  });
+}
+document.addEventListener('click',e=>{
+  if(e.target.classList.contains('chip')) e.target.classList.toggle('on');
+});
+function finishWizard(){
+  const chips=[...document.querySelectorAll('#w_chips .chip.on')].map(c=>c.dataset.v);
+  const r = blankResidence({
+    org:document.getElementById('w_org').value.trim(),
+    orgType:document.getElementById('w_orgtype').value,
+    phone:document.getElementById('w_phone').value.trim(),
+    email:document.getElementById('w_email').value.trim(),
+    name:document.getElementById('w_res').value.trim(),
+    pop:document.getElementById('w_pop').value,
+    capacity:+document.getElementById('w_beds').value,
+    fee:+document.getElementById('w_fee').value,
+    level:document.getElementById('w_level').value,
+    city:document.getElementById('w_city').value.trim(),
+    commitments:chips,
+    curfew:document.getElementById('w_curfew').value,
+    lead:document.getElementById('w_lead').value.trim(),
+    ed:document.getElementById('w_ed').value.trim(),
+  });
+  for(let i=1;i<=r.capacity;i++) r.beds.push({no:'B'+i, room:'Room '+Math.ceil(i/2), status:'available', resident:null});
+  store.residences.push(r);
+  store.activeId=r.id;
+  closeWizard(); enterApp();
+  toast('Residence profile created — welcome to '+r.name);
+}
+function enterDemo(){
+  if(!store.residences.length) seedDemo();
+  store.activeId = store.residences[0].id;
+  enterApp();
+}
+function enterApp(){
+  document.getElementById('landing').style.display='none';
+  document.getElementById('app').classList.add('active');
+  refreshSwitcher(); nav('dashboard');
+}
+function refreshSwitcher(){
+  const s=document.getElementById('resSwitch');
+  s.innerHTML = store.residences.map(r=>`<option value="${r.id}" ${r.id===store.activeId?'selected':''}>${r.name}</option>`).join('')
+    + `<option value="__new">＋ Add another residence…</option>`;
+}
+function switchResidence(v){
+  if(v==='__new'){ refreshSwitcher(); openWizard(); return; }
+  store.activeId=v; nav(currentPage);
+}
+
+/* ---------- navigation ---------- */
+let currentPage='dashboard';
+function nav(p){
+  currentPage=p;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('on', n.dataset.page===p));
+  document.getElementById('sidebar').classList.remove('open');
+  const root=document.getElementById('pageRoot');
+  root.innerHTML = pages[p]();
+  updateBadge();
+  persist();
+}
+
+/* ---------- alerts engine ---------- */
+function computeAlerts(){
+  const r=R(); const out=[];
+  // flagged check-ins
+  r.checkins.filter(c=>(c.mood===1||c.support) && !c.ack).forEach(c=>{
+    out.push({sev:'high', ico:'🚨', txt:`${resName(c.resident)} flagged a check-in (mood ${c.mood}/5${c.support?', asked for support':''})`, sub:c.date, act:`ackCheckin('${c.id}')`});
+  });
+  // balances
+  r.residents.filter(x=>x.balance>=r.fee).forEach(x=>{
+    out.push({sev:'med', ico:'💳', txt:`${x.name} balance is ${fmt$(x.balance)} (${Math.round(x.balance/r.fee)} week${x.balance/r.fee>1?'s':''} behind)`, sub:'Consider a payment-plan conversation', act:null});
+  });
+  // pending furloughs
+  r.furloughs.filter(f=>f.status==='pending').forEach(f=>{
+    out.push({sev:'med', ico:'🎒', txt:`Furlough request from ${resName(f.resident)} awaits review`, sub:`${f.start} → ${f.end}`, act:null});
+  });
+  // grievances due
+  r.grievances.filter(g=>g.status!=='resolved').forEach(g=>{
+    out.push({sev:'low', ico:'🕊', txt:`Open grievance: ${g.type}`, sub:'Response timeline running', act:null});
+  });
+  return out;
+}
+function updateBadge(){
+  const n=computeAlerts().filter(a=>a.sev==='high').length;
+  const b=document.getElementById('alertBadge');
+  b.classList.toggle('hidden', n===0); b.textContent=n;
+}
+function ackCheckin(id){
+  const c=R().checkins.find(x=>x.id===id); if(c) c.ack=true;
+  toast('Check-in acknowledged — follow up logged'); nav(currentPage);
+}
+
+/* ---------- pages ---------- */
+const pages = {
+
+dashboard(){
+  const r=R();
+  const occ=r.beds.filter(b=>b.status==='occupied').length;
+  const avail=r.beds.filter(b=>b.status==='available').length;
+  const alerts=computeAlerts();
+  const weekRev=r.payments.filter(p=>new Date(p.date)>new Date(Date.now()-7*864e5)).reduce((s,p)=>s+p.amount,0);
+  return `
+  <div class="page-head">
+    <div><h1>${r.name}</h1><div class="sub">${r.org} · ${r.pop} · ${r.level}${r.city?' · '+r.city:''}</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openCheckinModal()">＋ Log Check-In</button>
+  </div>
+  <div class="stat-row">
+    <div class="stat"><div class="num">${occ}/${r.beds.length}</div><div class="lbl">Beds occupied</div></div>
+    <div class="stat ok"><div class="num">${avail}</div><div class="lbl">Available now</div></div>
+    <div class="stat amber"><div class="num">${r.waitlist.length}</div><div class="lbl">On waitlist</div></div>
+    <div class="stat clay"><div class="num">${fmt$(weekRev)}</div><div class="lbl">Fees · last 7 days</div></div>
+  </div>
+  <div class="two-col">
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>Attention needed</h3><span class="mini-label">${alerts.length} item${alerts.length!==1?'s':''}</span></div>
+        ${alerts.length? alerts.map(a=>`
+          <div class="alert-item ${a.sev}">
+            <div class="a-ico">${a.ico}</div>
+            <div style="flex:1"><div class="a-txt">${a.txt}</div><div class="a-sub">${a.sub}</div></div>
+            ${a.act?`<button class="btn btn-line btn-sm" onclick="${a.act}">Acknowledge</button>`:''}
+          </div>`).join('') : `<div class="empty"><div class="e-ico">🌿</div><p>All clear. The house is steady today.</p></div>`}
+      </div>
+      <div class="card">
+        <div class="card-head"><h3>Recent check-ins</h3><button class="btn btn-line btn-sm" onclick="nav('checkins')">View all</button></div>
+        <table><thead><tr><th>Resident</th><th>Date</th><th>Mood</th><th>Cravings</th><th></th></tr></thead><tbody>
+        ${r.checkins.slice(-5).reverse().map(c=>`
+          <tr><td><strong>${resName(c.resident)}</strong></td><td>${c.date}</td>
+          <td>${['😞','😕','😐','🙂','😄'][c.mood-1]} ${c.mood}/5</td>
+          <td>${c.cravings==='yes'?'<span class="tag warn">yes</span>':c.cravings==='somewhat'?'<span class="tag amber">somewhat</span>':'<span class="tag ok">no</span>'}</td>
+          <td>${(c.mood===1||c.support)?(c.ack?'<span class="tag pine">followed up</span>':'<span class="tag bad">flagged</span>'):''}</td></tr>`).join('')||'<tr><td colspan=5>No check-ins yet.</td></tr>'}
+        </tbody></table>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-head"><h3>House board</h3><button class="btn btn-line btn-sm" onclick="openAnnModal()">＋ Post</button></div>
+        ${r.messages.slice().reverse().slice(0,4).map(m=>`
+          <div class="ann ${m.urgent?'urgent':''}"><div class="ann-meta">${m.from} · ${m.date}${m.urgent?' · URGENT':''}</div><div class="ann-body">${m.body}</div></div>`).join('')||'<div class="empty"><p>No announcements yet.</p></div>'}
+      </div>
+      <div class="card">
+        <h3>House commitments</h3>
+        <div class="chipset">${r.commitments.map(c=>`<div class="chip on" style="pointer-events:none">${c}</div>`).join('')||'<span class="helper">None selected — edit in House Profile.</span>'}</div>
+        <div class="divider"></div>
+        <div style="font-size:.9rem;line-height:1.9">
+          <div><span class="mini-label">Curfew</span> &nbsp;${r.curfew}</div>
+          <div><span class="mini-label">House Lead</span> &nbsp;${r.lead||'—'}</div>
+          <div><span class="mini-label">Executive Director</span> &nbsp;${r.ed||'—'}</div>
+          <div><span class="mini-label">Weekly fee</span> &nbsp;${fmt$(r.fee)}</div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+},
+
+residents(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Residents</h1><div class="sub">${r.residents.length} active · person-first records</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openResidentModal()">＋ Admit Resident</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Name</th><th>Phase</th><th>Admitted</th><th>Bed</th><th>MAT/MOUD</th><th>Balance</th><th>Status</th><th></th></tr></thead><tbody>
+    ${r.residents.map(x=>`
+      <tr>
+        <td><strong>${x.name}</strong></td>
+        <td><span class="tag pine">${x.phase}</span></td>
+        <td>${x.admitted}</td>
+        <td>${x.bed||'—'}</td>
+        <td>${x.mat?'<span class="tag ok">supported</span>':'<span class="tag pine">n/a</span>'}</td>
+        <td>${x.balance>0?`<span class="tag warn">${fmt$(x.balance)}</span>`:'<span class="tag ok">current</span>'}</td>
+        <td>${x.status==='good'?'<span class="tag ok">good standing</span>':'<span class="tag warn">supportive check-in</span>'}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-line btn-sm" onclick="advancePhase('${x.id}')">Advance</button>
+          <button class="btn btn-line btn-sm" onclick="exitResident('${x.id}')">Exit</button>
+        </td>
+      </tr>`).join('')||'<tr><td colspan=8><div class="empty"><div class="e-ico">🏠</div><p>No residents yet. Admit your first resident or pull from the waitlist.</p></div></td></tr>'}
+    </tbody></table>
+  </div>
+  <div class="helper">Phases: Stabilization → Integration → Preparation. Exits are recorded neutrally; a return to use is never framed as failure.</div>`;
+},
+
+beds(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Beds</h1><div class="sub">Tap a bed to change its status</div></div>
+    <button class="btn btn-pine btn-sm" onclick="addBed()">＋ Add Bed</button>
+  </div>
+  <div class="card">
+    <div class="bed-grid">
+      ${r.beds.map(b=>`
+        <div class="bed ${b.status}" onclick="cycleBed('${b.no}')">
+          <div class="bed-no">${b.no}</div>
+          <div class="bed-res">${b.resident?resName(b.resident):b.room}</div>
+          <span class="tag ${b.status==='available'?'ok':b.status==='occupied'?'pine':b.status==='reserved'?'amber':'bad'}">${b.status}</span>
+        </div>`).join('')}
+    </div>
+  </div>
+  <div class="helper">Statuses cycle: available → reserved → maintenance → available. Occupied beds are managed through resident admission and exit.</div>`;
+},
+
+waitlist(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Waitlist</h1><div class="sub">${r.waitlist.length} waiting · priority queue</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openWaitlistModal()">＋ Add to Waitlist</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>#</th><th>Name</th><th>Phone</th><th>Added</th><th>Priority</th><th>Notes</th><th></th></tr></thead><tbody>
+    ${r.waitlist.map((w,i)=>`
+      <tr>
+        <td><strong>${i+1}</strong></td>
+        <td><strong>${w.name}</strong></td>
+        <td>${w.phone}</td>
+        <td>${w.added}</td>
+        <td>${w.priority==='high'?'<span class="tag clay">high</span>':w.priority==='urgent'?'<span class="tag bad">urgent</span>':'<span class="tag pine">standard</span>'}</td>
+        <td style="max-width:220px;font-size:.85rem;color:var(--sage)">${w.note||''}</td>
+        <td style="white-space:nowrap">
+          <button class="btn btn-pine btn-sm" onclick="admitFromWaitlist('${w.id}')">Admit</button>
+          <button class="btn btn-line btn-sm" onclick="removeWaitlist('${w.id}')">Remove</button>
+        </td>
+      </tr>`).join('')||'<tr><td colspan=7><div class="empty"><div class="e-ico">⏳</div><p>Waitlist is empty.</p></div></td></tr>'}
+    </tbody></table>
+  </div>`;
+},
+
+checkins(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Daily Check-Ins</h1><div class="sub">60-second wellness pulse · flags route to staff</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openCheckinModal()">＋ Log Check-In</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Resident</th><th>Date</th><th>Mood</th><th>Cravings</th><th>Support?</th><th>Note</th><th></th></tr></thead><tbody>
+    ${r.checkins.slice().reverse().map(c=>`
+      <tr>
+        <td><strong>${resName(c.resident)}</strong></td>
+        <td>${c.date}</td>
+        <td>${['😞','😕','😐','🙂','😄'][c.mood-1]} ${c.mood}/5</td>
+        <td>${c.cravings==='yes'?'<span class="tag warn">yes</span>':c.cravings==='somewhat'?'<span class="tag amber">somewhat</span>':'<span class="tag ok">no</span>'}</td>
+        <td>${c.support?'<span class="tag clay">requested</span>':'—'}</td>
+        <td style="max-width:260px;font-size:.85rem;color:var(--sage)">${c.note||''}</td>
+        <td>${(c.mood===1||c.support)?(c.ack?'<span class="tag pine">followed up</span>':`<button class="btn btn-clay btn-sm" onclick="ackCheckin('${c.id}')">Follow up</button>`):''}</td>
+      </tr>`).join('')||'<tr><td colspan=7><div class="empty"><div class="e-ico">🌤</div><p>No check-ins logged yet.</p></div></td></tr>'}
+    </tbody></table>
+  </div>`;
+},
+
+payments(){
+  const r=R();
+  const total=r.payments.reduce((s,p)=>s+p.amount,0);
+  const owed=r.residents.reduce((s,x)=>s+x.balance,0);
+  return `
+  <div class="page-head">
+    <div><h1>Payments</h1><div class="sub">Weekly fee: ${fmt$(r.fee)} · secure processing ready (Stripe integration point)</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openPaymentModal()">＋ Record Payment</button>
+  </div>
+  <div class="stat-row">
+    <div class="stat ok"><div class="num">${fmt$(total)}</div><div class="lbl">Collected (all time)</div></div>
+    <div class="stat clay"><div class="num">${fmt$(owed)}</div><div class="lbl">Outstanding balances</div></div>
+    <div class="stat"><div class="num">${r.payments.length}</div><div class="lbl">Transactions</div></div>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Date</th><th>Resident</th><th>Type</th><th>Method</th><th>Amount</th><th>Receipt</th></tr></thead><tbody>
+    ${r.payments.slice().reverse().map(p=>`
+      <tr><td>${p.date}</td><td><strong>${resName(p.resident)}</strong></td><td>${p.type}</td>
+      <td><span class="tag pine">${p.method}</span></td><td><strong>${fmt$(p.amount)}</strong></td>
+      <td><button class="btn btn-line btn-sm" onclick="toast('Receipt #${p.id.toUpperCase()} generated')">Receipt</button></td></tr>`).join('')||'<tr><td colspan=6><div class="empty"><div class="e-ico">💳</div><p>No payments recorded yet.</p></div></td></tr>'}
+    </tbody></table>
+  </div>
+  <div class="helper">Hardship provisions apply — payment plans are arranged before fees are overdue, never punitively.</div>`;
+},
+
+furloughs(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Furlough Requests</h1><div class="sub">Temporary leave · bed held · check-ins during leave</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openFurloughModal()">＋ New Request</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Resident</th><th>Dates</th><th>Reason</th><th>Detail</th><th>Status</th><th></th></tr></thead><tbody>
+    ${r.furloughs.slice().reverse().map(f=>`
+      <tr>
+        <td><strong>${resName(f.resident)}</strong></td>
+        <td>${f.start} → ${f.end}</td>
+        <td>${f.reason}</td>
+        <td style="max-width:220px;font-size:.85rem;color:var(--sage)">${f.detail||''}</td>
+        <td>${f.status==='pending'?'<span class="tag amber">pending</span>':f.status==='approved'?'<span class="tag ok">approved</span>':f.status==='returned'?'<span class="tag pine">returned</span>':'<span class="tag bad">denied</span>'}</td>
+        <td style="white-space:nowrap">
+          ${f.status==='pending'?`<button class="btn btn-pine btn-sm" onclick="furloughAct('${f.id}','approved')">Approve</button>
+          <button class="btn btn-line btn-sm" onclick="furloughAct('${f.id}','denied')">Deny</button>`:
+          f.status==='approved'?`<button class="btn btn-line btn-sm" onclick="furloughAct('${f.id}','returned')">Confirm return</button>`:''}
+        </td>
+      </tr>`).join('')||'<tr><td colspan=6><div class="empty"><div class="e-ico">🎒</div><p>No furlough requests.</p></div></td></tr>'}
+    </tbody></table>
+  </div>`;
+},
+
+messages(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Messages & Announcements</h1><div class="sub">House board · visible to all residents</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openAnnModal()">＋ Post Announcement</button>
+  </div>
+  <div class="card">
+    ${r.messages.slice().reverse().map(m=>`
+      <div class="ann ${m.urgent?'urgent':''}"><div class="ann-meta">${m.from} · ${m.date}${m.urgent?' · URGENT':''}</div><div class="ann-body">${m.body}</div></div>`).join('')||'<div class="empty"><div class="e-ico">📣</div><p>Nothing posted yet.</p></div>'}
+  </div>`;
+},
+
+grievances(){
+  const r=R();
+  return `
+  <div class="page-head">
+    <div><h1>Grievances</h1><div class="sub">Right to be heard · anonymous option · no retaliation</div></div>
+    <button class="btn btn-pine btn-sm" onclick="openGrievanceModal()">＋ File Grievance</button>
+  </div>
+  <div class="card">
+    <table><thead><tr><th>Filed</th><th>From</th><th>Type</th><th>Description</th><th>Status</th><th></th></tr></thead><tbody>
+    ${r.grievances.slice().reverse().map(g=>`
+      <tr>
+        <td>${g.date}</td>
+        <td>${g.from}</td>
+        <td><span class="tag pine">${g.type}</span></td>
+        <td style="max-width:280px;font-size:.87rem">${g.desc}</td>
+        <td>${g.status==='submitted'?'<span class="tag amber">submitted</span>':g.status==='under_investigation'?'<span class="tag clay">investigating</span>':'<span class="tag ok">resolved</span>'}</td>
+        <td style="white-space:nowrap">
+          ${g.status!=='resolved'?`<button class="btn btn-line btn-sm" onclick="advanceGrievance('${g.id}')">${g.status==='submitted'?'Begin investigation':'Resolve'}</button>`:''}
+        </td>
+      </tr>`).join('')||'<tr><td colspan=6><div class="empty"><div class="e-ico">🕊</div><p>No grievances on file.</p></div></td></tr>'}
+    </tbody></table>
+  </div>
+  <div class="helper">Timeline standard: acknowledge in 2 business days · investigate in 5–10 · written decision in 5 · appeal window 10.</div>`;
+},
+
+profile(){
+  const r=R();
+  return `
+  <div class="page-head"><div><h1>House Profile</h1><div class="sub">Public-facing details shown to residents & referral partners</div></div></div>
+  <div class="two-col">
+    <div class="card">
+      <h3>Residence</h3>
+      <div class="field"><label>Residence name</label><input id="p_name" value="${r.name}"></div>
+      <div class="grid2">
+        <div class="field"><label>Population</label><input id="p_pop" value="${r.pop}"></div>
+        <div class="field"><label>Weekly fee ($)</label><input id="p_fee" type="number" value="${r.fee}"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Curfew</label><input id="p_curfew" value="${r.curfew}"></div>
+        <div class="field"><label>City</label><input id="p_city" value="${r.city}"></div>
+      </div>
+      <div class="field"><label>House Lead</label><input id="p_lead" value="${r.lead}"></div>
+      <div class="field"><label>Executive Director</label><input id="p_ed" value="${r.ed}"></div>
+      <button class="btn btn-pine btn-sm" onclick="saveProfile()">Save changes</button>
+    </div>
+    <div class="card">
+      <h3>Organization</h3>
+      <div style="font-size:.93rem;line-height:2">
+        <div><span class="mini-label">Org</span> &nbsp;${r.org}</div>
+        <div><span class="mini-label">Type</span> &nbsp;${r.orgType}</div>
+        <div><span class="mini-label">Email</span> &nbsp;${r.email||'—'}</div>
+        <div><span class="mini-label">Phone</span> &nbsp;${r.phone||'—'}</div>
+        <div><span class="mini-label">Support level</span> &nbsp;${r.level}</div>
+      </div>
+      <div class="divider"></div>
+      <h3>Commitments</h3>
+      <div class="chipset">${r.commitments.map(c=>`<div class="chip on" style="pointer-events:none">${c}</div>`).join('')||'<span class="helper">None listed.</span>'}</div>
+    </div>
+  </div>`;
+}
+};
+
+/* ---------- actions ---------- */
+function saveProfile(){
+  const r=R();
+  r.name=document.getElementById('p_name').value; r.pop=document.getElementById('p_pop').value;
+  r.fee=+document.getElementById('p_fee').value; r.curfew=document.getElementById('p_curfew').value;
+  r.city=document.getElementById('p_city').value; r.lead=document.getElementById('p_lead').value; r.ed=document.getElementById('p_ed').value;
+  refreshSwitcher(); toast('Profile saved'); nav('profile');
+}
+function advancePhase(id){
+  const x=R().residents.find(r=>r.id===id); if(!x)return;
+  const order=['Stabilization','Integration','Preparation'];
+  const i=order.indexOf(x.phase);
+  if(i<2){ x.phase=order[i+1]; toast(`${x.name} advanced to ${x.phase} 🎉`); }
+  else toast(`${x.name} is in the final phase — transition planning time`);
+  nav('residents');
+}
+function exitResident(id){
+  const r=R(); const x=r.residents.find(v=>v.id===id); if(!x)return;
+  const bed=r.beds.find(b=>b.resident===id); if(bed){bed.status='available';bed.resident=null;}
+  r.residents=r.residents.filter(v=>v.id!==id);
+  toast(`${x.name} exited — recorded neutrally, door stays open`);
+  nav('residents');
+}
+function addBed(){
+  const r=R(); const n=r.beds.length+1;
+  r.beds.push({no:'B'+n, room:'Room '+Math.ceil(n/2), status:'available', resident:null});
+  toast('Bed B'+n+' added'); nav('beds');
+}
+function cycleBed(no){
+  const b=R().beds.find(x=>x.no===no); if(!b)return;
+  if(b.status==='occupied'){ toast('Occupied — manage through the resident record'); return; }
+  b.status = b.status==='available'?'reserved':b.status==='reserved'?'maintenance':'available';
+  nav('beds');
+}
+function removeWaitlist(id){ const r=R(); r.waitlist=r.waitlist.filter(w=>w.id!==id); toast('Removed from waitlist'); nav('waitlist'); }
+function admitFromWaitlist(id){
+  const r=R(); const w=r.waitlist.find(x=>x.id===id); if(!w)return;
+  const bed=r.beds.find(b=>b.status==='available');
+  if(!bed){ toast('No beds available — mark one available first'); return; }
+  const rid=uid();
+  r.residents.push({id:rid,name:w.name,phase:'Stabilization',admitted:today(),bed:bed.no,status:'good',balance:0,mat:false,notes:''});
+  bed.status='occupied'; bed.resident=rid;
+  r.waitlist=r.waitlist.filter(x=>x.id!==id);
+  toast(`${w.name} admitted to ${bed.no} — welcome home`);
+  nav('waitlist');
+}
+function furloughAct(id,st){
+  const f=R().furloughs.find(x=>x.id===id); if(f){f.status=st;}
+  toast(st==='approved'?'Furlough approved — bed held, check-in schedule applies':st==='returned'?'Return confirmed — welcome back':'Request denied with explanation logged');
+  nav('furloughs');
+}
+function advanceGrievance(id){
+  const g=R().grievances.find(x=>x.id===id); if(!g)return;
+  g.status = g.status==='submitted'?'under_investigation':'resolved';
+  toast(g.status==='under_investigation'?'Investigation opened — impartial review begins':'Grievance resolved — written decision issued');
+  nav('grievances');
+}
+
+/* ---------- modals ---------- */
+function openModal(html){ document.getElementById('modalBox').innerHTML=html; document.getElementById('modalOverlay').classList.remove('hidden'); }
+function closeModal(){ document.getElementById('modalOverlay').classList.add('hidden'); }
+document.getElementById('modalOverlay').addEventListener('click',e=>{ if(e.target.id==='modalOverlay') closeModal(); });
+document.getElementById('wizardOverlay').addEventListener('click',e=>{ if(e.target.id==='wizardOverlay') closeWizard(); });
+
+function residentOptions(){ return R().residents.map(x=>`<option value="${x.id}">${x.name}</option>`).join(''); }
+
+function openResidentModal(){
+  openModal(`
+  <div class="modal-head"><h2>Admit resident</h2><p>Person-first record. Only what's needed to welcome them well.</p></div>
+  <div class="modal-body">
+    <div class="field"><label>Name *</label><input id="m_name" placeholder="First name + last initial is fine"></div>
+    <div class="grid2">
+      <div class="field"><label>Assign bed</label><select id="m_bed">${R().beds.filter(b=>b.status==='available'||b.status==='reserved').map(b=>`<option>${b.no}</option>`).join('')||'<option value="">No beds open</option>'}</select></div>
+      <div class="field"><label>Starting phase</label><select id="m_phase"><option>Stabilization</option><option>Integration</option><option>Preparation</option></select></div>
+    </div>
+    <div class="field"><label>MAT/MOUD prescribed?</label><select id="m_mat"><option value="no">No</option><option value="yes">Yes — fully supported here</option></select></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="saveResident()">Admit ✓</button></div>`);
+}
+function saveResident(){
+  const name=document.getElementById('m_name').value.trim();
+  const bedNo=document.getElementById('m_bed').value;
+  if(!name){toast('Name required');return;}
+  const r=R(); const rid=uid();
+  r.residents.push({id:rid,name,phase:document.getElementById('m_phase').value,admitted:today(),bed:bedNo||null,status:'good',balance:0,mat:document.getElementById('m_mat').value==='yes',notes:''});
+  const bed=r.beds.find(b=>b.no===bedNo); if(bed){bed.status='occupied';bed.resident=rid;}
+  closeModal(); toast(name+' admitted — welcome home'); nav('residents');
+}
+
+function openWaitlistModal(){
+  openModal(`
+  <div class="modal-head"><h2>Add to waitlist</h2><p>They'll hold a numbered place in the queue.</p></div>
+  <div class="modal-body">
+    <div class="field"><label>Name *</label><input id="m_wname"></div>
+    <div class="grid2">
+      <div class="field"><label>Phone</label><input id="m_wphone" placeholder="(555) 555-0100"></div>
+      <div class="field"><label>Priority</label><select id="m_wpri"><option>standard</option><option>high</option><option>urgent</option></select></div>
+    </div>
+    <div class="field"><label>Notes</label><textarea id="m_wnote" rows="2" placeholder="Referral source, timing, needs…"></textarea></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="saveWaitlist()">Add ✓</button></div>`);
+}
+function saveWaitlist(){
+  const name=document.getElementById('m_wname').value.trim(); if(!name){toast('Name required');return;}
+  R().waitlist.push({id:uid(),name,phone:document.getElementById('m_wphone').value,added:today(),priority:document.getElementById('m_wpri').value,note:document.getElementById('m_wnote').value});
+  closeModal(); toast(name+' added to waitlist'); nav('waitlist');
+}
+
+let ckMood=3;
+function openCheckinModal(){
+  if(!R().residents.length){toast('Admit a resident first');return;}
+  ckMood=3;
+  openModal(`
+  <div class="modal-head"><h2>Daily check-in</h2><p>Takes about 60 seconds. Honesty is safe here.</p></div>
+  <div class="modal-body">
+    <div class="field"><label>Resident</label><select id="m_cres">${residentOptions()}</select></div>
+    <div class="field"><label>How are you today?</label>
+      <div class="mood-row" id="moodRow">
+        ${['😞 struggling','😕 low','😐 okay','🙂 good','😄 great'].map((m,i)=>{
+          const [e,t]=m.split(' ');
+          return `<div class="mood ${i===2?'on':''}" data-m="${i+1}" onclick="pickMood(${i+1},this)">${e}<span>${t}</span></div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label>Cravings today?</label><select id="m_crav"><option value="no">No</option><option value="somewhat">Somewhat</option><option value="yes">Yes</option></select></div>
+      <div class="field"><label>Want to talk to someone?</label><select id="m_supp"><option value="no">Not today</option><option value="yes">Yes, please</option></select></div>
+    </div>
+    <div class="field"><label>Anything to add? (optional)</label><textarea id="m_cnote" rows="2" placeholder="Gratitude, focus, what's on your mind…"></textarea></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="saveCheckin()">Submit ✓</button></div>`);
+}
+function pickMood(m,el){ ckMood=m; document.querySelectorAll('#moodRow .mood').forEach(x=>x.classList.remove('on')); el.classList.add('on'); }
+function saveCheckin(){
+  const support=document.getElementById('m_supp').value==='yes';
+  R().checkins.push({id:uid(),resident:document.getElementById('m_cres').value,date:today(),mood:ckMood,cravings:document.getElementById('m_crav').value,support,note:document.getElementById('m_cnote').value});
+  closeModal();
+  toast((ckMood===1||support)?'Check-in saved — staff flagged for supportive follow-up':'Check-in saved — thanks for showing up today');
+  nav('checkins');
+}
+
+function openPaymentModal(){
+  if(!R().residents.length){toast('Admit a resident first');return;}
+  openModal(`
+  <div class="modal-head"><h2>Record payment</h2><p>A receipt is generated automatically.</p></div>
+  <div class="modal-body">
+    <div class="field"><label>Resident</label><select id="m_pres">${residentOptions()}</select></div>
+    <div class="grid2">
+      <div class="field"><label>Amount ($)</label><input id="m_pamt" type="number" value="${R().fee}"></div>
+      <div class="field"><label>Method</label><select id="m_pmeth"><option>cash</option><option>card</option><option>ACH</option><option>money order</option></select></div>
+    </div>
+    <div class="field"><label>Type</label><select id="m_ptype"><option>Program fee</option><option>Late arrangement</option><option>Deposit</option><option>Adjustment</option></select></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="savePayment()">Record ✓</button></div>`);
+}
+function savePayment(){
+  const r=R(); const resId=document.getElementById('m_pres').value; const amt=+document.getElementById('m_pamt').value;
+  r.payments.push({id:uid(),resident:resId,date:today(),amount:amt,method:document.getElementById('m_pmeth').value,type:document.getElementById('m_ptype').value});
+  const x=r.residents.find(v=>v.id===resId); if(x) x.balance=Math.max(0,x.balance-amt);
+  closeModal(); toast('Payment recorded — receipt generated'); nav('payments');
+}
+
+function openFurloughModal(){
+  if(!R().residents.length){toast('Admit a resident first');return;}
+  openModal(`
+  <div class="modal-head"><h2>Furlough request</h2><p>Bed is held during approved leave. Weekly fee still applies.</p></div>
+  <div class="modal-body">
+    <div class="field"><label>Resident</label><select id="m_fres">${residentOptions()}</select></div>
+    <div class="grid2">
+      <div class="field"><label>Start date</label><input id="m_fstart" type="date" value="${today()}"></div>
+      <div class="field"><label>Return date</label><input id="m_fend" type="date" value="${today()}"></div>
+    </div>
+    <div class="field"><label>Reason</label><select id="m_freason"><option>Family visit</option><option>Family emergency</option><option>Medical appointment</option><option>Court appearance</option><option>Employment</option><option>Other</option></select></div>
+    <div class="field"><label>Detail</label><textarea id="m_fdetail" rows="2" placeholder="Destination, contact during leave…"></textarea></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="saveFurlough()">Submit ✓</button></div>`);
+}
+function saveFurlough(){
+  R().furloughs.push({id:uid(),resident:document.getElementById('m_fres').value,start:document.getElementById('m_fstart').value,end:document.getElementById('m_fend').value,reason:document.getElementById('m_freason').value,detail:document.getElementById('m_fdetail').value,status:'pending'});
+  closeModal(); toast('Furlough request submitted for review'); nav('furloughs');
+}
+
+function openAnnModal(){
+  openModal(`
+  <div class="modal-head"><h2>Post announcement</h2><p>Visible on the house board to all residents.</p></div>
+  <div class="modal-body">
+    <div class="grid2">
+      <div class="field"><label>From</label><select id="m_afrom"><option>House Lead</option><option>Executive Director</option><option>Staff</option></select></div>
+      <div class="field"><label>Priority</label><select id="m_aurg"><option value="no">Normal</option><option value="yes">Urgent</option></select></div>
+    </div>
+    <div class="field"><label>Message *</label><textarea id="m_abody" rows="3" placeholder="House meeting Thursday 7 PM…"></textarea></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="saveAnn()">Post ✓</button></div>`);
+}
+function saveAnn(){
+  const body=document.getElementById('m_abody').value.trim(); if(!body){toast('Message required');return;}
+  R().messages.push({id:uid(),date:today(),from:document.getElementById('m_afrom').value,urgent:document.getElementById('m_aurg').value==='yes',body});
+  closeModal(); toast('Announcement posted'); nav(currentPage==='messages'?'messages':'dashboard');
+}
+
+function openGrievanceModal(){
+  openModal(`
+  <div class="modal-head"><h2>File a grievance</h2><p>Anonymous filing is honored. No retaliation — ever.</p></div>
+  <div class="modal-body">
+    <div class="grid2">
+      <div class="field"><label>Your name (or "Anonymous")</label><input id="m_gfrom" value="Anonymous"></div>
+      <div class="field"><label>Concern type</label><select id="m_gtype"><option>Treatment by staff</option><option>Program policy</option><option>Living conditions</option><option>Resident conflict</option><option>Medication / treatment</option><option>Discrimination</option><option>Other</option></select></div>
+    </div>
+    <div class="field"><label>What happened? *</label><textarea id="m_gdesc" rows="3"></textarea></div>
+  </div>
+  <div class="modal-foot"><button class="btn btn-line btn-sm" onclick="closeModal()">Cancel</button><button class="btn btn-pine btn-sm" onclick="saveGrievance()">Submit ✓</button></div>`);
+}
+function saveGrievance(){
+  const desc=document.getElementById('m_gdesc').value.trim(); if(!desc){toast('Description required');return;}
+  R().grievances.push({id:uid(),from:document.getElementById('m_gfrom').value||'Anonymous',date:today(),type:document.getElementById('m_gtype').value,desc,status:'submitted'});
+  closeModal(); toast('Grievance filed — acknowledgment within 2 business days'); nav('grievances');
+}
+
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer=setTimeout(()=>t.classList.remove('show'),2800);
+}
+
+/* ---------- boot: resume a saved session if one exists ---------- */
+restore();
+if(store.activeId && store.residences.some(r=>r.id===store.activeId)) enterApp();
+</script>
+</body>
+</html>
