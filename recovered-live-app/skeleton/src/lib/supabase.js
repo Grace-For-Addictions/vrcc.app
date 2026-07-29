@@ -6,7 +6,10 @@ import { createClient } from '@supabase/supabase-js';
 const url = import.meta.env.VITE_SUPABASE_URL || 'https://ykykeioydvtxpyreshhs.supabase.co';
 const anon = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
 
-export const supabase = createClient(url, anon, {
+// createClient throws if the key is empty, which would white-screen the whole app
+// when unconfigured. Pass a harmless placeholder so the client constructs; guard
+// real requests with isConfigured() (screens show an Offline notice instead).
+export const supabase = createClient(url, anon || 'anon-key-not-configured', {
   auth: { persistSession: true, autoRefreshToken: true },
 });
 

@@ -39,3 +39,38 @@ code { color: var(--teal); font-family: "Space Mono", ui-monospace, monospace; f
   .hamburger { display: block; }
   .content { padding-top: 64px; }
 }
+
+/* --- fleshed-out screens --- */
+.lead { font-size: 15px; margin-bottom: 18px; }
+.small { font-size: 12px; }
+.center { text-align: center; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 18px; margin: 0 0 16px; }
+.errorbox { border-color: #5a2130; background: #23121a; }
+.field { display: block; margin-bottom: 12px; }
+.field > span { display: block; font-size: 13px; color: var(--muted); margin-bottom: 5px; }
+.field input, .field select, .field textarea, .card textarea, .add-row input {
+  width: 100%; background: #0a0814; border: 1px solid var(--line); border-radius: 9px;
+  color: var(--text); padding: 10px 12px; font: inherit;
+}
+.card textarea { margin-top: 8px; }
+.btn { background: linear-gradient(90deg, var(--teal), var(--plum)); color: #fff; border: 0;
+  border-radius: 10px; padding: 11px 18px; font: inherit; font-weight: 600; cursor: pointer; }
+.btn:disabled { opacity: .5; cursor: default; }
+.btn--ghost { background: #17132a; color: var(--text); }
+.row-between { display: flex; justify-content: space-between; align-items: center; }
+.status { display: inline-block; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; }
+.status--ok { background: #12341f; color: #6be29a; } .status--warn { background: #2a2410; color: #ffcf6b; } .status--bad { background: #331520; color: #ff8fa3; }
+.phase-badge { display: inline-block; background: linear-gradient(90deg, var(--teal), var(--plum)); color: #fff; font-weight: 700; font-size: 13px; padding: 5px 14px; border-radius: 999px; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.pill { background: #17132a; border: 1px solid var(--line); border-radius: 999px; padding: 3px 10px; font-size: 12px; }
+.checklist { list-style: none; padding: 0; margin: 6px 0; }
+.checklist li label { display: flex; gap: 9px; align-items: center; padding: 5px 0; cursor: pointer; }
+.checklist .done { text-decoration: line-through; color: var(--muted); }
+.add-row { display: flex; gap: 8px; margin-top: 8px; }
+.mood-row { display: flex; gap: 8px; justify-content: space-between; margin-bottom: 12px; }
+.mood { flex: 1; background: #0a0814; border: 1px solid var(--line); border-radius: 12px; padding: 10px 4px; cursor: pointer; color: var(--text);
+  display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.mood--on { border-color: var(--teal); background: #10222a; }
+.mood__emoji { font-size: 22px; } .mood__label { font-size: 11px; color: var(--muted); }
+.slider { width: 100%; margin: 6px 0; accent-color: var(--teal); }
+.checkline { display: flex; gap: 9px; align-items: center; margin: 10px 0; font-size: 14px; }
