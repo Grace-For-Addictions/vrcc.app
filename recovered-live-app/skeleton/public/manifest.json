@@ -1,0 +1,13 @@
+{
+  "name": "GFA VRCC — Virtual Recovery Community Center",
+  "short_name": "GFA VRCC",
+  "description": "Grace For Addictions peer-led recovery support for Iowans. No fees. No stigma. Just Grace.",
+  "start_url": "/vrcc/app/",
+  "scope": "/vrcc/app/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#04030A",
+  "theme_color": "#1FB6B6",
+  "lang": "en-US",
+  "categories": ["health", "lifestyle"]
+}
