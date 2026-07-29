@@ -153,6 +153,36 @@ side branch — it is the leading build, and it is the only one whose code canno
 
 ---
 
+## 6a. UPDATE (07-29): the live deployment is now located — and its source is NOT in git
+
+Owner supplied `https://gfa-vrcc.pages.dev/vrcc/app/`. Verified directly:
+
+- **`vrcc.app` and `gfa-vrcc.pages.dev` serve the identical build** — byte-identical bundle
+  hashes (`index-DMwbAUg-.js`, `vendor-three-BtjH7Fki.js`, `index-BbPQ0YU6.css`).
+  → **vrcc.app is served by the Cloudflare _Pages_ project `gfa-vrcc`**, app mounted at
+  `/vrcc/app/`. It is **not** the `virtualrecovery` Worker (that was a different, lesser deploy).
+- It is one unified flagship app: the live JS bundle contains **ICARE, Grace Companion, and
+  Grace House** together. PWA (manifest, standalone, theme `#1FB6B6`).
+- Backend: same Supabase `ykykeioydvtxpyreshhs`, same publishable anon key
+  (`sb_publishable_9NOk…` — public by design). CSP `connect-src` confirms live wiring to
+  Supabase (REST + realtime), **Stripe.js (payments)**, an Iowa recovery map, weather, and
+  ArcGIS/OSM tiles. Vendor chunks: `vendor-three` (WebGL), `vendor-charts`, `vendor-motion`,
+  `vendor-ui`, `vendor-supabase`.
+
+**Critical:** this deployed build is **not captured by any pushed branch.**
+`claude/live-app-source` has a trivial `vite.config.js` (`plugins:[react()]`), no `three`,
+no `recharts`, no Stripe, and no `/vrcc/app` base — it **cannot** produce the deployed bundles.
+So `live-app-source` is an *earlier/simpler* recovered snapshot, **not** the code now serving
+vrcc.app. The true production source is only in an **unpushed session** — most plausibly the
+still-active `oqjtik` line, whose live schema (`policies`, `gh_documents`, the full residence-ops
+suite, `gracehouse_public_forms`/`intake_workflow`) matches a Grace-House-inclusive app and is
+the only lineage still shipping migrations this week.
+
+**Consequence — production has no source-of-truth in git.** If that session's container is
+reclaimed, the live app can only be recovered from **minified bundles on Cloudflare**, not from
+source. Backing up the real source (pushing that session's branch) is now the single highest
+priority, ahead of any deduplication.
+
 ## 7. What was NOT done
 
 No branch was merged. No table was dropped. No migration was applied. This document is the plan;
