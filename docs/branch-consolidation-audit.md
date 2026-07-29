@@ -183,6 +183,20 @@ reclaimed, the live app can only be recovered from **minified bundles on Cloudfl
 source. Backing up the real source (pushing that session's branch) is now the single highest
 priority, ahead of any deduplication.
 
+## 6b. UPDATE (07-29): dedup migration written (Phase 1, reversible, not yet applied)
+
+`supabase/migrations/20260729100000_gracehouse_dedup_quarantine_lineage_b.sql` implements the
+§5 decision. Re-verified against prod before writing: Lineage B document/signature tables still
+empty; no external FK into B; the only B dependents are B's own `gh_curfew_violations()` +
+`gh_signature_immutable()` trigger fn; the `gh_signature_status` view reads Lineage A only.
+
+Phase 1 = **quarantine, nothing dropped**: move the 6 Lineage-B tables + 2 functions into a new
+unexposed `gfa_residence_deprecated` schema (RLS/indexes/trigger travel with them; the 4+4 policy
+config rows are preserved). This removes the duplicate from the PostgREST API and is fully
+reversible (rollback block included). Phase 2 (`drop schema … cascade`) is commented out and
+requires an observation window + explicit sign-off. **Not applied to prod** — pending owner
+decision to test on a dev branch or apply during a quiet window.
+
 ## 7. What was NOT done
 
 No branch was merged. No table was dropped. No migration was applied. This document is the plan;
