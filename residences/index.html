@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recovery Residences — GFA VRCC</title>
+<meta name="description" content="Recovery housing options through Grace For Addictions — read the house rules and apply.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Karla:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1E2B23; --pine:#1E3A2F; --pine-deep:#142921; --sage:#5F7A6A;
+  --mist:#E8EDE8; --cream:#F7F4EC; --paper:#FFFFFF;
+  --amber:#D4A017; --amber-soft:#F6ECD2; --clay:#C4552D;
+  --ok:#2E7D4F; --ok-soft:#DEF0E4;
+  --radius:16px; --shadow:0 2px 6px rgba(20,41,33,.07),0 12px 32px rgba(20,41,33,.09);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Karla',sans-serif;background:var(--cream);color:var(--ink);-webkit-font-smoothing:antialiased;min-height:100vh;display:flex;flex-direction:column}
+h1,h2,h3{font-family:'Fraunces',serif}
+a{color:inherit}
+.top{
+  background:
+    radial-gradient(900px 420px at 90% -20%, rgba(212,160,23,.18), transparent 60%),
+    var(--pine-deep);
+  color:var(--cream);padding:1.2rem 1.4rem 3rem;
+}
+.topbar{display:flex;align-items:center;justify-content:space-between;max-width:960px;margin:0 auto 2.2rem;gap:1rem;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:.65rem;font-family:'Fraunces',serif;font-weight:700;font-size:1.1rem;text-decoration:none}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:var(--amber);display:grid;place-items:center;color:var(--pine-deep);font-size:1rem}
+.back{font-size:.9rem;font-weight:700;color:rgba(247,244,236,.85);text-decoration:none;border:1.5px solid rgba(247,244,236,.3);border-radius:10px;padding:.55rem 1rem;min-height:44px;display:inline-flex;align-items:center}
+.back:hover{background:rgba(247,244,236,.12)}
+.head{max-width:960px;margin:0 auto}
+.head h1{font-size:clamp(1.9rem,4.5vw,2.8rem);font-weight:600;line-height:1.12}
+.head h1 em{font-style:italic;color:var(--amber)}
+.head p{margin-top:.8rem;max-width:38rem;line-height:1.65;color:rgba(247,244,236,.8);font-size:1.05rem}
+main{flex:1;max-width:960px;margin:-1.6rem auto 0;padding:0 1.4rem 3rem;width:100%}
+.house{
+  background:var(--paper);border-radius:var(--radius);box-shadow:var(--shadow);
+  padding:1.6rem;display:grid;grid-template-columns:1.5fr 1fr;gap:1.5rem;margin-bottom:1.2rem;
+}
+@media(max-width:720px){.house{grid-template-columns:1fr}}
+.house h2{font-size:1.45rem;font-weight:600;color:var(--pine)}
+.meta{color:var(--sage);font-weight:600;font-size:.95rem;margin:.25rem 0 .9rem}
+.house p{line-height:1.6;font-size:.98rem}
+.badges{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.9rem}
+.badge{padding:.35rem .8rem;border-radius:99px;font-size:.8rem;font-weight:700;background:var(--mist);color:var(--pine)}
+.badge.live{background:var(--ok-soft);color:var(--ok)}
+.badge.gold{background:var(--amber-soft);color:#8A6A0D}
+.apply-panel{display:flex;flex-direction:column;justify-content:center;gap:.8rem;border-left:1px solid var(--mist);padding-left:1.5rem}
+@media(max-width:720px){.apply-panel{border-left:none;padding-left:0;border-top:1px solid var(--mist);padding-top:1.2rem}}
+.apply-note{font-size:.88rem;color:var(--sage);line-height:1.5}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:48px;
+  padding:.85rem 1.4rem;border-radius:12px;font-weight:700;font-size:1rem;text-decoration:none;
+  transition:transform .12s, box-shadow .12s;
+}
+.btn:active{transform:translateY(1px)}
+.btn-amber{background:var(--amber);color:var(--pine-deep)}
+.btn-amber:hover{box-shadow:0 6px 18px rgba(212,160,23,.35)}
+.btn-line{border:1.5px solid var(--pine);color:var(--pine)}
+.btn-line:hover{background:var(--mist)}
+.soon{
+  background:linear-gradient(180deg,#FFFFFF, #FBFAF4);border:1.5px dashed #D8DED6;border-radius:var(--radius);
+  padding:1.5rem;text-align:center;color:var(--sage);margin-bottom:1.2rem;
+}
+.soon h3{color:var(--pine);font-weight:600;margin-bottom:.35rem}
+.soon p{font-size:.93rem;line-height:1.55;max-width:34rem;margin:0 auto}
+.how{margin:2.2rem 0 0}
+.how h3{font-size:1.2rem;font-weight:600;color:var(--pine);margin-bottom:1rem}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.9rem}
+.step{background:var(--paper);border-radius:12px;padding:1rem 1.1rem;box-shadow:0 1px 3px rgba(20,41,33,.08)}
+.step .s-ico{width:34px;height:34px;border-radius:10px;background:var(--amber-soft);display:grid;place-items:center;margin-bottom:.6rem;font-size:1rem}
+.step b{display:block;color:var(--pine);margin-bottom:.2rem}
+.step span{font-size:.86rem;color:var(--sage);line-height:1.45}
+footer{background:var(--pine-deep);color:rgba(247,244,236,.75);padding:1.4rem;text-align:center;font-size:.88rem;line-height:1.7}
+footer strong{color:var(--cream)}
+footer a{color:var(--amber);font-weight:700;text-decoration:none}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="topbar">
+    <a class="brand" href="https://vrcc.app"><span class="brand-mark">🌱</span> GFA VRCC</a>
+    <a class="back" href="https://vrcc.app">← Back to the Center</a>
+  </div>
+  <div class="head">
+    <h1>A safe place to live while you <em>rebuild</em>.</h1>
+    <p>Recovery residences through Grace For Addictions are trauma-informed, MAT/MOUD-affirming homes where you're met with grace — never shame. Read each house's rules before you apply, so you know exactly what living there means.</p>
+  </div>
+</div>
+
+<main>
+  <!-- Grace House -->
+  <section class="house" aria-labelledby="gh-title">
+    <div>
+      <h2 id="gh-title">Grace House</h2>
+      <div class="meta">Women · Des Moines, Iowa · Level II — Monitored</div>
+      <p>A peer-run women's recovery residence in the heart of Des Moines. Structured phases, house meetings, and a community that walks with you — with virtual intake available so distance is never the barrier.</p>
+      <div class="badges">
+        <span class="badge live">● Accepting applications</span>
+        <span class="badge">MAT/MOUD-affirming</span>
+        <span class="badge">Trauma-informed</span>
+        <span class="badge">Multiple pathways</span>
+        <span class="badge gold">Preparing for NARR alignment</span>
+      </div>
+    </div>
+    <div class="apply-panel">
+      <a class="btn btn-amber" href="https://gracehouse4.pages.dev/">Read the rules &amp; apply →</a>
+      <p class="apply-note">You'll review all house documents and rules first, then complete the application. After you submit, the Grace House team reviews it and reaches out about a bed or the waitlist.</p>
+    </div>
+  </section>
+
+  <!-- future residences -->
+  <section class="soon">
+    <h3>More houses are joining</h3>
+    <p>As additional recovery residences come onto the platform, they'll be listed here with their own rules and applications. Operate a recovery residence? Ask us about getting your house on RecoveryOS.</p>
+  </section>
+
+  <section class="how" aria-labelledby="how-title">
+    <h3 id="how-title">How applying works</h3>
+    <div class="steps">
+      <div class="step"><div class="s-ico">📖</div><b>1 · Read &amp; apply</b><span>Review the house rules and documents, then complete the application — it saves as you go.</span></div>
+      <div class="step"><div class="s-ico">🤝</div><b>2 · Staff review</b><span>The house team reviews your application and contacts you — usually within two business days.</span></div>
+      <div class="step"><div class="s-ico">🛏</div><b>3 · Bed or waitlist</b><span>You're offered a bed, or hold a numbered place on the waitlist with updates along the way.</span></div>
+      <div class="step"><div class="s-ico">🌱</div><b>4 · Begin at the VRCC</b><span>Once you're in, you'll be invited into the Virtual Recovery Community Center — coaching, daily practice, and community.</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <strong>Need support right now?</strong> Call or text <a href="tel:988">988</a> — free, 24/7.<br>
+  Grace For Addictions · Des Moines, Iowa · No Fees · No Stigma · Just Grace
+</footer>
+
+</body>
+</html>
