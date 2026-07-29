@@ -34,13 +34,33 @@ account (`thomas-499`); planned domain `recoveryresidence.app`. The deployed
 Residence OS supersedes `residence/index.html` as the operational workspace —
 the shell remains the white-label onboarding blueprint (03 doc).
 
+## UPDATE 2026-07-28 — the flagship already carries both surfaces
+
+Bundle inspection of vrcc.app shows the flagship ALREADY contains:
+- a **public residences directory** reading `gfa_residence.residences`
+  (`active AND public_listed`, filters: women/men/MAT/reentry) + `public_profiles`
+  + `residence_availability` — this is what renders at vrcc.app/residences and it
+  lists Grace House and Ernest & Johnnie White Recovery House from live data;
+- a **staff house-management area** reading `beds`, `waitlist`, `drug_tests`,
+  `iowa_hhs_checklist` per residence — so coaches/admin house management already
+  exists inside vrcc.app, as the owner directs.
+
+The ONLY missing link was an apply URL. Migration
+`20260728000000_residence_apply_url.sql` (applied to prod, committed here) adds
+`gfa_residence.public_profiles.apply_url` and sets Grace House →
+https://gracehouse4.pages.dev/. Null apply_url = fall back to phone/contact.
+
+`residences/index.html` in this repo is hereby a **fallback/reference page**, not
+the canonical directory — the flagship's own DB-driven page is canonical.
+
 ## Who implements what
 
-1. **Flagship session (vrcc.app):** point the "Residences" nav item at the
-   directory (host `residences/index.html` at `vrcc.app/residences`, or absorb
-   the page as a route). One-line change.
-2. **This repo (done):** `residences/index.html` — directory with Grace House →
-   gracehouse4.pages.dev, 4-step "how applying works", 988 footer, back-to-Center.
+1. **Flagship session (vrcc.app) — one small code change:** on the residences
+   page, when `public_profiles.apply_url` is set, render the card/detail CTA as
+   **"Read the rules & apply →"** linking to `apply_url` (new tab); keep the
+   phone fallback when null. Everything else it needs is already in its data.
+2. **This repo (done):** `apply_url` migration + seed; `residences/index.html`
+   kept as fallback/reference.
 3. **gracehouse4 session:** on application submit — (a) keep writing `intakes`;
    (b) create the auth user (Supabase signup or invite) so the applicant has an
    account; (c) show "what happens next" + link to the Residence OS. The `intakes`
