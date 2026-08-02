@@ -77,6 +77,42 @@
 
 
 
+/* ---------------------------------------------------------------------------
+   Cosmic Grace design tokens (GFA-VRCC design system)
+
+   Additive by design: these sit alongside the shadcn/ui HSL variables above and
+   do not replace them, so the ~50 existing UI components keep working unchanged.
+
+   Namespaced `--cosmic-*` / `cosmic-*` in Tailwind so they never shadow
+   Tailwind's built-in `teal` and `amber` palettes, which existing components use.
+
+   Accent semantics from the mandate:
+     teal  -> participant-facing surfaces (The Sanctuary)
+     gold  -> coach / professional / administrative surfaces (Command Center)
+--------------------------------------------------------------------------- */
+@layer base {
+  :root {
+    /* Environment */
+    --cosmic-void: #04030a;
+    --cosmic-deep: #0a0818;
+
+    /* Accents */
+    --cosmic-teal: #1fb6b6;
+    --cosmic-gold: #c8972a;
+
+    /* Typography stacks.
+       NOTE: Cinzel / Crimson Pro / Space Mono webfont files are NOT bundled in
+       this repo yet. Each stack falls back to a system face so nothing breaks
+       before the fonts are self-hosted. They are deliberately not loaded from a
+       third-party CDN — this platform's privacy posture argues for self-hosting
+       (Cloudflare Pages/Images) rather than leaking participant page views to an
+       external font host. Wiring the actual font files is a separate gate. */
+    --font-display: 'Cinzel', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-editorial: 'Crimson Pro', ui-serif, Georgia, Cambria, serif;
+    --font-data: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

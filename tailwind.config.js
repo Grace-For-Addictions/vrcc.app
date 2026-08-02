@@ -59,7 +59,21 @@ module.exports = {
   				'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
   				border: 'hsl(var(--sidebar-border))',
   				ring: 'hsl(var(--sidebar-ring))'
+  			},
+  			// Cosmic Grace palette. Namespaced under `cosmic-` so it cannot
+  			// shadow Tailwind's stock `teal`/`amber` scales used by existing
+  			// components. Values live in src/index.css as CSS custom properties.
+  			cosmic: {
+  				void: 'var(--cosmic-void)',
+  				deep: 'var(--cosmic-deep)',
+  				teal: 'var(--cosmic-teal)',
+  				gold: 'var(--cosmic-gold)'
   			}
+  		},
+  		fontFamily: {
+  			display: 'var(--font-display)',
+  			editorial: 'var(--font-editorial)',
+  			data: 'var(--font-data)'
   		},
   		keyframes: {
   			'accordion-down': {
