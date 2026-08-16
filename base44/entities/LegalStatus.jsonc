@@ -1,0 +1,87 @@
+{
+  "name": "LegalStatus",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the participant"
+    },
+    "current_legal_status": {
+      "type": "string",
+      "enum": [
+        "none",
+        "probation",
+        "parole",
+        "incarcerated",
+        "pending_charges",
+        "diversion_program",
+        "other"
+      ],
+      "description": "Current involvement with justice system"
+    },
+    "case_manager_po_contact": {
+      "type": "string",
+      "description": "Probation officer or case manager contact info"
+    },
+    "court_mandates": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Court-ordered requirements",
+      "default": []
+    },
+    "criminal_history_summary": {
+      "type": "string",
+      "description": "Non-judgmental summary from official sources"
+    },
+    "upcoming_court_dates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "purpose": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "recidivism_progression": {
+      "type": "string",
+      "description": "Time and severity of re-offense tracking"
+    },
+    "community_supervision_violations": {
+      "type": "number",
+      "default": 0,
+      "description": "Count of supervision violations"
+    },
+    "social_reintegration_score": {
+      "type": "number",
+      "description": "Metric for community engagement and reintegration",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "reentry_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of release from incarceration"
+    },
+    "supervision_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expected end of probation/parole"
+    }
+  },
+  "required": [
+    "user_email",
+    "current_legal_status"
+  ]
+}

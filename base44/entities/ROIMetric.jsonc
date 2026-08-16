@@ -1,0 +1,49 @@
+{
+  "name": "ROIMetric",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "referral_id": {
+      "type": "string",
+      "description": "Reference to InternalReferral or ExternalReferral"
+    },
+    "referral_type": {
+      "type": "string",
+      "enum": [
+        "internal",
+        "external"
+      ]
+    },
+    "metric_type": {
+      "type": "string",
+      "enum": [
+        "housing_secured",
+        "employment_gained",
+        "crisis_events_reduced",
+        "treatment_engagement",
+        "justice_diversion",
+        "education_enrollment",
+        "family_reunification",
+        "peer_support_engagement",
+        "medication_adherence",
+        "reduced_hospitalization"
+      ]
+    },
+    "recorded_by": {
+      "type": "string"
+    },
+    "outcome_notes": {
+      "type": "string"
+    },
+    "recorded_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "participant_email",
+    "metric_type"
+  ]
+}

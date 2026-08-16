@@ -1,0 +1,87 @@
+{
+  "name": "ResourceSuggestion",
+  "type": "object",
+  "properties": {
+    "suggested_by_email": {
+      "type": "string",
+      "description": "User who suggested this resource"
+    },
+    "organization_name": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "treatment",
+        "housing",
+        "employment",
+        "legal",
+        "family",
+        "crisis",
+        "peer_support",
+        "healthcare",
+        "education",
+        "food",
+        "transportation",
+        "mental_health",
+        "narcan",
+        "other"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "default": "Iowa"
+    },
+    "why_helpful": {
+      "type": "string",
+      "description": "Why the suggester recommends this resource"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "under_review",
+        "verified",
+        "declined"
+      ],
+      "default": "pending"
+    },
+    "reviewed_by": {
+      "type": "string",
+      "description": "Navigator/admin who reviewed"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "converted_to_resource_id": {
+      "type": "string",
+      "description": "If verified, the ID of created Resource"
+    }
+  },
+  "required": [
+    "suggested_by_email",
+    "organization_name",
+    "category"
+  ]
+}

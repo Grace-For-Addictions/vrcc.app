@@ -1,0 +1,87 @@
+{
+  "name": "PeerMatch",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "peer_email": {
+      "type": "string",
+      "description": "Matched peer supporter"
+    },
+    "match_type": {
+      "type": "string",
+      "enum": [
+        "sponsor",
+        "accountability_partner",
+        "recovery_friend",
+        "mentor"
+      ],
+      "default": "recovery_friend"
+    },
+    "match_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What they were matched on",
+      "default": []
+    },
+    "match_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI confidence in match"
+    },
+    "match_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "match_status": {
+      "type": "string",
+      "enum": [
+        "suggested",
+        "accepted",
+        "active",
+        "inactive",
+        "ended"
+      ],
+      "default": "suggested"
+    },
+    "connection_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "biweekly",
+        "as_needed"
+      ],
+      "default": "weekly"
+    },
+    "shared_interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "last_interaction_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "match_quality_score": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Self-reported by both parties"
+    },
+    "ended_reason": {
+      "type": "string",
+      "description": "If status=ended"
+    }
+  },
+  "required": [
+    "participant_email",
+    "peer_email"
+  ]
+}

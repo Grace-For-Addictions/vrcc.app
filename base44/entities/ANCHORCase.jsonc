@@ -1,0 +1,122 @@
+{
+  "name": "ANCHORCase",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string",
+      "description": "Email of justice-involved participant"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "anchor_status": {
+      "type": "string",
+      "enum": [
+        "intake",
+        "active_incarcerated",
+        "active_live_out",
+        "transitioning",
+        "reentry_complete",
+        "recidivism",
+        "graduated"
+      ],
+      "default": "intake",
+      "description": "Current status in ANCHOR program"
+    },
+    "referral_source": {
+      "type": "string",
+      "enum": [
+        "recovery_court",
+        "county_jail",
+        "idoc",
+        "probation_parole",
+        "self_referral",
+        "community_partner"
+      ]
+    },
+    "live_out_program": {
+      "type": "boolean",
+      "default": false,
+      "description": "Enrolled in live-out program"
+    },
+    "comprehensive_case_plan": {
+      "type": "object",
+      "properties": {
+        "housing_goal": {
+          "type": "string"
+        },
+        "employment_goal": {
+          "type": "string"
+        },
+        "recovery_goal": {
+          "type": "string"
+        },
+        "legal_obligations": {
+          "type": "string"
+        },
+        "support_network": {
+          "type": "string"
+        },
+        "generated_date": {
+          "type": "string"
+        }
+      }
+    },
+    "recidivism_risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI-calculated recidivism risk"
+    },
+    "employment_secured": {
+      "type": "boolean",
+      "default": false
+    },
+    "employment_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "housing_secured": {
+      "type": "boolean",
+      "default": false
+    },
+    "days_since_release": {
+      "type": "number",
+      "description": "Days since release from incarceration"
+    },
+    "recovery_court_compliance": {
+      "type": "boolean",
+      "default": true
+    },
+    "last_court_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "assigned_specialist_email": {
+      "type": "string",
+      "description": "ANCHOR specialist assigned"
+    },
+    "case_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "logged_by": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "participant_email",
+    "anchor_status"
+  ]
+}

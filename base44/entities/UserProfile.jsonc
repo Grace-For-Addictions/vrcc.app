@@ -1,0 +1,308 @@
+{
+  "name": "UserProfile",
+  "type": "object",
+  "properties": {
+    "display_name": {
+      "type": "string",
+      "description": "Anonymous display name"
+    },
+    "avatar_url": {
+      "type": "string",
+      "description": "Profile avatar image"
+    },
+    "avatar_style": {
+      "type": "string",
+      "enum": [
+        "lighthouse",
+        "sunrise",
+        "mountain",
+        "ocean",
+        "forest",
+        "phoenix"
+      ],
+      "default": "lighthouse"
+    },
+    "bio": {
+      "type": "string",
+      "description": "Brief personal bio"
+    },
+    "my_why": {
+      "type": "string",
+      "description": "Personal recovery motivation"
+    },
+    "recovery_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Recovery journey start date"
+    },
+    "pathways": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "substance_use",
+          "mental_health",
+          "justice_involved",
+          "family_ally",
+          "youth",
+          "provider"
+        ]
+      },
+      "description": "Recovery pathways"
+    },
+    "stage": {
+      "type": "string",
+      "enum": [
+        "exploring",
+        "engaging",
+        "transforming"
+      ],
+      "default": "exploring"
+    },
+    "county": {
+      "type": "string",
+      "description": "Iowa county"
+    },
+    "points": {
+      "type": "number",
+      "default": 0
+    },
+    "badges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "earned_date": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "current_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "longest_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "last_active": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "onboarding_complete": {
+      "type": "boolean",
+      "default": false
+    },
+    "readiness_level": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "default": 1,
+      "description": "Journey readiness level for gated content (1-5)"
+    },
+    "consent_acknowledged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Transformation Hub consent acknowledged"
+    },
+    "privacy_settings": {
+      "type": "object",
+      "properties": {
+        "show_on_leaderboard": {
+          "type": "boolean",
+          "default": false
+        },
+        "allow_peer_matches": {
+          "type": "boolean",
+          "default": true
+        },
+        "share_milestones": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "client_id": {
+      "type": "string",
+      "description": "Unique client identifier (BeePurple sync)"
+    },
+    "intake_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of initial intake"
+    },
+    "active_status": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether client is currently active"
+    },
+    "assigned_coach": {
+      "type": "string",
+      "description": "Email of assigned peer coach"
+    },
+    "first_name": {
+      "type": "string"
+    },
+    "last_name": {
+      "type": "string"
+    },
+    "preferred_name": {
+      "type": "string",
+      "description": "Preferred name or nickname"
+    },
+    "dob": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of birth"
+    },
+    "age": {
+      "type": "number",
+      "description": "Calculated age"
+    },
+    "gender_identity": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "HUD HMIS standards (self-identified, multi-select)"
+    },
+    "pronouns": {
+      "type": "string",
+      "description": "Preferred pronouns"
+    },
+    "sexual_orientation": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "HUD HMIS standards (self-identified)"
+    },
+    "race_ethnicity_primary": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Primary race/ethnicity (HUD standards, multi-select)"
+    },
+    "race_ethnicity_additional": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Additional race/ethnicity identities"
+    },
+    "ethnicity": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Hispanic/Latino ethnicity (HUD standards)"
+    },
+    "primary_language": {
+      "type": "string",
+      "description": "Primary language for communication"
+    },
+    "highest_education": {
+      "type": "string",
+      "description": "Highest grade or degree completed"
+    },
+    "ssn_last4": {
+      "type": "string",
+      "description": "Last 4 digits of SSN (SAMHSA PATH requirement)"
+    },
+    "phone_primary": {
+      "type": "string"
+    },
+    "phone_secondary": {
+      "type": "string"
+    },
+    "address_line1": {
+      "type": "string"
+    },
+    "address_line2": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "default": "Iowa"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "emergency_contact_name": {
+      "type": "string"
+    },
+    "emergency_contact_relationship": {
+      "type": "string"
+    },
+    "emergency_contact_phone": {
+      "type": "string"
+    },
+    "drivers_license_status": {
+      "type": "string",
+      "description": "Driver's license status (Valid/Suspended/None)"
+    },
+    "transportation_access": {
+      "type": "string",
+      "description": "Primary mode of transportation access"
+    },
+    "veteran_status": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether participant is a military veteran"
+    },
+    "military_branch": {
+      "type": "string",
+      "description": "Branch of military service if veteran"
+    },
+    "discharge_type": {
+      "type": "string",
+      "description": "Type of discharge if veteran"
+    },
+    "referral_source": {
+      "type": "string",
+      "description": "How participant was referred to GFA"
+    },
+    "consent_to_data": {
+      "type": "object",
+      "properties": {
+        "given": {
+          "type": "boolean",
+          "default": false,
+          "description": "Explicit consent for sensitive data collection"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When consent was given"
+        },
+        "privacy_notice_version": {
+          "type": "string",
+          "description": "Version of privacy notice acknowledged"
+        },
+        "consent_form_signed": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "required": [
+    "display_name"
+  ],
+  "rls": {
+    "create": {
+      "data.User ID": "{{user.email}}"
+    }
+  }
+}

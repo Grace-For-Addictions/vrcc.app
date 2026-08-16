@@ -1,0 +1,76 @@
+{
+  "name": "PreventionCampaignMetrics",
+  "type": "object",
+  "properties": {
+    "campaign_name": {
+      "type": "string"
+    },
+    "campaign_type": {
+      "type": "string",
+      "enum": [
+        "school_assembly",
+        "social_media",
+        "community_event",
+        "media_coverage",
+        "educational_workshop"
+      ]
+    },
+    "target_audience": {
+      "type": "string",
+      "enum": [
+        "youth_k12",
+        "college_students",
+        "parents_families",
+        "community_general",
+        "professionals"
+      ]
+    },
+    "reach_count": {
+      "type": "number",
+      "description": "Number of people reached"
+    },
+    "exposure_impressions": {
+      "type": "number",
+      "description": "Total impressions/views"
+    },
+    "engagement_rate": {
+      "type": "number",
+      "description": "Engagement percentage"
+    },
+    "strength_based_messaging": {
+      "type": "boolean",
+      "default": true,
+      "description": "Used non-stigmatizing language"
+    },
+    "neuroplasticity_education": {
+      "type": "boolean",
+      "default": false,
+      "description": "Included brain science education"
+    },
+    "pre_survey_stigma_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "post_survey_stigma_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "campaign_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "county": {
+      "type": "string"
+    },
+    "school_district": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "campaign_name",
+    "campaign_type",
+    "reach_count"
+  ]
+}

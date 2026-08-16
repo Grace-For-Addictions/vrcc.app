@@ -1,0 +1,69 @@
+{
+  "name": "DigitalEquityRequest",
+  "type": "object",
+  "properties": {
+    "request_type": {
+      "type": "string",
+      "enum": [
+        "hotspot",
+        "device",
+        "internet_subsidy",
+        "tech_training"
+      ]
+    },
+    "full_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "zip_code": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "household_size": {
+      "type": "number"
+    },
+    "recovery_capital_score": {
+      "type": "number"
+    },
+    "eligibility_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "distributed",
+        "declined"
+      ],
+      "default": "pending"
+    },
+    "device_distributed": {
+      "type": "string"
+    },
+    "distribution_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "usage_tracking": {
+      "type": "object",
+      "properties": {
+        "days_active": {
+          "type": "number"
+        },
+        "data_used_gb": {
+          "type": "number"
+        }
+      }
+    }
+  },
+  "required": [
+    "request_type",
+    "contact_email",
+    "zip_code"
+  ]
+}

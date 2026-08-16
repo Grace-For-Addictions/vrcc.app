@@ -1,0 +1,36 @@
+{
+  "name": "User",
+  "type": "object",
+  "properties": {
+    "user_role": {
+      "type": "string",
+      "enum": [
+        "participant",
+        "peer_coach",
+        "navigator",
+        "moderator",
+        "administrator"
+      ],
+      "default": "participant",
+      "description": "User's role in the system for access control"
+    },
+    "intake_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "bio": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "bio",
+    "phone",
+    "location"
+  ]
+}

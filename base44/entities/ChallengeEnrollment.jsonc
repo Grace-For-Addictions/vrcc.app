@@ -1,0 +1,51 @@
+{
+  "name": "ChallengeEnrollment",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "challenge_id": {
+      "type": "string",
+      "description": "Reference to Challenge entity"
+    },
+    "enrolled_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completion_status": {
+      "type": "string",
+      "enum": [
+        "in_progress",
+        "completed",
+        "failed",
+        "abandoned"
+      ],
+      "default": "in_progress"
+    },
+    "progress_count": {
+      "type": "number",
+      "default": 0,
+      "description": "Current count toward target"
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "points_awarded": {
+      "type": "number",
+      "default": 0
+    },
+    "badges_earned": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "user_email",
+    "challenge_id"
+  ]
+}

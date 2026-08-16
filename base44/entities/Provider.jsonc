@@ -1,0 +1,87 @@
+{
+  "name": "Provider",
+  "type": "object",
+  "properties": {
+    "organization_name": {
+      "type": "string",
+      "description": "Provider organization name"
+    },
+    "organization_type": {
+      "type": "string",
+      "enum": [
+        "treatment_center",
+        "court",
+        "probation",
+        "housing",
+        "employment",
+        "healthcare",
+        "peer_support",
+        "other"
+      ],
+      "description": "Type of provider organization"
+    },
+    "contact_name": {
+      "type": "string"
+    },
+    "contact_email": {
+      "type": "string"
+    },
+    "contact_phone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "services_offered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "capacity": {
+      "type": "number",
+      "description": "Current capacity for referrals"
+    },
+    "is_verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "partnership_level": {
+      "type": "string",
+      "enum": [
+        "partner",
+        "collaborator",
+        "referral_only"
+      ],
+      "default": "referral_only"
+    },
+    "accepts_warm_handoffs": {
+      "type": "boolean",
+      "default": false
+    },
+    "profile_data": {
+      "type": "object",
+      "properties": {
+        "description": {
+          "type": "string"
+        },
+        "hours": {
+          "type": "string"
+        },
+        "website": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "organization_name",
+    "organization_type"
+  ]
+}

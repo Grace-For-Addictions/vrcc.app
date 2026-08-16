@@ -1,0 +1,111 @@
+{
+  "name": "GrowthGoal",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of user who owns this goal"
+    },
+    "goal_name": {
+      "type": "string",
+      "description": "Name of the goal"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the goal"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "recovery",
+        "employment",
+        "relationships",
+        "health",
+        "education",
+        "housing",
+        "financial",
+        "personal_growth"
+      ],
+      "description": "Goal category"
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Target completion date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "paused",
+        "abandoned"
+      ],
+      "default": "active",
+      "description": "Current status of the goal"
+    },
+    "progress_percentage": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0,
+      "description": "Progress toward goal completion"
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "date": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Goal milestones",
+      "default": []
+    },
+    "action_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Specific action steps to achieve goal",
+      "default": []
+    },
+    "progress_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Journal of progress updates",
+      "default": []
+    },
+    "ai_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-generated suggestions for achieving goal",
+      "default": []
+    }
+  },
+  "required": [
+    "user_email",
+    "goal_name",
+    "category"
+  ]
+}

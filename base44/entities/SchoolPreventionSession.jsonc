@@ -1,0 +1,93 @@
+{
+  "name": "SchoolPreventionSession",
+  "type": "object",
+  "properties": {
+    "school_name": {
+      "type": "string"
+    },
+    "district": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "session_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "grade_level": {
+      "type": "string",
+      "enum": [
+        "elementary",
+        "middle_school",
+        "high_school"
+      ]
+    },
+    "students_reached": {
+      "type": "number"
+    },
+    "curriculum_module": {
+      "type": "string",
+      "enum": [
+        "neuroplasticity_basics",
+        "peer_pressure_resistance",
+        "rhythm_games_stress_reduction",
+        "your_why_discovery",
+        "brain_reward_pathways"
+      ]
+    },
+    "vr_headsets_used": {
+      "type": "number",
+      "default": 0
+    },
+    "peer_coaches_present": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pre_survey_data": {
+      "type": "object",
+      "properties": {
+        "avg_knowledge_score": {
+          "type": "number"
+        },
+        "stigma_index": {
+          "type": "number"
+        }
+      }
+    },
+    "post_survey_data": {
+      "type": "object",
+      "properties": {
+        "avg_knowledge_score": {
+          "type": "number"
+        },
+        "stigma_index": {
+          "type": "number"
+        },
+        "intent_to_seek_help": {
+          "type": "number"
+        }
+      }
+    },
+    "opioid_settlement_funded": {
+      "type": "boolean",
+      "default": false
+    },
+    "feedback_score": {
+      "type": "number"
+    },
+    "exported_to_ibhrs": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "school_name",
+    "county",
+    "session_date",
+    "grade_level",
+    "students_reached"
+  ]
+}

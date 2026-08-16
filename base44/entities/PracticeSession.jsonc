@@ -1,0 +1,80 @@
+{
+  "name": "PracticeSession",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "practice_type": {
+      "type": "string",
+      "enum": [
+        "self_compassion",
+        "loving_kindness",
+        "grounding",
+        "reflection",
+        "gratitude",
+        "breath_work"
+      ],
+      "description": "Type of mindfulness practice"
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "completion_method": {
+      "type": "string",
+      "enum": [
+        "tap",
+        "gesture",
+        "voice",
+        "text",
+        "vr"
+      ],
+      "default": "tap"
+    },
+    "emotional_state_before": {
+      "type": "string",
+      "enum": [
+        "struggling",
+        "neutral",
+        "hopeful",
+        "peaceful",
+        "joyful"
+      ]
+    },
+    "emotional_state_after": {
+      "type": "string",
+      "enum": [
+        "struggling",
+        "neutral",
+        "hopeful",
+        "peaceful",
+        "joyful"
+      ]
+    },
+    "practice_notes": {
+      "type": "string"
+    },
+    "plant_unlocked": {
+      "type": "string"
+    },
+    "neuroplastic_insight": {
+      "type": "string"
+    },
+    "reality_level": {
+      "type": "string",
+      "enum": [
+        "real_world",
+        "ar_grounding",
+        "av_input",
+        "vr_immersion"
+      ],
+      "default": "real_world",
+      "description": "Reality-Virtuality Continuum position"
+    }
+  },
+  "required": [
+    "user_email",
+    "practice_type",
+    "duration_minutes"
+  ]
+}

@@ -1,0 +1,98 @@
+{
+  "name": "MRCCOutreachLog",
+  "type": "object",
+  "properties": {
+    "outreach_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of outreach event"
+    },
+    "outreach_type": {
+      "type": "string",
+      "enum": [
+        "warm_handoff_transport",
+        "rural_outreach",
+        "urban_outreach",
+        "narcan_distribution",
+        "prevention_education",
+        "resource_linkage"
+      ],
+      "description": "Type of MRCC outreach activity"
+    },
+    "county": {
+      "type": "string",
+      "description": "Iowa county served"
+    },
+    "city": {
+      "type": "string"
+    },
+    "location_description": {
+      "type": "string",
+      "description": "Specific location of outreach"
+    },
+    "participants_reached": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of people reached"
+    },
+    "narcan_kits_distributed": {
+      "type": "number",
+      "default": 0
+    },
+    "narcan_trainings_provided": {
+      "type": "number",
+      "default": 0
+    },
+    "warm_handoff_transports": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of warm handoff transports provided"
+    },
+    "transport_from": {
+      "type": "string",
+      "description": "Origin location (jail, IDOC, treatment, etc.)"
+    },
+    "transport_to": {
+      "type": "string",
+      "description": "Destination (Grace House, appointment, etc.)"
+    },
+    "resources_provided": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Resources shared or distributed",
+      "default": []
+    },
+    "volunteer_staff": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Emails of volunteers who staffed the outreach",
+      "default": []
+    },
+    "volunteer_hours": {
+      "type": "number",
+      "description": "Total volunteer hours for this outreach"
+    },
+    "follow_up_referrals": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of follow-up referrals created"
+    },
+    "mileage": {
+      "type": "number",
+      "description": "Miles driven for this outreach"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Outreach notes and observations"
+    }
+  },
+  "required": [
+    "outreach_date",
+    "outreach_type",
+    "county"
+  ]
+}

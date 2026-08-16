@@ -1,0 +1,52 @@
+{
+  "name": "ProviderNotification",
+  "type": "object",
+  "properties": {
+    "provider_id": {
+      "type": "string"
+    },
+    "notification_type": {
+      "type": "string",
+      "enum": [
+        "new_referral",
+        "referral_update",
+        "ibhrs_alert",
+        "urgent_update",
+        "system_message"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "urgent"
+      ],
+      "default": "medium"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "related_referral_id": {
+      "type": "string"
+    },
+    "action_required": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "provider_id",
+    "notification_type",
+    "title",
+    "message"
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "name": "MenteeGoal",
+  "type": "object",
+  "properties": {
+    "mentee_email": {
+      "type": "string"
+    },
+    "coach_email": {
+      "type": "string"
+    },
+    "goal_title": {
+      "type": "string"
+    },
+    "goal_description": {
+      "type": "string"
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "housing",
+        "employment",
+        "health",
+        "relationships",
+        "recovery_capital",
+        "education",
+        "financial"
+      ],
+      "description": "Category of goal"
+    },
+    "target_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "on_hold",
+        "abandoned"
+      ],
+      "default": "active"
+    },
+    "progress_percentage": {
+      "type": "number",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 100
+    },
+    "milestones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "completed": {
+            "type": "boolean"
+          },
+          "completed_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "default": []
+    },
+    "assigned_resources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Resource IDs assigned by coach",
+      "default": []
+    }
+  },
+  "required": [
+    "mentee_email",
+    "coach_email",
+    "goal_title"
+  ]
+}

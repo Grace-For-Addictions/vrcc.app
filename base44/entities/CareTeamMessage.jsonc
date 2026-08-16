@@ -1,0 +1,68 @@
+{
+  "name": "CareTeamMessage",
+  "type": "object",
+  "properties": {
+    "client_email": {
+      "type": "string"
+    },
+    "sender_email": {
+      "type": "string"
+    },
+    "sender_role": {
+      "type": "string",
+      "enum": [
+        "coach",
+        "navigator",
+        "admin"
+      ]
+    },
+    "recipient_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "consultation",
+        "referral",
+        "progress_update",
+        "concern",
+        "celebration"
+      ],
+      "default": "consultation"
+    },
+    "subject": {
+      "type": "string"
+    },
+    "message": {
+      "type": "string"
+    },
+    "shared_insights": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Progress insight IDs shared with consent",
+      "default": []
+    },
+    "client_consented": {
+      "type": "boolean",
+      "default": false,
+      "description": "Client explicitly consented to share"
+    },
+    "is_urgent": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "client_email",
+    "sender_email",
+    "sender_role",
+    "recipient_emails",
+    "subject",
+    "message"
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "name": "GrantOpportunity",
+  "type": "object",
+  "properties": {
+    "funder_name": {
+      "type": "string"
+    },
+    "grant_name": {
+      "type": "string"
+    },
+    "funding_amount_min": {
+      "type": "number"
+    },
+    "funding_amount_max": {
+      "type": "number"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "strategic_alignment": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "healthy_community",
+          "infrastructure_investment",
+          "preventative_approaches",
+          "service_excellence",
+          "improvement_innovation",
+          "fiscal_responsibility"
+        ]
+      },
+      "default": []
+    },
+    "priority_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Keywords funder prioritizes",
+      "default": []
+    },
+    "ai_match_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI-calculated alignment score"
+    },
+    "auto_drafted_proposal": {
+      "type": "string",
+      "description": "AI-generated proposal draft"
+    },
+    "metrics_highlighted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Which GFA metrics were emphasized",
+      "default": []
+    },
+    "proposal_status": {
+      "type": "string",
+      "enum": [
+        "identified",
+        "drafted",
+        "under_review",
+        "submitted",
+        "awarded",
+        "declined"
+      ],
+      "default": "identified"
+    }
+  },
+  "required": [
+    "funder_name",
+    "grant_name",
+    "deadline"
+  ]
+}

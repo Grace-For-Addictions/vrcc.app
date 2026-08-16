@@ -1,0 +1,151 @@
+{
+  "name": "GraceHouseResident",
+  "type": "object",
+  "properties": {
+    "resident_email": {
+      "type": "string",
+      "description": "Email of Grace House resident"
+    },
+    "admission_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date admitted to Grace House"
+    },
+    "program_phase": {
+      "type": "string",
+      "enum": [
+        "grace_period_30",
+        "days_31_90",
+        "days_91_180",
+        "graduated",
+        "exited"
+      ],
+      "default": "grace_period_30",
+      "description": "Current phase in Grace House program"
+    },
+    "grace_period_status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "completed",
+        "extended"
+      ],
+      "default": "active",
+      "description": "Status of 30-day grace period"
+    },
+    "grace_period_end_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When grace period ends"
+    },
+    "housing_fees_covered": {
+      "type": "number",
+      "default": 0,
+      "description": "Total amount of fees covered during grace period"
+    },
+    "sobriety_start_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of initial sobriety (post grace period)"
+    },
+    "stabilization_status": {
+      "type": "string",
+      "enum": [
+        "active_withdrawal",
+        "stabilizing",
+        "stable",
+        "post_acute_withdrawal"
+      ],
+      "description": "Current stabilization status"
+    },
+    "zero_tolerance_effective_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When zero-tolerance policy takes effect (post grace period)"
+    },
+    "just_grace_curriculum_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "in_progress",
+        "completed"
+      ],
+      "default": "not_started"
+    },
+    "volunteer_training_complete": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether trained as Recovery Ally volunteer"
+    },
+    "employment_secured": {
+      "type": "boolean",
+      "default": false
+    },
+    "employment_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "permanent_housing_secured": {
+      "type": "boolean",
+      "default": false
+    },
+    "exit_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "exit_reason": {
+      "type": "string",
+      "enum": [
+        "successful_completion",
+        "permanent_housing_secured",
+        "program_violation",
+        "voluntary_exit",
+        "incarceration",
+        "other"
+      ]
+    },
+    "exit_destination": {
+      "type": "string",
+      "description": "Where resident went after Grace House"
+    },
+    "assigned_room": {
+      "type": "string"
+    },
+    "referral_source": {
+      "type": "string",
+      "enum": [
+        "IDOC",
+        "Polk_County_Jail",
+        "Clive_Behavioral_Health",
+        "IHYC",
+        "Beacon",
+        "Future_Change_Course",
+        "Self_Referral",
+        "Other"
+      ]
+    },
+    "case_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "logged_by": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "resident_email",
+    "admission_date",
+    "program_phase"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "name": "ChecklistCompletion",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "checklist_item_id": {
+      "type": "string",
+      "description": "Reference to ChecklistItem"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": true
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email",
+    "completion_date",
+    "checklist_item_id"
+  ]
+}

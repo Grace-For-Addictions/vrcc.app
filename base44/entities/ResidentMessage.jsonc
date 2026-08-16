@@ -1,0 +1,67 @@
+{
+  "name": "ResidentMessage",
+  "type": "object",
+  "properties": {
+    "house_id": {
+      "type": "string"
+    },
+    "sender_email": {
+      "type": "string"
+    },
+    "sender_name": {
+      "type": "string"
+    },
+    "sender_role": {
+      "type": "string",
+      "enum": [
+        "resident",
+        "staff"
+      ]
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "For direct messages, null for group"
+    },
+    "is_group_message": {
+      "type": "boolean",
+      "default": false
+    },
+    "message_content": {
+      "type": "string"
+    },
+    "media_url": {
+      "type": "string"
+    },
+    "media_type": {
+      "type": "string",
+      "enum": [
+        "image",
+        "document",
+        "voice_note"
+      ]
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    },
+    "read_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ai_flagged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Triggered language detected"
+    },
+    "flag_reason": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "house_id",
+    "sender_email",
+    "message_content"
+  ]
+}

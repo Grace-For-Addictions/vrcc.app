@@ -1,0 +1,76 @@
+{
+  "name": "HousingStatus",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the participant"
+    },
+    "housing_status": {
+      "type": "string",
+      "enum": [
+        "permanent_housing",
+        "temporary_housing",
+        "transitional_housing",
+        "homeless_sheltered",
+        "homeless_unsheltered",
+        "at_risk_homelessness"
+      ],
+      "description": "Current housing status (HUD HMIS aligned)"
+    },
+    "previous_housing_history": {
+      "type": "string",
+      "description": "Summary of past housing situations"
+    },
+    "housing_stability_risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Identified risks to housing stability",
+      "default": []
+    },
+    "time_to_secure_permanent_housing_days": {
+      "type": "number",
+      "description": "Days taken to secure permanent housing from intake"
+    },
+    "percentage_in_permanent_housing": {
+      "type": "number",
+      "description": "Percentage of time in permanent housing over tracking period",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "rent_burden_percentage": {
+      "type": "number",
+      "description": "Percentage of income spent on housing",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "housing_secured_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date permanent housing was secured"
+    },
+    "current_address": {
+      "type": "string",
+      "description": "Current housing address (if applicable)"
+    },
+    "household_composition": {
+      "type": "object",
+      "properties": {
+        "adults": {
+          "type": "number",
+          "default": 1
+        },
+        "children": {
+          "type": "number",
+          "default": 0
+        }
+      }
+    }
+  },
+  "required": [
+    "user_email",
+    "housing_status"
+  ]
+}

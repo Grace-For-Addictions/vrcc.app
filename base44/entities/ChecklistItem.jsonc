@@ -1,0 +1,45 @@
+{
+  "name": "ChecklistItem",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "morning_routine",
+        "emotional_checkin",
+        "spiritual_practice",
+        "community_connection",
+        "evening_reflection"
+      ]
+    },
+    "item_text": {
+      "type": "string",
+      "description": "The checklist item description"
+    },
+    "is_custom": {
+      "type": "boolean",
+      "default": false,
+      "description": "User-created custom item"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    },
+    "reminder_time": {
+      "type": "string",
+      "description": "Optional reminder time in HH:MM format"
+    }
+  },
+  "required": [
+    "user_email",
+    "category",
+    "item_text"
+  ]
+}

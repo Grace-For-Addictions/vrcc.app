@@ -1,0 +1,50 @@
+{
+  "name": "DailyReflectionResponse",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the user reflecting"
+    },
+    "slogan_number": {
+      "type": "number",
+      "description": "Which reflection card (1-59)"
+    },
+    "reflection_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of reflection"
+    },
+    "personal_reflection": {
+      "type": "string",
+      "description": "User's written reflection"
+    },
+    "completion_status": {
+      "type": "string",
+      "enum": [
+        "reflected",
+        "acted",
+        "skipped"
+      ],
+      "default": "reflected",
+      "description": "Whether user just reflected or took action"
+    },
+    "mood_before": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Mood rating before reflection"
+    },
+    "mood_after": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Mood rating after reflection"
+    }
+  },
+  "required": [
+    "user_email",
+    "slogan_number",
+    "reflection_date"
+  ]
+}

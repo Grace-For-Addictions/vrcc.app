@@ -1,0 +1,58 @@
+{
+  "name": "ExternalReferral",
+  "type": "object",
+  "properties": {
+    "participantId": {
+      "type": "string",
+      "description": "Participant email or ID"
+    },
+    "participantName": {
+      "type": "string"
+    },
+    "organizationName": {
+      "type": "string"
+    },
+    "contactName": {
+      "type": "string"
+    },
+    "contactPhone": {
+      "type": "string"
+    },
+    "contactEmail": {
+      "type": "string"
+    },
+    "referralReason": {
+      "type": "string"
+    },
+    "warmHandoff": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is a warm handoff vs cold referral"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "connected",
+        "confirmed",
+        "unsuccessful",
+        "closed"
+      ],
+      "default": "pending"
+    },
+    "outcomeNotes": {
+      "type": "string"
+    },
+    "followUpDate": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "referredBy": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participantId",
+    "organizationName"
+  ]
+}

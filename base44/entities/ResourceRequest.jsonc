@@ -1,0 +1,86 @@
+{
+  "name": "ResourceRequest",
+  "type": "object",
+  "properties": {
+    "requester_email": {
+      "type": "string"
+    },
+    "requester_name": {
+      "type": "string"
+    },
+    "resource_type": {
+      "type": "string",
+      "enum": [
+        "offline_content",
+        "mobile_hotspot",
+        "device_laptop",
+        "device_tablet",
+        "wifi_access",
+        "telehealth_kiosk",
+        "crisis_materials",
+        "other"
+      ]
+    },
+    "specific_resource": {
+      "type": "string",
+      "description": "What specifically is being requested"
+    },
+    "urgency_level": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ],
+      "default": "medium"
+    },
+    "reason_for_request": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "description": "Where resource is needed"
+    },
+    "is_rural": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_unhoused": {
+      "type": "boolean",
+      "default": false
+    },
+    "request_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "fulfilled",
+        "denied",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "fulfilled_by": {
+      "type": "string"
+    },
+    "fulfillment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "fulfillment_notes": {
+      "type": "string"
+    },
+    "ai_priority_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI-calculated urgency score"
+    }
+  },
+  "required": [
+    "requester_email",
+    "resource_type",
+    "specific_resource"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "DailyReflectionCard",
+  "type": "object",
+  "properties": {
+    "slogan_number": {
+      "type": "number",
+      "description": "Unique number for the reflection slogan (1-59)"
+    },
+    "card_title": {
+      "type": "string",
+      "description": "Title of the reflection card"
+    },
+    "core_reflection": {
+      "type": "string",
+      "description": "The main reflection text or prompt"
+    },
+    "pause_notice_prompt": {
+      "type": "string",
+      "description": "Prompt for pausing and noticing"
+    },
+    "gentle_inquiry": {
+      "type": "string",
+      "description": "A gentle question for deeper self-reflection"
+    },
+    "small_action": {
+      "type": "string",
+      "description": "A small, actionable step for the day"
+    },
+    "base44_prompt": {
+      "type": "string",
+      "description": "A prompt from Grace to encourage reflection"
+    }
+  },
+  "required": [
+    "slogan_number",
+    "card_title",
+    "core_reflection",
+    "pause_notice_prompt",
+    "gentle_inquiry",
+    "small_action",
+    "base44_prompt"
+  ]
+}

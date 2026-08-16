@@ -1,0 +1,67 @@
+{
+  "name": "PredictiveAlert",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of participant at risk"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "disengagement_risk",
+        "crisis_risk",
+        "dropout_risk",
+        "resource_need"
+      ],
+      "description": "Type of predictive alert"
+    },
+    "risk_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI-calculated risk score"
+    },
+    "contributing_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Factors contributing to risk",
+      "default": []
+    },
+    "suggested_interventions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-recommended actions",
+      "default": []
+    },
+    "predicted_outcome": {
+      "type": "string",
+      "description": "What might happen without intervention"
+    },
+    "confidence_level": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Model confidence (0-1)"
+    },
+    "is_acknowledged": {
+      "type": "boolean",
+      "default": false
+    },
+    "acknowledged_by": {
+      "type": "string"
+    },
+    "action_taken": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email",
+    "alert_type",
+    "risk_score"
+  ]
+}

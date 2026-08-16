@@ -1,0 +1,47 @@
+{
+  "name": "CommunityDecoration",
+  "type": "object",
+  "properties": {
+    "decoration_id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "unlock_requirement": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "total_gifts",
+            "total_points",
+            "community_level",
+            "unique_gifters"
+          ]
+        },
+        "threshold": {
+          "type": "number"
+        }
+      }
+    },
+    "is_unlocked": {
+      "type": "boolean",
+      "default": false
+    },
+    "unlocked_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "name",
+    "unlock_requirement"
+  ]
+}

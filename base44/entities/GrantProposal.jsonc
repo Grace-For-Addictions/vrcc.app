@@ -1,0 +1,91 @@
+{
+  "name": "GrantProposal",
+  "type": "object",
+  "properties": {
+    "grant_type": {
+      "type": "string",
+      "enum": [
+        "dallas_county",
+        "opioid_settlement",
+        "samhsa",
+        "state_behavioral_health",
+        "foundation",
+        "federal"
+      ]
+    },
+    "project_title": {
+      "type": "string"
+    },
+    "amount_requested": {
+      "type": "number"
+    },
+    "amount_awarded": {
+      "type": "number"
+    },
+    "focus_areas": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "proposal_content": {
+      "type": "string",
+      "description": "Full proposal text or JSON"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "prospecting",
+        "draft",
+        "submitted",
+        "under_review",
+        "awarded",
+        "declined"
+      ],
+      "default": "draft"
+    },
+    "submission_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "decision_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "deadline": {
+      "type": "string",
+      "format": "date"
+    },
+    "funder_name": {
+      "type": "string"
+    },
+    "funder_contact": {
+      "type": "string"
+    },
+    "matching_funds_required": {
+      "type": "number"
+    },
+    "matching_funds_secured": {
+      "type": "number"
+    },
+    "generated_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "grant_type",
+    "project_title",
+    "amount_requested"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

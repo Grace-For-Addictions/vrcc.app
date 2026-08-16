@@ -1,0 +1,58 @@
+{
+  "name": "Referral",
+  "type": "object",
+  "properties": {
+    "provider_id": {
+      "type": "string",
+      "description": "Provider entity ID"
+    },
+    "provider_name": {
+      "type": "string"
+    },
+    "participant_email": {
+      "type": "string",
+      "description": "Participant who was referred"
+    },
+    "referral_type": {
+      "type": "string",
+      "enum": [
+        "warm_handoff",
+        "cold_referral",
+        "self_referral"
+      ],
+      "default": "cold_referral"
+    },
+    "service_needed": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "accepted",
+        "completed",
+        "declined",
+        "no_show"
+      ],
+      "default": "pending"
+    },
+    "referral_notes": {
+      "type": "string"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "outcome": {
+      "type": "string"
+    },
+    "consent_given": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "provider_id",
+    "service_needed"
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "name": "Post",
+  "type": "object",
+  "properties": {
+    "author_email": {
+      "type": "string"
+    },
+    "author_name": {
+      "type": "string",
+      "description": "Display name"
+    },
+    "content": {
+      "type": "string",
+      "description": "Post text"
+    },
+    "post_type": {
+      "type": "string",
+      "enum": [
+        "win",
+        "struggle",
+        "question",
+        "encouragement",
+        "milestone",
+        "resource_share"
+      ],
+      "default": "encouragement"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": false
+    },
+    "mood_tag": {
+      "type": "string",
+      "enum": [
+        "celebrating",
+        "struggling",
+        "grateful",
+        "hopeful",
+        "curious",
+        "other"
+      ]
+    },
+    "likes_count": {
+      "type": "number",
+      "default": 0
+    },
+    "comment_count": {
+      "type": "number",
+      "default": 0
+    },
+    "liked_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Array of user emails who liked",
+      "default": []
+    },
+    "pinned": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mods can pin important posts"
+    },
+    "flagged": {
+      "type": "boolean",
+      "default": false,
+      "description": "Community moderation"
+    },
+    "image_url": {
+      "type": "string",
+      "description": "Attached image"
+    },
+    "badge_earned": {
+      "type": "string",
+      "description": "If milestone post, which badge"
+    }
+  },
+  "required": [
+    "author_email",
+    "content"
+  ]
+}

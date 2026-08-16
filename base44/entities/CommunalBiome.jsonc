@@ -1,0 +1,69 @@
+{
+  "name": "CommunalBiome",
+  "type": "object",
+  "properties": {
+    "biome_name": {
+      "type": "string"
+    },
+    "biome_type": {
+      "type": "string",
+      "enum": [
+        "justice_healing",
+        "family_hope",
+        "youth_resilience",
+        "substance_freedom",
+        "mental_wellness",
+        "peer_strength"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "participant_count": {
+      "type": "number",
+      "default": 0
+    },
+    "total_practice_hours": {
+      "type": "number",
+      "default": 0
+    },
+    "flourish_level": {
+      "type": "number",
+      "default": 0,
+      "description": "0-100 flourish score based on participation"
+    },
+    "unlocked_resources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "pollination_posts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "anonymous_id": {
+            "type": "string"
+          },
+          "inspiration_text": {
+            "type": "string"
+          },
+          "posted_date": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "biome_name",
+    "biome_type"
+  ]
+}

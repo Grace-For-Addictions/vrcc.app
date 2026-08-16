@@ -1,0 +1,69 @@
+{
+  "name": "Challenge",
+  "type": "object",
+  "properties": {
+    "challenge_name": {
+      "type": "string"
+    },
+    "challenge_type": {
+      "type": "string",
+      "enum": [
+        "individual",
+        "team",
+        "community_wide"
+      ]
+    },
+    "challenge_category": {
+      "type": "string",
+      "enum": [
+        "physical",
+        "social",
+        "creative",
+        "learning",
+        "service"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "points_reward": {
+      "type": "number",
+      "description": "Points earned on completion"
+    },
+    "badge_reward": {
+      "type": "string",
+      "description": "Badge earned if applicable"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "completed_by": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "team_id": {
+      "type": "string",
+      "description": "If team challenge"
+    }
+  },
+  "required": [
+    "challenge_name",
+    "challenge_type",
+    "description"
+  ]
+}

@@ -1,0 +1,95 @@
+{
+  "name": "EmploymentHistory",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of the participant"
+    },
+    "current_employment_status": {
+      "type": "string",
+      "enum": [
+        "employed_full_time",
+        "employed_part_time",
+        "unemployed",
+        "student",
+        "retired",
+        "disabled",
+        "seeking_employment",
+        "other"
+      ],
+      "description": "Current employment status"
+    },
+    "current_employer": {
+      "type": "string",
+      "description": "Current employer name"
+    },
+    "desired_job_career_path": {
+      "type": "string",
+      "description": "Career goals and aspirations"
+    },
+    "full_time_vs_part_time": {
+      "type": "string",
+      "enum": [
+        "full_time",
+        "part_time",
+        "n/a"
+      ],
+      "description": "Employment type"
+    },
+    "job_retention_months": {
+      "type": "number",
+      "description": "Average length of employment with same employer in months"
+    },
+    "income_monthly": {
+      "type": "number",
+      "description": "Monthly income in dollars"
+    },
+    "work_history": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "employer": {
+            "type": "string"
+          },
+          "start_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "end_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "position": {
+            "type": "string"
+          },
+          "reason_for_leaving": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "employment_barriers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Barriers to employment (e.g., criminal record, lack of transportation)",
+      "default": []
+    },
+    "job_readiness_supports": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Support services received for employment",
+      "default": []
+    }
+  },
+  "required": [
+    "user_email",
+    "current_employment_status"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "name": "FeedbackAlert",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "alert_type": {
+      "type": "string",
+      "enum": [
+        "critical_negative_sentiment",
+        "disengagement_risk",
+        "service_complaint",
+        "improvement_suggestion",
+        "crisis_indicator"
+      ]
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "source": {
+      "type": "string",
+      "description": "Where feedback came from (survey, chat, case notes)"
+    },
+    "feedback_content": {
+      "type": "string"
+    },
+    "ai_analysis": {
+      "type": "string",
+      "description": "AI interpretation and recommended action"
+    },
+    "assigned_to": {
+      "type": "string",
+      "description": "Case manager email"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "in_progress",
+        "resolved",
+        "dismissed"
+      ],
+      "default": "pending"
+    },
+    "resolution_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participant_email",
+    "alert_type",
+    "severity",
+    "source"
+  ]
+}

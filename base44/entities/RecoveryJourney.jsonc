@@ -1,0 +1,81 @@
+{
+  "name": "RecoveryJourney",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "assessment_data": {
+      "type": "object",
+      "description": "Latest BARC-10 scores and dimensions"
+    },
+    "recovery_goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "recommended_content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "content_type": {
+            "type": "string"
+          },
+          "content_id": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "recommended_peer_coaches": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "garden_suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "engagement_score": {
+      "type": "number",
+      "description": "0-100 calculated from activity"
+    },
+    "journey_phase": {
+      "type": "string",
+      "enum": [
+        "onboarding",
+        "early_engagement",
+        "active_participation",
+        "sustained_recovery",
+        "peer_leader"
+      ],
+      "default": "onboarding"
+    },
+    "next_milestone": {
+      "type": "string"
+    },
+    "last_ai_update": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

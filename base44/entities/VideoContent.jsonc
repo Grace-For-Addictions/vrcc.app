@@ -1,0 +1,81 @@
+{
+  "name": "VideoContent",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string",
+      "description": "Title of the video content"
+    },
+    "content_type": {
+      "type": "string",
+      "enum": [
+        "article",
+        "video",
+        "audio",
+        "guide",
+        "worksheet"
+      ],
+      "default": "article",
+      "description": "Type of content"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "recovery_stories",
+        "brain_science",
+        "coping_strategies",
+        "rebuilding_life",
+        "relationships",
+        "employment",
+        "self_care",
+        "motivation"
+      ],
+      "description": "Content category"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the content"
+    },
+    "content_body": {
+      "type": "string",
+      "description": "Full article text or content"
+    },
+    "video_url": {
+      "type": "string",
+      "description": "URL if it's a video"
+    },
+    "thumbnail_url": {
+      "type": "string",
+      "description": "Thumbnail image URL"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Duration in minutes"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Tags for searchability",
+      "default": []
+    },
+    "view_count": {
+      "type": "number",
+      "default": 0
+    },
+    "is_featured": {
+      "type": "boolean",
+      "default": false
+    },
+    "publish_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "title",
+    "content_type",
+    "category"
+  ]
+}

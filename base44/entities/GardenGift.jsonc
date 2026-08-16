@@ -1,0 +1,39 @@
+{
+  "name": "GardenGift",
+  "type": "object",
+  "properties": {
+    "sender_email": {
+      "type": "string"
+    },
+    "recipient_email": {
+      "type": "string"
+    },
+    "gift_type": {
+      "type": "string",
+      "enum": [
+        "sunshine",
+        "rain",
+        "seeds",
+        "fertilizer",
+        "flower"
+      ],
+      "description": "Type of virtual gift"
+    },
+    "message": {
+      "type": "string"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "sender_email",
+    "recipient_email",
+    "gift_type"
+  ]
+}

@@ -1,0 +1,103 @@
+{
+  "name": "IBHRSServiceEvent",
+  "type": "object",
+  "properties": {
+    "participant_id": {
+      "type": "string",
+      "description": "Anonymized participant identifier"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "peer_support",
+        "crisis_intervention",
+        "recovery_coaching",
+        "group_session",
+        "vr_training",
+        "assessment",
+        "warm_handoff",
+        "digital_equity_support",
+        "school_prevention"
+      ]
+    },
+    "service_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "duration_minutes": {
+      "type": "number"
+    },
+    "setting": {
+      "type": "string",
+      "enum": [
+        "virtual",
+        "in_person",
+        "phone",
+        "vr_immersive"
+      ]
+    },
+    "county": {
+      "type": "string",
+      "description": "Iowa county where service delivered"
+    },
+    "provider_credential": {
+      "type": "string",
+      "description": "CPS, CPRS, or other certification"
+    },
+    "outcome_measure": {
+      "type": "object",
+      "properties": {
+        "functional_improvement": {
+          "type": "boolean"
+        },
+        "crisis_averted": {
+          "type": "boolean"
+        },
+        "linkage_to_care": {
+          "type": "boolean"
+        },
+        "recovery_capital_increase": {
+          "type": "number"
+        }
+      }
+    },
+    "vr_session_data": {
+      "type": "object",
+      "properties": {
+        "scenario_id": {
+          "type": "string"
+        },
+        "completion_rate": {
+          "type": "number"
+        },
+        "skills_practiced": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "cue_exposure_success": {
+          "type": "boolean"
+        }
+      }
+    },
+    "billable": {
+      "type": "boolean",
+      "default": false
+    },
+    "exported_to_ibhrs": {
+      "type": "boolean",
+      "default": false
+    },
+    "export_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "participant_id",
+    "service_type",
+    "service_date",
+    "county"
+  ]
+}

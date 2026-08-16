@@ -1,0 +1,73 @@
+{
+  "name": "CrossReferral",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "from_service": {
+      "type": "string",
+      "enum": [
+        "anchor_reentry",
+        "peer_coaching",
+        "housing_navigation",
+        "employment_services",
+        "narcan_distribution",
+        "gfarc_meetings"
+      ]
+    },
+    "to_service": {
+      "type": "string",
+      "enum": [
+        "anchor_reentry",
+        "peer_coaching",
+        "housing_navigation",
+        "employment_services",
+        "narcan_distribution",
+        "gfarc_meetings"
+      ]
+    },
+    "referral_reason": {
+      "type": "string",
+      "description": "Why this cross-referral was suggested"
+    },
+    "ai_generated": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether AI suggested this referral"
+    },
+    "criteria_met": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What criteria triggered the referral",
+      "default": []
+    },
+    "referral_status": {
+      "type": "string",
+      "enum": [
+        "suggested",
+        "sent",
+        "accepted",
+        "declined",
+        "completed"
+      ],
+      "default": "suggested"
+    },
+    "referred_by": {
+      "type": "string"
+    },
+    "accepted_by": {
+      "type": "string"
+    },
+    "outcome_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participant_email",
+    "from_service",
+    "to_service"
+  ]
+}

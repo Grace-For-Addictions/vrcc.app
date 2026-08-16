@@ -1,0 +1,86 @@
+{
+  "name": "VRHeadsetCheckout",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string",
+      "description": "User who checked out headset"
+    },
+    "headset_id": {
+      "type": "string"
+    },
+    "checkout_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "return_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "checkout_type": {
+      "type": "string",
+      "enum": [
+        "1_week_prevention",
+        "2_week_treatment",
+        "extended_recovery"
+      ],
+      "default": "1_week_prevention"
+    },
+    "target_population": {
+      "type": "string",
+      "enum": [
+        "youth_prevention",
+        "adult_recovery",
+        "justice_involved",
+        "high_risk"
+      ]
+    },
+    "connectivity_provided": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mobile hotspot included"
+    },
+    "sessions_completed": {
+      "type": "number",
+      "default": 0
+    },
+    "scenarios_practiced": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "reported_cravings_reduced": {
+      "type": "boolean"
+    },
+    "school_affiliation": {
+      "type": "string",
+      "description": "If youth prevention"
+    },
+    "dallas_county_resident": {
+      "type": "boolean",
+      "default": true
+    },
+    "consent_data_sharing": {
+      "type": "boolean",
+      "default": false
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "active",
+        "returned",
+        "overdue",
+        "damaged",
+        "lost"
+      ],
+      "default": "active"
+    }
+  },
+  "required": [
+    "participant_email",
+    "headset_id",
+    "checkout_date",
+    "target_population"
+  ]
+}

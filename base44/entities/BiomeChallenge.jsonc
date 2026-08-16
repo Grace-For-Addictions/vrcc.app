@@ -1,0 +1,62 @@
+{
+  "name": "BiomeChallenge",
+  "type": "object",
+  "properties": {
+    "challenge_name": {
+      "type": "string"
+    },
+    "biome_id": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "challenge_type": {
+      "type": "string",
+      "enum": [
+        "practice_hours",
+        "participant_count",
+        "pollination_posts",
+        "collective_goal"
+      ]
+    },
+    "target_value": {
+      "type": "number"
+    },
+    "current_progress": {
+      "type": "number",
+      "default": 0
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "reward_description": {
+      "type": "string"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "challenge_name",
+    "challenge_type",
+    "target_value"
+  ]
+}

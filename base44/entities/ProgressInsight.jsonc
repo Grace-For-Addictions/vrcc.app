@@ -1,0 +1,89 @@
+{
+  "name": "ProgressInsight",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "insight_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "insight_type": {
+      "type": "string",
+      "enum": [
+        "trend",
+        "warning",
+        "celebration",
+        "recommendation",
+        "prediction"
+      ],
+      "description": "Type of insight"
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "default": "medium"
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "data_points": {
+      "type": "object",
+      "properties": {
+        "barc_score_trend": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "mood_trend": {
+          "type": "array",
+          "items": {
+            "type": "number"
+          }
+        },
+        "activity_trend": {
+          "type": "string"
+        },
+        "meeting_attendance": {
+          "type": "number"
+        }
+      }
+    },
+    "ai_recommendations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_shared_with_sponsor": {
+      "type": "boolean",
+      "default": false
+    },
+    "is_read": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "user_email",
+    "insight_type",
+    "title",
+    "description"
+  ]
+}

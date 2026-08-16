@@ -1,0 +1,109 @@
+{
+  "name": "SponsorConnection",
+  "type": "object",
+  "properties": {
+    "mentee_email": {
+      "type": "string",
+      "description": "Person receiving support"
+    },
+    "sponsor_email": {
+      "type": "string",
+      "description": "Sponsor/mentor providing support"
+    },
+    "connection_type": {
+      "type": "string",
+      "enum": [
+        "sponsor",
+        "mentor",
+        "peer_coach",
+        "accountability_partner"
+      ],
+      "default": "sponsor"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "active",
+        "paused",
+        "ended"
+      ],
+      "default": "pending"
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "view_progress": {
+          "type": "boolean",
+          "default": false
+        },
+        "view_assessments": {
+          "type": "boolean",
+          "default": false
+        },
+        "view_check_ins": {
+          "type": "boolean",
+          "default": false
+        },
+        "view_goals": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "default": {}
+    },
+    "connection_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "last_check_in": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "shared_resources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Resource IDs shared by sponsor",
+      "default": []
+    },
+    "check_in_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "note": {
+            "type": "string"
+          },
+          "sponsor_email": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "ai_match_score": {
+      "type": "number",
+      "description": "AI-calculated compatibility score",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "shared_interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "mentee_email",
+    "sponsor_email",
+    "connection_type"
+  ]
+}

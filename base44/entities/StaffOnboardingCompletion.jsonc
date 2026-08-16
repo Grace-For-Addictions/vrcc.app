@@ -1,0 +1,128 @@
+{
+  "name": "StaffOnboardingCompletion",
+  "type": "object",
+  "properties": {
+    "staff_email": {
+      "type": "string",
+      "description": "Email of staff member"
+    },
+    "staff_role": {
+      "type": "string",
+      "enum": [
+        "peer_support",
+        "coach",
+        "program_staff",
+        "administrator",
+        "executive"
+      ],
+      "description": "Staff member's role"
+    },
+    "completion_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When onboarding was completed"
+    },
+    "onboarding_version": {
+      "type": "string",
+      "description": "Version of onboarding materials completed",
+      "default": "2026-01"
+    },
+    "acknowledgments": {
+      "type": "object",
+      "properties": {
+        "welcome_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "role_clarity_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "views_distinction_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "daily_flow_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "documentation_rules_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "readiness_harbor_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "escalation_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "supervisor_role_acknowledged": {
+          "type": "boolean",
+          "default": false
+        },
+        "corrective_process_acknowledged": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "staff_commitment_signature": {
+      "type": "string",
+      "description": "Staff member's signature on commitment statement"
+    },
+    "staff_commitment_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "supervisor_commitment_signature": {
+      "type": "string",
+      "description": "Supervisor's signature (if applicable)"
+    },
+    "supervisor_commitment_timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "quiz_scores": {
+      "type": "object",
+      "properties": {
+        "language_policy_score": {
+          "type": "number"
+        },
+        "scope_of_practice_score": {
+          "type": "number"
+        },
+        "confidentiality_score": {
+          "type": "number"
+        }
+      }
+    },
+    "check_in_schedule": {
+      "type": "object",
+      "properties": {
+        "week_1_completed": {
+          "type": "boolean",
+          "default": false
+        },
+        "day_30_completed": {
+          "type": "boolean",
+          "default": false
+        },
+        "day_60_completed": {
+          "type": "boolean",
+          "default": false
+        },
+        "day_90_completed": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    }
+  },
+  "required": [
+    "staff_email",
+    "staff_role",
+    "staff_commitment_signature"
+  ]
+}

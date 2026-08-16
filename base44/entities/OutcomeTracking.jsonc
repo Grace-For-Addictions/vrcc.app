@@ -1,0 +1,52 @@
+{
+  "name": "OutcomeTracking",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "outcome_type": {
+      "type": "string",
+      "enum": [
+        "housing_stability",
+        "crisis_diversion",
+        "justice_reduction",
+        "employment_gained",
+        "family_reconnection",
+        "overdose_prevented"
+      ]
+    },
+    "outcome_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string"
+    },
+    "verified_by": {
+      "type": "string",
+      "description": "Staff or partner who verified"
+    },
+    "cost_avoidance_estimate": {
+      "type": "number",
+      "description": "Estimated cost savings in USD"
+    },
+    "prevention_indicator": {
+      "type": "boolean",
+      "default": false,
+      "description": "Was this a prevention outcome vs intervention"
+    },
+    "contributing_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What helped achieve this outcome"
+    }
+  },
+  "required": [
+    "user_email",
+    "outcome_type",
+    "outcome_date"
+  ]
+}

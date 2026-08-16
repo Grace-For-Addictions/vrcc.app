@@ -1,0 +1,82 @@
+{
+  "name": "ResidentProfile",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Linked to User entity"
+    },
+    "house_id": {
+      "type": "string",
+      "description": "RecoveryHouse ID"
+    },
+    "resident_status": {
+      "type": "string",
+      "enum": [
+        "pending_approval",
+        "active",
+        "alumni",
+        "exited"
+      ],
+      "default": "pending_approval"
+    },
+    "intake_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "sobriety_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "room_number": {
+      "type": "string"
+    },
+    "intake_photo_url": {
+      "type": "string",
+      "description": "For optional biometric verification"
+    },
+    "emergency_contact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string"
+        }
+      }
+    },
+    "program_goals": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "weekly_meeting_goal": {
+      "type": "number",
+      "default": 3
+    },
+    "current_balance": {
+      "type": "number",
+      "default": 0
+    },
+    "approved_by": {
+      "type": "string"
+    },
+    "approval_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "exit_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "user_email",
+    "house_id"
+  ]
+}

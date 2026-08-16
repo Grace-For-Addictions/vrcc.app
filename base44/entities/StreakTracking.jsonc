@@ -1,0 +1,70 @@
+{
+  "name": "StreakTracking",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "streak_type": {
+      "type": "string",
+      "enum": [
+        "daily_checklist",
+        "meeting_attendance",
+        "check_in",
+        "overall"
+      ],
+      "default": "overall"
+    },
+    "current_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "longest_streak": {
+      "type": "number",
+      "default": 0
+    },
+    "last_activity_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "streak_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "total_days_active": {
+      "type": "number",
+      "default": 0
+    },
+    "milestones_achieved": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "milestone": {
+            "type": "string",
+            "enum": [
+              "7_days",
+              "30_days",
+              "60_days",
+              "90_days",
+              "6_months",
+              "1_year",
+              "2_years",
+              "5_years",
+              "10_years"
+            ]
+          },
+          "achieved_date": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      },
+      "default": []
+    }
+  },
+  "required": [
+    "user_email",
+    "streak_type"
+  ]
+}

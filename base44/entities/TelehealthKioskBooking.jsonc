@@ -1,0 +1,73 @@
+{
+  "name": "TelehealthKioskBooking",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "mrcc_location": {
+      "type": "string",
+      "description": "MRCC physical address"
+    },
+    "appointment_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "appointment_duration_minutes": {
+      "type": "number",
+      "default": 30
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "peer_coaching",
+        "case_management",
+        "benefits_enrollment",
+        "job_application_assistance",
+        "virtual_court_appearance",
+        "telehealth_medical",
+        "other"
+      ]
+    },
+    "wifi_access_needed": {
+      "type": "boolean",
+      "default": true
+    },
+    "device_needed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Need to borrow device/tablet"
+    },
+    "booking_status": {
+      "type": "string",
+      "enum": [
+        "requested",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "no_show"
+      ],
+      "default": "requested"
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "county": {
+      "type": "string"
+    },
+    "is_rural": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "participant_email",
+    "mrcc_location",
+    "appointment_date",
+    "service_type"
+  ]
+}

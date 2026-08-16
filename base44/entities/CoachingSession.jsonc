@@ -1,0 +1,56 @@
+{
+  "name": "CoachingSession",
+  "type": "object",
+  "properties": {
+    "scenario_id": {
+      "type": "string"
+    },
+    "scenario_title": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    },
+    "score": {
+      "type": "number"
+    },
+    "empathy_score": {
+      "type": "number"
+    },
+    "mi_skills_score": {
+      "type": "number"
+    },
+    "resource_accuracy": {
+      "type": "number"
+    },
+    "strengths": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "improvements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "time_taken_seconds": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "scenario_id",
+    "score"
+  ],
+  "rls": {
+    "create": {
+      "data.User ID": "{{user.email}}"
+    }
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "name": "ServiceCapacity",
+  "type": "object",
+  "properties": {
+    "location_type": {
+      "type": "string",
+      "enum": [
+        "vrcc_virtual",
+        "mrcc_mobile_unit",
+        "grace_house",
+        "community_partner"
+      ]
+    },
+    "location_name": {
+      "type": "string"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "peer_coaching",
+        "telehealth_kiosk",
+        "wifi_access",
+        "gfarc_meeting",
+        "case_management",
+        "narcan_distribution",
+        "resource_navigation"
+      ]
+    },
+    "current_capacity": {
+      "type": "number",
+      "description": "Current number of participants being served"
+    },
+    "max_capacity": {
+      "type": "number"
+    },
+    "availability_status": {
+      "type": "string",
+      "enum": [
+        "available",
+        "limited",
+        "at_capacity",
+        "offline"
+      ],
+      "default": "available"
+    },
+    "next_available_slot": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "county": {
+      "type": "string"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "location_type",
+    "service_type",
+    "availability_status"
+  ]
+}

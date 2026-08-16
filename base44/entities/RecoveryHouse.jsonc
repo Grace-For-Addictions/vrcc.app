@@ -1,0 +1,78 @@
+{
+  "name": "RecoveryHouse",
+  "type": "object",
+  "properties": {
+    "house_name": {
+      "type": "string",
+      "description": "Name of the recovery house"
+    },
+    "house_code": {
+      "type": "string",
+      "description": "Unique 6-character access code"
+    },
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "gender_served": {
+      "type": "string",
+      "enum": [
+        "men",
+        "women",
+        "co-ed"
+      ]
+    },
+    "capacity": {
+      "type": "number"
+    },
+    "current_occupancy": {
+      "type": "number",
+      "default": 0
+    },
+    "house_manager_email": {
+      "type": "string"
+    },
+    "staff_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "house_rules": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "chore_library": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "chore_name": {
+            "type": "string"
+          },
+          "frequency": {
+            "type": "string"
+          },
+          "assigned_to": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "house_name",
+    "house_code"
+  ]
+}

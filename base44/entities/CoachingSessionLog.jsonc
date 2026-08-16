@@ -1,0 +1,100 @@
+{
+  "name": "CoachingSessionLog",
+  "type": "object",
+  "properties": {
+    "session_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coach_email": {
+      "type": "string",
+      "description": "Peer coach who delivered session"
+    },
+    "participant_email": {
+      "type": "string",
+      "description": "Who received coaching"
+    },
+    "session_type": {
+      "type": "string",
+      "enum": [
+        "intake_coaching",
+        "ongoing_coaching",
+        "crisis_coaching",
+        "discharge_coaching"
+      ],
+      "default": "ongoing_coaching"
+    },
+    "session_duration_minutes": {
+      "type": "number",
+      "default": 60
+    },
+    "session_modality": {
+      "type": "string",
+      "enum": [
+        "in_person",
+        "virtual",
+        "phone",
+        "telehealth_kiosk"
+      ],
+      "default": "virtual"
+    },
+    "topics_covered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "goals_discussed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Links to GFAPlan goals",
+      "default": []
+    },
+    "progress_notes": {
+      "type": "string",
+      "description": "Coach notes (confidential)"
+    },
+    "participant_self_assessment": {
+      "type": "string",
+      "description": "Participant's own reflection"
+    },
+    "barriers_identified": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "next_steps": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "next_session_scheduled": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "crisis_indicators_present": {
+      "type": "boolean",
+      "default": false
+    },
+    "referrals_made": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Links to InternalReferral or ExternalReferral IDs",
+      "default": []
+    }
+  },
+  "required": [
+    "session_date",
+    "coach_email",
+    "participant_email"
+  ]
+}

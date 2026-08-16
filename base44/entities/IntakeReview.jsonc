@@ -1,0 +1,89 @@
+{
+  "name": "IntakeReview",
+  "type": "object",
+  "properties": {
+    "intake_submission_id": {
+      "type": "string",
+      "description": "Link to IntakeSubmission"
+    },
+    "participant_email": {
+      "type": "string"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "review_status": {
+      "type": "string",
+      "enum": [
+        "draft",
+        "in_progress",
+        "completed",
+        "escalated"
+      ],
+      "default": "draft"
+    },
+    "assigned_coordinator_email": {
+      "type": "string"
+    },
+    "ai_urgency_level": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "description": "AI-assessed urgency"
+    },
+    "ai_primary_concerns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "AI-identified main concerns"
+    },
+    "ai_recommended_track": {
+      "type": "string",
+      "enum": [
+        "coaching",
+        "housing",
+        "crisis_intervention",
+        "treatment",
+        "peer_support",
+        "case_management"
+      ],
+      "description": "AI-suggested service track"
+    },
+    "ai_analysis_summary": {
+      "type": "string",
+      "description": "Full AI analysis text"
+    },
+    "coordinator_notes": {
+      "type": "string"
+    },
+    "action_items": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "referrals_created": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "IDs of created referrals"
+    },
+    "next_contact_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "intake_submission_id",
+    "participant_email"
+  ]
+}

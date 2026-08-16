@@ -1,0 +1,61 @@
+{
+  "name": "ResourceFeedback",
+  "type": "object",
+  "properties": {
+    "resource_id": {
+      "type": "string"
+    },
+    "resource_name": {
+      "type": "string"
+    },
+    "feedback_type": {
+      "type": "string",
+      "enum": [
+        "outdated_info",
+        "incorrect_phone",
+        "incorrect_address",
+        "incorrect_hours",
+        "no_longer_available",
+        "positive_experience",
+        "negative_experience",
+        "additional_info"
+      ]
+    },
+    "feedback_text": {
+      "type": "string"
+    },
+    "accuracy_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "How accurate is the resource info?"
+    },
+    "helpfulness_rating": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "How helpful was this resource?"
+    },
+    "contacted_date": {
+      "type": "string",
+      "format": "date",
+      "description": "When did user contact this resource?"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "submitted",
+        "reviewed",
+        "resource_updated"
+      ],
+      "default": "submitted"
+    },
+    "reviewed_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "resource_id",
+    "feedback_type"
+  ]
+}

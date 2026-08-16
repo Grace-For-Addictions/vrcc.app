@@ -1,0 +1,82 @@
+{
+  "name": "MeetingLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "meeting_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "meeting_type": {
+      "type": "string",
+      "enum": [
+        "GFARC",
+        "AA",
+        "NA",
+        "CA",
+        "MA",
+        "SMART Recovery",
+        "Celebrate Recovery",
+        "Refuge Recovery",
+        "LifeRing",
+        "Women for Sobriety",
+        "Al-Anon",
+        "Nar-Anon",
+        "ACA",
+        "CoDA",
+        "SLAA",
+        "GA",
+        "OA",
+        "DA",
+        "Virtual",
+        "In-Person",
+        "Hybrid",
+        "Phone",
+        "Other"
+      ]
+    },
+    "meeting_format": {
+      "type": "string",
+      "enum": [
+        "virtual",
+        "in_person",
+        "hybrid",
+        "phone"
+      ],
+      "default": "virtual"
+    },
+    "did_share": {
+      "type": "boolean",
+      "default": false,
+      "description": "Did user share/speak at meeting"
+    },
+    "meeting_topic": {
+      "type": "string"
+    },
+    "meeting_notes": {
+      "type": "string",
+      "description": "Personal takeaways and reflections"
+    },
+    "is_favorite": {
+      "type": "boolean",
+      "default": false,
+      "description": "Mark as favorite meeting"
+    },
+    "meeting_duration_minutes": {
+      "type": "number"
+    },
+    "location": {
+      "type": "string"
+    },
+    "virtual_link": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "user_email",
+    "meeting_date",
+    "meeting_type"
+  ]
+}

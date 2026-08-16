@@ -1,0 +1,47 @@
+{
+  "name": "EmergencyResource",
+  "type": "object",
+  "properties": {
+    "resource_type": {
+      "type": "string",
+      "enum": [
+        "crisis_hotline",
+        "sponsor_contact",
+        "grounding_technique",
+        "breathing_exercise",
+        "coping_strategy",
+        "emergency_contact"
+      ]
+    },
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "phone_number": {
+      "type": "string"
+    },
+    "instructions": {
+      "type": "string",
+      "description": "Step-by-step instructions for techniques"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "For timed exercises"
+    },
+    "is_personal": {
+      "type": "boolean",
+      "default": false,
+      "description": "User's personal emergency contact"
+    },
+    "display_order": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "resource_type",
+    "title"
+  ]
+}

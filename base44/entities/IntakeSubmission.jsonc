@@ -1,0 +1,72 @@
+{
+  "name": "IntakeSubmission",
+  "type": "object",
+  "properties": {
+    "firstName": {
+      "type": "string",
+      "description": "First name of the person seeking support"
+    },
+    "lastName": {
+      "type": "string",
+      "description": "Last name of the person seeking support"
+    },
+    "email": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "referralSource": {
+      "type": "string",
+      "description": "How they found GFA"
+    },
+    "housingStatus": {
+      "type": "string",
+      "enum": [
+        "stable_housing",
+        "temporary_housing",
+        "unsheltered",
+        "transitional",
+        "at_risk",
+        "other"
+      ]
+    },
+    "primaryConcern": {
+      "type": "string",
+      "description": "Main reason for reaching out"
+    },
+    "urgencyLevel": {
+      "type": "string",
+      "enum": [
+        "routine",
+        "urgent",
+        "crisis"
+      ],
+      "default": "routine"
+    },
+    "consentGiven": {
+      "type": "boolean",
+      "default": false
+    },
+    "submittedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "under_review",
+        "scheduled",
+        "converted",
+        "referred_out",
+        "closed"
+      ],
+      "default": "new"
+    }
+  },
+  "required": [
+    "firstName",
+    "lastName"
+  ]
+}

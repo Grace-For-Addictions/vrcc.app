@@ -1,0 +1,123 @@
+{
+  "name": "PreventionCampaign",
+  "type": "object",
+  "properties": {
+    "campaign_name": {
+      "type": "string"
+    },
+    "campaign_type": {
+      "type": "string",
+      "enum": [
+        "social_media",
+        "school_assembly",
+        "community_event",
+        "media_outreach",
+        "workplace_training",
+        "faith_based"
+      ]
+    },
+    "target_audience": {
+      "type": "string",
+      "enum": [
+        "youth_k12",
+        "college_students",
+        "parents_families",
+        "community_general",
+        "professionals",
+        "faith_leaders"
+      ]
+    },
+    "counties_targeted": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "campaign_start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "campaign_end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "ai_generated_content": {
+      "type": "string",
+      "description": "AI-generated campaign messaging"
+    },
+    "messaging_themes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Neuroplasticity, hope, stigma reduction",
+      "default": []
+    },
+    "channels": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "facebook",
+          "instagram",
+          "tiktok",
+          "in_person",
+          "radio",
+          "tv",
+          "print"
+        ]
+      },
+      "default": []
+    },
+    "estimated_reach": {
+      "type": "number",
+      "description": "AI-predicted reach"
+    },
+    "actual_reach": {
+      "type": "number",
+      "default": 0
+    },
+    "engagement_count": {
+      "type": "number",
+      "default": 0
+    },
+    "stigma_pre_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "stigma_post_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 10
+    },
+    "effectiveness_prediction": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "AI-predicted effectiveness score"
+    },
+    "campaign_status": {
+      "type": "string",
+      "enum": [
+        "planning",
+        "active",
+        "completed",
+        "cancelled"
+      ],
+      "default": "planning"
+    },
+    "budget": {
+      "type": "number"
+    },
+    "created_by": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "campaign_name",
+    "campaign_type",
+    "target_audience"
+  ]
+}

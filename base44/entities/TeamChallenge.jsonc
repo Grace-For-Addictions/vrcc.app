@@ -1,0 +1,78 @@
+{
+  "name": "TeamChallenge",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "challenge_type": {
+      "type": "string",
+      "enum": [
+        "community_participation",
+        "resource_sharing",
+        "milestone_celebration",
+        "support_giving",
+        "learning"
+      ]
+    },
+    "team_size_min": {
+      "type": "number",
+      "default": 2
+    },
+    "team_size_max": {
+      "type": "number",
+      "default": 10
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "chat_count",
+        "post_count",
+        "resource_shares",
+        "attendance",
+        "connections"
+      ]
+    },
+    "goal_target": {
+      "type": "number"
+    },
+    "current_progress": {
+      "type": "number",
+      "default": 0
+    },
+    "team_members": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "points_reward_per_member": {
+      "type": "number",
+      "default": 50
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "title",
+    "challenge_type",
+    "goal_target"
+  ]
+}

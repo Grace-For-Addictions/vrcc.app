@@ -1,0 +1,26 @@
+{
+  "name": "FavoriteResource",
+  "type": "object",
+  "properties": {
+    "resource_id": {
+      "type": "string",
+      "description": "ID of the favorited resource"
+    },
+    "resource_name": {
+      "type": "string",
+      "description": "Name of resource for quick reference"
+    },
+    "notify_on_changes": {
+      "type": "boolean",
+      "default": true,
+      "description": "Notify user when resource details change"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Personal notes about this resource"
+    }
+  },
+  "required": [
+    "resource_id"
+  ]
+}

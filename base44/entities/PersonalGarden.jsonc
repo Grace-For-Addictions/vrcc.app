@@ -1,0 +1,68 @@
+{
+  "name": "PersonalGarden",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "garden_name": {
+      "type": "string",
+      "default": "My Grace Garden"
+    },
+    "garden_type": {
+      "type": "string",
+      "enum": [
+        "forest",
+        "meadow",
+        "coastal",
+        "desert",
+        "mountain"
+      ],
+      "default": "meadow"
+    },
+    "total_practice_minutes": {
+      "type": "number",
+      "default": 0
+    },
+    "current_streak_days": {
+      "type": "number",
+      "default": 0
+    },
+    "longest_streak_days": {
+      "type": "number",
+      "default": 0
+    },
+    "plants_grown": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "plant_id": {
+            "type": "string"
+          },
+          "plant_type": {
+            "type": "string"
+          },
+          "growth_stage": {
+            "type": "number"
+          },
+          "planted_date": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "neuroplastic_insights_count": {
+      "type": "number",
+      "default": 0
+    },
+    "last_practice_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

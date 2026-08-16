@@ -1,0 +1,70 @@
+{
+  "name": "VRCollaborativeSession",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string"
+    },
+    "scenario_title": {
+      "type": "string"
+    },
+    "scenario_description": {
+      "type": "string"
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced",
+        "expert"
+      ]
+    },
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "participant_roles": {
+      "type": "object",
+      "description": "Maps participant IDs to their roles in the scenario"
+    },
+    "ai_generated": {
+      "type": "boolean",
+      "default": false
+    },
+    "generation_prompt": {
+      "type": "string"
+    },
+    "skills_practiced": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "team_score": {
+      "type": "number"
+    },
+    "individual_scores": {
+      "type": "object"
+    },
+    "session_duration_minutes": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    }
+  },
+  "required": [
+    "scenario_title",
+    "participant_ids"
+  ]
+}

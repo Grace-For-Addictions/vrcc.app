@@ -1,0 +1,127 @@
+{
+  "name": "FunderRelationship",
+  "type": "object",
+  "properties": {
+    "funder_name": {
+      "type": "string"
+    },
+    "funder_type": {
+      "type": "string",
+      "enum": [
+        "federal_samhsa",
+        "state_iowa",
+        "county_local",
+        "private_foundation",
+        "corporate"
+      ]
+    },
+    "primary_contact_name": {
+      "type": "string"
+    },
+    "primary_contact_email": {
+      "type": "string"
+    },
+    "primary_contact_phone": {
+      "type": "string"
+    },
+    "preferred_language_keywords": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Polk County 5 Points, SAMHSA priorities, etc.",
+      "default": []
+    },
+    "polk_county_5_points_alignment": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "healthy_community",
+          "impactful_collaboration",
+          "infrastructure_investment",
+          "preventative_approaches",
+          "service_excellence"
+        ]
+      },
+      "default": []
+    },
+    "past_grants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "grant_name": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "awarded",
+              "declined",
+              "pending"
+            ]
+          },
+          "year": {
+            "type": "number"
+          }
+        }
+      },
+      "default": []
+    },
+    "upcoming_deadlines": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "deadline_type": {
+            "type": "string",
+            "enum": [
+              "proposal_submission",
+              "interim_report",
+              "final_report",
+              "renewal_application"
+            ]
+          },
+          "deadline_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "grant_name": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "communication_log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "ai_success_analysis": {
+      "type": "string",
+      "description": "AI analysis of what works with this funder"
+    }
+  },
+  "required": [
+    "funder_name",
+    "funder_type"
+  ]
+}

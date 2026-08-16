@@ -1,0 +1,40 @@
+{
+  "name": "Message",
+  "type": "object",
+  "properties": {
+    "sender_email": {
+      "type": "string"
+    },
+    "recipient_email": {
+      "type": "string",
+      "description": "For DMs (null if comment on post)"
+    },
+    "post_id": {
+      "type": "string",
+      "description": "If comment on post"
+    },
+    "content": {
+      "type": "string"
+    },
+    "message_type": {
+      "type": "string",
+      "enum": [
+        "comment",
+        "direct_message",
+        "coach_message"
+      ]
+    },
+    "read": {
+      "type": "boolean",
+      "default": false
+    },
+    "parent_message_id": {
+      "type": "string",
+      "description": "For threaded replies"
+    }
+  },
+  "required": [
+    "sender_email",
+    "content"
+  ]
+}

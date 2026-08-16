@@ -1,0 +1,79 @@
+{
+  "name": "VolunteerShift",
+  "type": "object",
+  "properties": {
+    "volunteer_email": {
+      "type": "string"
+    },
+    "shift_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "shift_time": {
+      "type": "string",
+      "description": "e.g., 9:00 AM - 12:00 PM"
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "recovery_coach",
+        "peer_support",
+        "mrcc_outreach",
+        "event_facilitator",
+        "resource_navigator",
+        "administrative",
+        "transportation"
+      ]
+    },
+    "opportunity_title": {
+      "type": "string",
+      "description": "Title of volunteer opportunity"
+    },
+    "opportunity_description": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string",
+      "description": "Virtual, MRCC, Grace House, Community Location"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "no_show"
+      ],
+      "default": "scheduled"
+    },
+    "hours_logged": {
+      "type": "number",
+      "description": "Actual hours volunteered"
+    },
+    "reminder_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "reminder_sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "volunteer_email",
+    "shift_date",
+    "role"
+  ]
+}

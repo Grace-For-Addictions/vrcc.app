@@ -1,0 +1,151 @@
+{
+  "name": "ProgramActivityLog",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string",
+      "description": "Email of participant"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "activity_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date activity occurred"
+    },
+    "activity_type": {
+      "type": "string",
+      "enum": [
+        "peer_coaching_session",
+        "virtual_group",
+        "referral",
+        "gfarc_meeting",
+        "check_in",
+        "workshop",
+        "training",
+        "other"
+      ],
+      "description": "Type of program activity"
+    },
+    "activity_notes": {
+      "type": "string",
+      "description": "Notes about the activity"
+    },
+    "referral_made": {
+      "type": "boolean",
+      "default": false
+    },
+    "referral_type": {
+      "type": "string",
+      "enum": [
+        "housing_assistance",
+        "shelter_placement",
+        "sober_living_placement",
+        "detox_admission",
+        "residential_treatment",
+        "outpatient_treatment_iop",
+        "mental_health_counseling",
+        "psychiatric_services",
+        "primary_care",
+        "dental_care",
+        "mat_provider",
+        "id_documentation_assistance",
+        "transportation_assistance",
+        "food_pantry",
+        "clothing_personal_needs",
+        "legal_aid",
+        "court_advocacy",
+        "benefits_enrollment",
+        "employment_services",
+        "education_ged",
+        "vocational_training",
+        "childcare",
+        "parenting_class",
+        "domestic_violence_services",
+        "financial_assistance",
+        "technology_access",
+        "reentry_services",
+        "faith_based_support",
+        "other"
+      ]
+    },
+    "referral_specify": {
+      "type": "string",
+      "description": "Specification if referral_type is 'other'"
+    },
+    "goal_set": {
+      "type": "boolean",
+      "default": false
+    },
+    "goal_description": {
+      "type": "string"
+    },
+    "employment_status_update": {
+      "type": "string",
+      "enum": [
+        "employed",
+        "unemployed",
+        "student"
+      ]
+    },
+    "employment_type": {
+      "type": "string",
+      "enum": [
+        "full_time",
+        "part_time",
+        "temporary_seasonal",
+        "gig_contract",
+        "self_employed"
+      ]
+    },
+    "living_status_update": {
+      "type": "string",
+      "enum": [
+        "unsheltered",
+        "emergency_shelter",
+        "safe_haven",
+        "transitional_housing",
+        "treatment_residential",
+        "sober_living",
+        "staying_with_family",
+        "hotel_self_paid",
+        "hotel_voucher",
+        "rented_market",
+        "rented_subsidy",
+        "owned_housing",
+        "institutional",
+        "jail_prison"
+      ]
+    },
+    "drug_test_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "drug_test_result": {
+      "type": "string",
+      "enum": [
+        "positive",
+        "negative"
+      ]
+    },
+    "logged_by": {
+      "type": "string",
+      "description": "Email of staff/volunteer who logged activity"
+    },
+    "beepurple_synced": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether synced to BeePurple"
+    },
+    "beepurple_sync_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "participant_email",
+    "activity_date",
+    "activity_type"
+  ]
+}

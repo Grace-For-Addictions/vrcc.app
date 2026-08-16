@@ -1,0 +1,70 @@
+{
+  "name": "UserPreferences",
+  "type": "object",
+  "properties": {
+    "favorite_resources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "IDs of favorited resources",
+      "default": []
+    },
+    "saved_searches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "county": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "keywords": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "notification_preferences": {
+      "type": "object",
+      "properties": {
+        "email_reminders": {
+          "type": "boolean",
+          "default": true
+        },
+        "event_notifications": {
+          "type": "boolean",
+          "default": true
+        },
+        "coach_messages": {
+          "type": "boolean",
+          "default": true
+        },
+        "milestone_celebrations": {
+          "type": "boolean",
+          "default": true
+        }
+      }
+    },
+    "dashboard_widgets": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Customized dashboard widget preferences",
+      "default": [
+        "mood_tracker",
+        "goals",
+        "upcoming_events",
+        "my_why"
+      ]
+    }
+  },
+  "required": []
+}

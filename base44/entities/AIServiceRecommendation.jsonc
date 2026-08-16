@@ -1,0 +1,65 @@
+{
+  "name": "AIServiceRecommendation",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "recommended_service": {
+      "type": "string",
+      "enum": [
+        "vrcc_peer_coaching",
+        "mrcc_telehealth_kiosk",
+        "anchor_reentry_program",
+        "gfarc_meeting",
+        "narcan_access",
+        "housing_navigation",
+        "employment_services",
+        "crisis_intervention"
+      ]
+    },
+    "recommendation_reason": {
+      "type": "string",
+      "description": "AI-generated explanation"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "data_points_analyzed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "What data informed the recommendation",
+      "default": []
+    },
+    "urgency_level": {
+      "type": "string",
+      "enum": [
+        "immediate",
+        "within_24h",
+        "within_week",
+        "routine"
+      ],
+      "default": "routine"
+    },
+    "nearest_location": {
+      "type": "string"
+    },
+    "participant_accepted": {
+      "type": "boolean",
+      "default": false
+    },
+    "acceptance_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "participant_email",
+    "recommended_service",
+    "recommendation_reason"
+  ]
+}

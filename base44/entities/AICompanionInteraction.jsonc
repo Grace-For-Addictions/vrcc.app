@@ -1,0 +1,50 @@
+{
+  "name": "AICompanionInteraction",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string"
+    },
+    "interaction_type": {
+      "type": "string",
+      "enum": [
+        "pattern_recognition",
+        "reframing",
+        "gentle_nudge",
+        "resource_suggestion",
+        "escalation_flag"
+      ]
+    },
+    "pattern_detected": {
+      "type": "string",
+      "description": "What pattern the AI noticed"
+    },
+    "companion_message": {
+      "type": "string"
+    },
+    "user_response": {
+      "type": "string"
+    },
+    "escalation_level": {
+      "type": "string",
+      "enum": [
+        "none",
+        "peer_alert",
+        "staff_review",
+        "crisis_protocol"
+      ],
+      "default": "none"
+    },
+    "escalation_reason": {
+      "type": "string"
+    },
+    "was_helpful": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "user_email",
+    "interaction_type",
+    "companion_message"
+  ]
+}

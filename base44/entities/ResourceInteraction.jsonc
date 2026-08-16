@@ -1,0 +1,47 @@
+{
+  "name": "ResourceInteraction",
+  "type": "object",
+  "properties": {
+    "resource_id": {
+      "type": "string",
+      "description": "ID of the resource interacted with"
+    },
+    "resource_name": {
+      "type": "string",
+      "description": "Name for quick reference"
+    },
+    "interaction_type": {
+      "type": "string",
+      "enum": [
+        "viewed",
+        "clicked_contact",
+        "saved",
+        "shared",
+        "feedback_submitted"
+      ],
+      "description": "Type of interaction"
+    },
+    "user_context": {
+      "type": "object",
+      "properties": {
+        "search_query": {
+          "type": "string"
+        },
+        "pathways": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "stage": {
+          "type": "string"
+        }
+      },
+      "description": "Context when interaction occurred"
+    }
+  },
+  "required": [
+    "resource_id",
+    "interaction_type"
+  ]
+}

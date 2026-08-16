@@ -1,0 +1,129 @@
+{
+  "name": "Resource",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Resource name"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "treatment",
+        "housing",
+        "employment",
+        "legal",
+        "family",
+        "crisis",
+        "peer_support",
+        "healthcare",
+        "education",
+        "food",
+        "transportation",
+        "mental_health",
+        "narcan",
+        "virtual_meeting"
+      ]
+    },
+    "subcategory": {
+      "type": "string"
+    },
+    "address": {
+      "type": "string"
+    },
+    "city": {
+      "type": "string"
+    },
+    "county": {
+      "type": "string"
+    },
+    "state": {
+      "type": "string",
+      "default": "Iowa"
+    },
+    "zip": {
+      "type": "string"
+    },
+    "phone": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string"
+    },
+    "website": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "string"
+    },
+    "is_free": {
+      "type": "boolean",
+      "default": false
+    },
+    "accepts_medicaid": {
+      "type": "boolean",
+      "default": false
+    },
+    "accepts_uninsured": {
+      "type": "boolean",
+      "default": false
+    },
+    "pathways": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "is_verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_verified": {
+      "type": "string",
+      "format": "date"
+    },
+    "verification_status": {
+      "type": "string",
+      "enum": [
+        "verified",
+        "discrepancy_found",
+        "offline",
+        "pending"
+      ],
+      "default": "pending"
+    },
+    "verification_notes": {
+      "type": "string",
+      "description": "AI findings or manual notes"
+    },
+    "ai_tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "AI-generated tags from content analysis"
+    },
+    "session_topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Related topics"
+    },
+    "latitude": {
+      "type": "number"
+    },
+    "longitude": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "name",
+    "category"
+  ]
+}

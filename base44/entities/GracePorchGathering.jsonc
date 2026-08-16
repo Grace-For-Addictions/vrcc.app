@@ -1,0 +1,150 @@
+{
+  "name": "GracePorchGathering",
+  "type": "object",
+  "properties": {
+    "host_email": {
+      "type": "string",
+      "description": "Email of user hosting the gathering"
+    },
+    "moderator_email": {
+      "type": "string",
+      "description": "Optional moderator for the gathering"
+    },
+    "title": {
+      "type": "string",
+      "description": "Title of the gathering"
+    },
+    "description": {
+      "type": "string",
+      "description": "What the gathering is about"
+    },
+    "topic": {
+      "type": "string",
+      "enum": [
+        "early_recovery",
+        "long_term_recovery",
+        "employment",
+        "housing",
+        "relationships",
+        "parenting",
+        "grief_loss",
+        "anxiety_depression",
+        "trauma_healing",
+        "spirituality",
+        "lgbtq_support",
+        "veterans",
+        "open_discussion"
+      ],
+      "description": "Primary topic of discussion"
+    },
+    "scheduled_time": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the gathering is scheduled"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "default": 60,
+      "description": "Expected duration"
+    },
+    "max_participants": {
+      "type": "number",
+      "default": 12,
+      "description": "Maximum number of participants"
+    },
+    "is_anonymous": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether participants remain anonymous"
+    },
+    "requires_approval": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether host must approve participants"
+    },
+    "pathways": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Which recovery pathways this gathering serves",
+      "default": []
+    },
+    "meeting_link": {
+      "type": "string",
+      "description": "Virtual meeting link (Zoom, Teams, etc.)"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "user_email": {
+            "type": "string"
+          },
+          "joined_at": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "registered",
+              "attended",
+              "no_show"
+            ]
+          }
+        }
+      },
+      "default": []
+    },
+    "community_agreements": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Gathering-specific agreements",
+      "default": [
+        "Respect confidentiality - what's shared here stays here",
+        "Use person-first, stigma-free language",
+        "One person speaks at a time",
+        "Listen with empathy, share from experience",
+        "No advice-giving unless requested",
+        "Honor each person's journey and choices"
+      ]
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this gathering repeats"
+    },
+    "recurrence_pattern": {
+      "type": "string",
+      "enum": [
+        "weekly",
+        "biweekly",
+        "monthly"
+      ],
+      "description": "If recurring, the pattern"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Host notes or summary"
+    }
+  },
+  "required": [
+    "host_email",
+    "title",
+    "topic",
+    "scheduled_time"
+  ]
+}

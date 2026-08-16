@@ -1,0 +1,94 @@
+{
+  "name": "RecoveryGarden",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "garden_level": {
+      "type": "number",
+      "default": 1
+    },
+    "total_growth_points": {
+      "type": "number",
+      "default": 0
+    },
+    "plants": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "plant_name": {
+            "type": "string"
+          },
+          "plant_type": {
+            "type": "string"
+          },
+          "growth_stage": {
+            "type": "string",
+            "enum": [
+              "seed",
+              "sprout",
+              "growing",
+              "blooming",
+              "flourishing"
+            ]
+          },
+          "points_invested": {
+            "type": "number"
+          },
+          "unlocked_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Plants grown",
+      "default": []
+    },
+    "garden_theme": {
+      "type": "string",
+      "enum": [
+        "zen",
+        "wildflower",
+        "vegetable",
+        "tropical"
+      ],
+      "default": "zen"
+    },
+    "decorations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "decoration_name": {
+            "type": "string"
+          },
+          "decoration_type": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "number"
+          },
+          "unlocked_date": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "description": "Unlockable items",
+      "default": []
+    },
+    "visitors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Peers who've visited garden",
+      "default": []
+    }
+  },
+  "required": [
+    "participant_email"
+  ]
+}

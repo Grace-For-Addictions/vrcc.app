@@ -1,0 +1,137 @@
+{
+  "name": "GFAPlan",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of participant who owns this plan"
+    },
+    "plan_name": {
+      "type": "string",
+      "default": "My Grace-Filled Action Plan",
+      "description": "Custom name for the plan"
+    },
+    "section_gratitude": {
+      "type": "string",
+      "description": "Current strengths, sources of hope, things going well"
+    },
+    "section_resilience": {
+      "type": "string",
+      "description": "Skills and supports that help in tough moments"
+    },
+    "section_acceptance": {
+      "type": "string",
+      "description": "Gentle reflection on what is, without judgment"
+    },
+    "section_connection": {
+      "type": "string",
+      "description": "Desired relationships, community roles, peer supports"
+    },
+    "section_empowerment": {
+      "type": "string",
+      "description": "Small, achievable actions and longer-term dreams"
+    },
+    "grace_notes": {
+      "type": "string",
+      "description": "Optional free-text for anything else on their heart"
+    },
+    "sections_completed": {
+      "type": "number",
+      "default": 0,
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Count of GRACE sections touched"
+    },
+    "last_touched_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Last time plan was edited"
+    },
+    "opt_in_tracking": {
+      "type": "boolean",
+      "default": false,
+      "description": "Participant opted in to track progress"
+    },
+    "opt_in_anonymized_data": {
+      "type": "boolean",
+      "default": false,
+      "description": "Participant opted in to contribute anonymized data"
+    },
+    "section_touch_dates": {
+      "type": "object",
+      "properties": {
+        "gratitude": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resilience": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "connection": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "empowerment": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "description": "Timestamps when each section was touched"
+    },
+    "self_reported_outcomes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "tag": {
+            "type": "string",
+            "enum": [
+              "felt_hopeful",
+              "took_small_action",
+              "connected_with_someone",
+              "practiced_self_compassion",
+              "reached_out_for_support",
+              "celebrated_progress",
+              "noticed_strength",
+              "took_a_breath"
+            ]
+          },
+          "reflection": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "growth_garden_visible": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether to show growth garden visualization"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "required": [
+    "user_email"
+  ]
+}

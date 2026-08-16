@@ -1,0 +1,61 @@
+{
+  "name": "Conversation",
+  "type": "object",
+  "properties": {
+    "participant_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "conversation_type": {
+      "type": "string",
+      "enum": [
+        "ai_grace",
+        "peer_chat",
+        "coach_session",
+        "anonymous_match"
+      ],
+      "default": "ai_grace"
+    },
+    "title": {
+      "type": "string"
+    },
+    "last_message": {
+      "type": "string"
+    },
+    "last_activity": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "unread_count": {
+      "type": "number",
+      "default": 0
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "crisis_detected": {
+          "type": "boolean"
+        },
+        "escalated": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "required": [
+    "conversation_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

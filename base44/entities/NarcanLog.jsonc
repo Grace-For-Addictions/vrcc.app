@@ -1,0 +1,100 @@
+{
+  "name": "NarcanLog",
+  "type": "object",
+  "properties": {
+    "user_email": {
+      "type": "string",
+      "description": "Email of participant involved"
+    },
+    "log_type": {
+      "type": "string",
+      "enum": [
+        "training",
+        "distribution",
+        "reversal_report"
+      ],
+      "description": "Type of Narcan-related log entry"
+    },
+    "date_of_training": {
+      "type": "string",
+      "format": "date",
+      "description": "Date of Narcan training completion"
+    },
+    "type_of_training": {
+      "type": "string",
+      "enum": [
+        "in-person",
+        "virtual",
+        "hybrid"
+      ],
+      "description": "Format of Narcan training"
+    },
+    "training_provider": {
+      "type": "string",
+      "description": "Organization or individual providing training"
+    },
+    "date_of_distribution": {
+      "type": "string",
+      "format": "date",
+      "description": "Date Narcan kit(s) distributed"
+    },
+    "number_of_kits": {
+      "type": "number",
+      "default": 1,
+      "description": "Number of kits distributed"
+    },
+    "kit_expiration_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Expiration date of distributed kit"
+    },
+    "reported_reversals": {
+      "type": "number",
+      "default": 0,
+      "description": "Number of overdose reversals reported from this distribution"
+    },
+    "reversal_details": {
+      "type": "object",
+      "properties": {
+        "date_of_reversal": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "location": {
+          "type": "string"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "successful_reversal",
+            "ems_called",
+            "hospital_transport",
+            "unknown"
+          ]
+        },
+        "administered_by": {
+          "type": "string",
+          "description": "Who administered Narcan"
+        },
+        "follow_up_provided": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Additional notes on training, distribution, or reversal"
+    }
+  },
+  "required": [
+    "log_type"
+  ],
+  "rls": {
+    "create": {
+      "user_condition": {
+        "role": "admin"
+      }
+    }
+  }
+}

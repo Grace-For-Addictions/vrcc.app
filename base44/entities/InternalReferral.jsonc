@@ -1,0 +1,75 @@
+{
+  "name": "InternalReferral",
+  "type": "object",
+  "properties": {
+    "participantId": {
+      "type": "string",
+      "description": "Participant email or ID"
+    },
+    "participantName": {
+      "type": "string"
+    },
+    "fromRole": {
+      "type": "string",
+      "description": "Role creating the referral"
+    },
+    "toRole": {
+      "type": "string",
+      "description": "Role receiving the referral"
+    },
+    "serviceType": {
+      "type": "string",
+      "enum": [
+        "coaching",
+        "neuro_program",
+        "housing",
+        "vrcc_support",
+        "case_management",
+        "peer_support",
+        "crisis_intervention"
+      ]
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "crisis"
+      ],
+      "default": "medium"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "open",
+        "accepted",
+        "in_progress",
+        "completed",
+        "closed"
+      ],
+      "default": "open"
+    },
+    "referralNotes": {
+      "type": "string"
+    },
+    "outcomeNotes": {
+      "type": "string"
+    },
+    "acceptedBy": {
+      "type": "string"
+    },
+    "acceptedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "participantId",
+    "serviceType"
+  ]
+}

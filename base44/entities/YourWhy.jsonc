@@ -1,0 +1,40 @@
+{
+  "name": "YourWhy",
+  "type": "object",
+  "properties": {
+    "reflection": {
+      "type": "string",
+      "description": "User's personal why - their recovery motivation"
+    },
+    "updated_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "insights": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "context": {
+            "type": "string"
+          },
+          "connection": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "neuroplasticity_themes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": [
+    "reflection"
+  ]
+}

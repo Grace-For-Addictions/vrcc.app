@@ -1,0 +1,63 @@
+{
+  "name": "ResidentGoal",
+  "type": "object",
+  "properties": {
+    "resident_email": {
+      "type": "string"
+    },
+    "house_id": {
+      "type": "string"
+    },
+    "goal_type": {
+      "type": "string",
+      "enum": [
+        "meetings",
+        "chores",
+        "mood",
+        "check_ins",
+        "custom"
+      ]
+    },
+    "goal_description": {
+      "type": "string"
+    },
+    "target_value": {
+      "type": "number"
+    },
+    "current_progress": {
+      "type": "number",
+      "default": 0
+    },
+    "time_period": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "monthly"
+      ],
+      "default": "weekly"
+    },
+    "start_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "end_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "is_completed": {
+      "type": "boolean",
+      "default": false
+    },
+    "ai_suggested": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "resident_email",
+    "goal_type",
+    "goal_description",
+    "target_value"
+  ]
+}

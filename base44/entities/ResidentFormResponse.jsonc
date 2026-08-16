@@ -1,0 +1,29 @@
+{
+  "name": "ResidentFormResponse",
+  "type": "object",
+  "properties": {
+    "form_id": {
+      "type": "string"
+    },
+    "resident_email": {
+      "type": "string"
+    },
+    "responses": {
+      "type": "object",
+      "description": "Key-value pairs of field names and responses"
+    },
+    "submitted_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "is_draft": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "required": [
+    "form_id",
+    "resident_email",
+    "responses"
+  ]
+}

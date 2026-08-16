@@ -1,0 +1,88 @@
+{
+  "name": "CustomReport",
+  "type": "object",
+  "properties": {
+    "report_name": {
+      "type": "string",
+      "description": "Name of the custom report"
+    },
+    "created_by": {
+      "type": "string",
+      "description": "Email of user who created the report"
+    },
+    "configuration": {
+      "type": "object",
+      "properties": {
+        "metrics": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Selected metrics to include"
+        },
+        "date_range": {
+          "type": "object",
+          "properties": {
+            "start_date": {
+              "type": "string",
+              "format": "date"
+            },
+            "end_date": {
+              "type": "string",
+              "format": "date"
+            }
+          }
+        },
+        "demographic_filters": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Filters like county, pathway, age range"
+        },
+        "entity_types": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Entity types to analyze"
+        }
+      }
+    },
+    "is_scheduled": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether report is scheduled for automated generation"
+    },
+    "schedule_config": {
+      "type": "object",
+      "properties": {
+        "frequency": {
+          "type": "string",
+          "enum": [
+            "daily",
+            "weekly",
+            "monthly",
+            "quarterly"
+          ]
+        },
+        "delivery_emails": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "next_run_date": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "last_generated": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "report_name",
+    "configuration"
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "name": "ResidentForm",
+  "type": "object",
+  "properties": {
+    "form_title": {
+      "type": "string"
+    },
+    "form_description": {
+      "type": "string"
+    },
+    "house_id": {
+      "type": "string",
+      "description": "Null for organization-wide forms"
+    },
+    "form_type": {
+      "type": "string",
+      "enum": [
+        "survey",
+        "consent",
+        "incident_report",
+        "feedback",
+        "request"
+      ]
+    },
+    "form_fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "field_name": {
+            "type": "string"
+          },
+          "field_type": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "due_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "priority": {
+      "type": "string",
+      "enum": [
+        "low",
+        "normal",
+        "high",
+        "urgent"
+      ],
+      "default": "normal"
+    }
+  },
+  "required": [
+    "form_title",
+    "form_type",
+    "form_fields"
+  ]
+}

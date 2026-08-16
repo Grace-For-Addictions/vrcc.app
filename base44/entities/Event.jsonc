@@ -1,0 +1,146 @@
+{
+  "name": "Event",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "meeting",
+        "workshop",
+        "social",
+        "training",
+        "game_night",
+        "speaker",
+        "support_group",
+        "peer_circle",
+        "recovery_group"
+      ]
+    },
+    "start_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "end_time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timezone": {
+      "type": "string",
+      "default": "America/Chicago"
+    },
+    "is_virtual": {
+      "type": "boolean",
+      "default": true
+    },
+    "meeting_link": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    },
+    "host_name": {
+      "type": "string"
+    },
+    "host_email": {
+      "type": "string",
+      "description": "Email of the session host/moderator"
+    },
+    "moderator_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Additional moderators who can manage the session"
+    },
+    "max_attendees": {
+      "type": "number"
+    },
+    "attendee_count": {
+      "type": "number",
+      "default": 0
+    },
+    "attendee_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false
+    },
+    "recurrence_pattern": {
+      "type": "string"
+    },
+    "image_url": {
+      "type": "string"
+    },
+    "pathways": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "session_topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Topics covered in this session"
+    },
+    "related_video_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "IDs of related VideoContent"
+    },
+    "related_resource_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "IDs of related Resources"
+    },
+    "session_status": {
+      "type": "string",
+      "enum": [
+        "scheduled",
+        "in_progress",
+        "completed",
+        "cancelled"
+      ],
+      "default": "scheduled"
+    },
+    "registration_required": {
+      "type": "boolean",
+      "default": false
+    },
+    "session_summary": {
+      "type": "string",
+      "description": "AI-generated summary of completed session including key points, decisions, and action items"
+    },
+    "summary_generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the AI summary was generated"
+    }
+  },
+  "required": [
+    "title",
+    "event_type",
+    "start_time"
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "name": "VolunteerProfile",
+  "type": "object",
+  "properties": {
+    "volunteer_email": {
+      "type": "string",
+      "description": "Email of volunteer"
+    },
+    "volunteer_name": {
+      "type": "string"
+    },
+    "application_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "application_status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "in_training",
+        "active",
+        "inactive",
+        "declined"
+      ],
+      "default": "pending"
+    },
+    "onboarding_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "orientation_complete",
+        "training_in_progress",
+        "certification_pending",
+        "fully_onboarded"
+      ],
+      "default": "not_started"
+    },
+    "volunteer_roles": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "recovery_coach",
+          "peer_support",
+          "mrcc_outreach",
+          "event_facilitator",
+          "resource_navigator",
+          "administrative",
+          "transportation",
+          "narcan_trainer",
+          "curriculum_trainer"
+        ]
+      },
+      "description": "Assigned volunteer roles",
+      "default": []
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "certification_name": {
+            "type": "string"
+          },
+          "date_earned": {
+            "type": "string",
+            "format": "date"
+          },
+          "expiration_date": {
+            "type": "string",
+            "format": "date"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "expired",
+              "pending"
+            ]
+          }
+        }
+      },
+      "default": []
+    },
+    "just_grace_certified": {
+      "type": "boolean",
+      "default": false
+    },
+    "just_grace_completion_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "narcan_certified": {
+      "type": "boolean",
+      "default": false
+    },
+    "narcan_certification_date": {
+      "type": "string",
+      "format": "date"
+    },
+    "skills_interests": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Skills and areas of interest for matching",
+      "default": []
+    },
+    "availability": {
+      "type": "object",
+      "properties": {
+        "monday": {
+          "type": "boolean",
+          "default": false
+        },
+        "tuesday": {
+          "type": "boolean",
+          "default": false
+        },
+        "wednesday": {
+          "type": "boolean",
+          "default": false
+        },
+        "thursday": {
+          "type": "boolean",
+          "default": false
+        },
+        "friday": {
+          "type": "boolean",
+          "default": false
+        },
+        "saturday": {
+          "type": "boolean",
+          "default": false
+        },
+        "sunday": {
+          "type": "boolean",
+          "default": false
+        }
+      }
+    },
+    "preferred_times": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "morning",
+          "afternoon",
+          "evening",
+          "weekend"
+        ]
+      },
+      "default": []
+    },
+    "total_hours_volunteered": {
+      "type": "number",
+      "default": 0
+    },
+    "performance_ratings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "rating": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "reviewer": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "is_recovery_ally": {
+      "type": "boolean",
+      "default": false,
+      "description": "Trained as community-based Recovery Ally (30+ goal)"
+    },
+    "lived_experience": {
+      "type": "boolean",
+      "default": false,
+      "description": "Has lived experience with recovery"
+    },
+    "background_check_status": {
+      "type": "string",
+      "enum": [
+        "not_started",
+        "pending",
+        "cleared",
+        "flagged"
+      ],
+      "default": "not_started"
+    },
+    "emergency_contact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "phone": {
+          "type": "string"
+        },
+        "relationship": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "required": [
+    "volunteer_email",
+    "volunteer_name"
+  ]
+}

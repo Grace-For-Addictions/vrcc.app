@@ -1,0 +1,46 @@
+{
+  "name": "DailyCheckIn",
+  "type": "object",
+  "properties": {
+    "mood": {
+      "type": "number",
+      "description": "1-5 mood scale"
+    },
+    "mood_emoji": {
+      "type": "string"
+    },
+    "gratitude": {
+      "type": "string",
+      "description": "Today's gratitude"
+    },
+    "challenges_completed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "connections_made": {
+      "type": "number",
+      "default": 0
+    },
+    "notes": {
+      "type": "string"
+    },
+    "trigger_level": {
+      "type": "number",
+      "description": "1-5 trigger intensity"
+    },
+    "coping_used": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "streak_day": {
+      "type": "number"
+    }
+  },
+  "required": [
+    "mood"
+  ]
+}

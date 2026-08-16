@@ -1,0 +1,85 @@
+{
+  "name": "CommunityServiceLog",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string",
+      "description": "Email of participant performing community service"
+    },
+    "participant_name": {
+      "type": "string",
+      "description": "Full name of participant"
+    },
+    "date_of_service": {
+      "type": "string",
+      "format": "date",
+      "description": "Date service was performed"
+    },
+    "time_in": {
+      "type": "string",
+      "description": "Start time of service"
+    },
+    "time_out": {
+      "type": "string",
+      "description": "End time of service"
+    },
+    "total_hours": {
+      "type": "number",
+      "description": "Total hours of service"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of community service work"
+    },
+    "service_category": {
+      "type": "string",
+      "enum": [
+        "transportation",
+        "peer_support",
+        "event_facilitation",
+        "administrative",
+        "outreach",
+        "resource_coordination",
+        "other"
+      ],
+      "default": "peer_support",
+      "description": "Category of service performed"
+    },
+    "court_ordered": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether this is court-ordered community service"
+    },
+    "hours_ordered": {
+      "type": "number",
+      "description": "Total hours ordered by court (if applicable)"
+    },
+    "hours_completed": {
+      "type": "number",
+      "description": "Running total of hours completed"
+    },
+    "probation_officer_name": {
+      "type": "string"
+    },
+    "probation_officer_phone": {
+      "type": "string"
+    },
+    "verified_by": {
+      "type": "string",
+      "description": "Staff member who verified the service"
+    },
+    "verification_signature": {
+      "type": "string"
+    },
+    "verification_date": {
+      "type": "string",
+      "format": "date"
+    }
+  },
+  "required": [
+    "participant_email",
+    "date_of_service",
+    "total_hours",
+    "description"
+  ]
+}

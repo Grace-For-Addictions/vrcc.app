@@ -1,0 +1,86 @@
+{
+  "name": "CrisisContact",
+  "type": "object",
+  "properties": {
+    "organization_name": {
+      "type": "string"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "suicide_hotline",
+        "crisis_center",
+        "mobile_crisis",
+        "hospital_er",
+        "warmline",
+        "text_line",
+        "substance_crisis",
+        "domestic_violence",
+        "homeless_services"
+      ]
+    },
+    "phone": {
+      "type": "string",
+      "description": "Primary contact number"
+    },
+    "text_number": {
+      "type": "string",
+      "description": "Text crisis lines"
+    },
+    "website": {
+      "type": "string"
+    },
+    "hours": {
+      "type": "string",
+      "description": "24/7 or specific hours"
+    },
+    "geographic_coverage": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Counties served",
+      "default": []
+    },
+    "languages": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Languages supported",
+      "default": []
+    },
+    "special_populations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "LGBTQ+, veterans, youth, specific populations served",
+      "default": []
+    },
+    "response_time": {
+      "type": "string",
+      "description": "Immediate or average wait time"
+    },
+    "is_free": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_verified": {
+      "type": "boolean",
+      "default": false
+    },
+    "last_verified": {
+      "type": "string",
+      "format": "date"
+    },
+    "description": {
+      "type": "string",
+      "description": "What services they provide"
+    }
+  },
+  "required": [
+    "organization_name",
+    "service_type"
+  ]
+}

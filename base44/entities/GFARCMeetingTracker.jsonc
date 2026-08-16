@@ -1,0 +1,107 @@
+{
+  "name": "GFARCMeetingTracker",
+  "type": "object",
+  "properties": {
+    "meeting_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time of GFARC meeting"
+    },
+    "meeting_type": {
+      "type": "string",
+      "enum": [
+        "general_recovery_circle",
+        "early_recovery",
+        "long_term_recovery",
+        "family_support",
+        "justice_involved",
+        "youth_support",
+        "grief_and_loss"
+      ]
+    },
+    "facilitator_email": {
+      "type": "string",
+      "description": "Lead peer coach facilitating"
+    },
+    "participant_count": {
+      "type": "number",
+      "description": "Number of participants"
+    },
+    "participant_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "meeting_frequency": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "biweekly",
+        "monthly",
+        "one_time"
+      ],
+      "default": "weekly"
+    },
+    "social_connectedness_scores": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "participant_email": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 5
+          },
+          "felt_heard": {
+            "type": "boolean"
+          },
+          "felt_supported": {
+            "type": "boolean"
+          },
+          "will_return": {
+            "type": "boolean"
+          }
+        }
+      },
+      "default": [],
+      "description": "Post-meeting social connectedness survey data"
+    },
+    "avg_connectedness_score": {
+      "type": "number",
+      "description": "Average social connectedness for this meeting"
+    },
+    "topics_discussed": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "neuroplasticity_education": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether brain science was discussed"
+    },
+    "lived_experience_volunteers": {
+      "type": "number",
+      "default": 0,
+      "description": "Volunteers with lived experience present"
+    },
+    "quality_of_life_focus": {
+      "type": "boolean",
+      "default": true,
+      "description": "Professional/relationship coaching included"
+    }
+  },
+  "required": [
+    "meeting_date",
+    "meeting_type",
+    "participant_count"
+  ]
+}

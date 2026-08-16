@@ -1,0 +1,76 @@
+{
+  "name": "ChatRoom",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "theme": {
+      "type": "string",
+      "enum": [
+        "general",
+        "morning_coffee",
+        "evening_reflection",
+        "newcomers",
+        "family",
+        "justice",
+        "youth",
+        "games",
+        "gratitude",
+        "crisis_support"
+      ]
+    },
+    "icon": {
+      "type": "string"
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "is_moderated": {
+      "type": "boolean",
+      "default": true
+    },
+    "max_members": {
+      "type": "number",
+      "default": 50
+    },
+    "current_members": {
+      "type": "number",
+      "default": 0
+    },
+    "member_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scheduled_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "start_time": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "color": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "name",
+    "theme"
+  ]
+}

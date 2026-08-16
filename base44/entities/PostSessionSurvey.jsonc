@@ -1,0 +1,101 @@
+{
+  "name": "PostSessionSurvey",
+  "type": "object",
+  "properties": {
+    "session_id": {
+      "type": "string",
+      "description": "Reference to coaching/meeting session"
+    },
+    "session_type": {
+      "type": "string",
+      "enum": [
+        "peer_coaching",
+        "gfarc_meeting",
+        "anchor_case_management",
+        "volunteer_shift",
+        "workshop"
+      ]
+    },
+    "respondent_email": {
+      "type": "string"
+    },
+    "respondent_type": {
+      "type": "string",
+      "enum": [
+        "participant",
+        "coach",
+        "volunteer",
+        "facilitator"
+      ]
+    },
+    "satisfaction_score": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Overall satisfaction rating"
+    },
+    "quality_of_life_impact": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "QOL improvement rating"
+    },
+    "social_connectedness_score": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 5,
+      "description": "Feeling of connection"
+    },
+    "would_recommend": {
+      "type": "boolean",
+      "default": true
+    },
+    "what_went_well": {
+      "type": "string"
+    },
+    "what_could_improve": {
+      "type": "string"
+    },
+    "additional_support_needed": {
+      "type": "string"
+    },
+    "survey_completed_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "auto_generated": {
+      "type": "boolean",
+      "default": true,
+      "description": "Whether survey was auto-sent by automation"
+    },
+    "sentiment_score": {
+      "type": "number",
+      "minimum": -1,
+      "maximum": 1,
+      "description": "AI sentiment analysis (-1 negative, 0 neutral, 1 positive)"
+    },
+    "sentiment_label": {
+      "type": "string",
+      "enum": [
+        "very_negative",
+        "negative",
+        "neutral",
+        "positive",
+        "very_positive"
+      ]
+    },
+    "key_themes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "AI-extracted themes from open-ended responses",
+      "default": []
+    }
+  },
+  "required": [
+    "session_id",
+    "session_type",
+    "respondent_email"
+  ]
+}

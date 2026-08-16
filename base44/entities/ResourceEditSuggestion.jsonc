@@ -1,0 +1,52 @@
+{
+  "name": "ResourceEditSuggestion",
+  "type": "object",
+  "properties": {
+    "resource_id": {
+      "type": "string",
+      "description": "ID of resource being edited"
+    },
+    "resource_name": {
+      "type": "string",
+      "description": "Name for quick reference"
+    },
+    "suggested_by_email": {
+      "type": "string"
+    },
+    "suggested_by_name": {
+      "type": "string"
+    },
+    "proposed_changes": {
+      "type": "object",
+      "description": "JSON object with proposed field changes"
+    },
+    "change_reason": {
+      "type": "string",
+      "description": "Why this change is needed"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "rejected"
+      ],
+      "default": "pending"
+    },
+    "reviewed_by": {
+      "type": "string"
+    },
+    "review_notes": {
+      "type": "string"
+    },
+    "reviewed_date": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "resource_id",
+    "suggested_by_email",
+    "proposed_changes"
+  ]
+}

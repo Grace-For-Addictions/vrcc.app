@@ -1,0 +1,137 @@
+{
+  "name": "ClosedLoopReferral",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string",
+      "description": "Email of participant being referred"
+    },
+    "referral_to": {
+      "type": "string",
+      "description": "Organization or provider receiving referral"
+    },
+    "service_type": {
+      "type": "string",
+      "enum": [
+        "housing",
+        "treatment",
+        "employment",
+        "legal",
+        "medical",
+        "mental_health",
+        "detox",
+        "recovery_housing",
+        "food",
+        "transportation",
+        "childcare",
+        "education",
+        "other"
+      ]
+    },
+    "referral_method": {
+      "type": "string",
+      "enum": [
+        "warm_handoff",
+        "cold_referral",
+        "escort_transport",
+        "virtual_introduction"
+      ],
+      "default": "cold_referral"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "sent",
+        "received",
+        "accepted",
+        "in_progress",
+        "completed",
+        "declined",
+        "no_show",
+        "closed"
+      ],
+      "default": "sent",
+      "description": "Closed-loop status tracking"
+    },
+    "sent_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "received_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When partner acknowledged receipt"
+    },
+    "accepted_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When participant accepted by partner"
+    },
+    "completed_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When service was completed"
+    },
+    "outcome": {
+      "type": "string",
+      "description": "Final outcome of referral"
+    },
+    "time_to_completion_days": {
+      "type": "number",
+      "description": "Days from sent to completed"
+    },
+    "referred_by": {
+      "type": "string",
+      "description": "Email of staff/volunteer who made referral"
+    },
+    "partner_contact_name": {
+      "type": "string"
+    },
+    "partner_contact_email": {
+      "type": "string"
+    },
+    "partner_contact_phone": {
+      "type": "string"
+    },
+    "consent_given": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether participant gave consent to share info"
+    },
+    "follow_up_notes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "note": {
+            "type": "string"
+          },
+          "logged_by": {
+            "type": "string"
+          }
+        }
+      },
+      "default": []
+    },
+    "barriers_encountered": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "Barriers that delayed or prevented completion",
+      "default": []
+    },
+    "admin_hours_saved": {
+      "type": "number",
+      "description": "Estimated admin hours saved by closed-loop tracking"
+    }
+  },
+  "required": [
+    "participant_email",
+    "referral_to",
+    "service_type"
+  ]
+}

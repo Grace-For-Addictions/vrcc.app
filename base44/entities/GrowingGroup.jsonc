@@ -1,0 +1,62 @@
+{
+  "name": "GrowingGroup",
+  "type": "object",
+  "properties": {
+    "group_name": {
+      "type": "string"
+    },
+    "biome_type": {
+      "type": "string",
+      "enum": [
+        "compassion_grove",
+        "hope_meadow",
+        "serenity_spring",
+        "resilience_forest",
+        "faith_garden"
+      ],
+      "description": "Garden biome location"
+    },
+    "group_type": {
+      "type": "string",
+      "enum": [
+        "faith_based",
+        "trauma_aware",
+        "family_support",
+        "reentry_focus",
+        "youth",
+        "general"
+      ],
+      "default": "general"
+    },
+    "created_by": {
+      "type": "string"
+    },
+    "member_emails": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    },
+    "description": {
+      "type": "string"
+    },
+    "is_private": {
+      "type": "boolean",
+      "default": false
+    },
+    "group_challenge_id": {
+      "type": "string",
+      "description": "Active group challenge"
+    },
+    "total_group_points": {
+      "type": "number",
+      "default": 0
+    }
+  },
+  "required": [
+    "group_name",
+    "biome_type",
+    "created_by"
+  ]
+}

@@ -1,0 +1,61 @@
+{
+  "name": "CommunicationLog",
+  "type": "object",
+  "properties": {
+    "client_email": {
+      "type": "string",
+      "description": "Email of the client this communication is about"
+    },
+    "logged_by": {
+      "type": "string",
+      "description": "Email of staff member who logged this"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "phone",
+        "email",
+        "meeting",
+        "message"
+      ],
+      "description": "Type of communication"
+    },
+    "subject": {
+      "type": "string",
+      "description": "Subject or topic of communication"
+    },
+    "notes": {
+      "type": "string",
+      "description": "Detailed notes about the communication"
+    },
+    "duration_minutes": {
+      "type": "number",
+      "description": "Duration in minutes for calls/meetings"
+    },
+    "follow_up_needed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether follow-up is required"
+    },
+    "follow_up_date": {
+      "type": "string",
+      "format": "date",
+      "description": "Date for follow-up reminder"
+    },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "URLs of attached files",
+      "default": []
+    }
+  },
+  "required": [
+    "client_email",
+    "logged_by",
+    "type",
+    "subject",
+    "notes"
+  ]
+}

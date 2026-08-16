@@ -1,0 +1,60 @@
+{
+  "name": "MeetingSummary",
+  "type": "object",
+  "properties": {
+    "meeting_type": {
+      "type": "string"
+    },
+    "meeting_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "attendee_count": {
+      "type": "number"
+    },
+    "attendee_list": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "summary": {
+      "type": "string",
+      "description": "AI-generated overall summary"
+    },
+    "key_themes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "action_items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "task": {
+            "type": "string"
+          },
+          "responsible": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "key_decisions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "transcript": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "meeting_type",
+    "meeting_date",
+    "summary"
+  ]
+}

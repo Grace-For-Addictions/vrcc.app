@@ -1,0 +1,48 @@
+{
+  "name": "Badge",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "badge_name": {
+      "type": "string",
+      "description": "e.g., '7-Day Streak', 'First Session', 'Community Helper'"
+    },
+    "badge_category": {
+      "type": "string",
+      "enum": [
+        "engagement",
+        "milestone",
+        "social",
+        "learning",
+        "service"
+      ]
+    },
+    "badge_description": {
+      "type": "string",
+      "description": "What earned it"
+    },
+    "badge_icon": {
+      "type": "string",
+      "description": "Image URL"
+    },
+    "earned_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "points_value": {
+      "type": "number",
+      "description": "Some badges worth more points"
+    },
+    "is_public": {
+      "type": "boolean",
+      "default": true,
+      "description": "Display on profile?"
+    }
+  },
+  "required": [
+    "participant_email",
+    "badge_name"
+  ]
+}

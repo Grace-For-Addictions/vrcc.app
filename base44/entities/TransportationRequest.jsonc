@@ -1,0 +1,79 @@
+{
+  "name": "TransportationRequest",
+  "type": "object",
+  "properties": {
+    "participant_email": {
+      "type": "string"
+    },
+    "participant_name": {
+      "type": "string"
+    },
+    "pickup_address": {
+      "type": "string"
+    },
+    "destination_address": {
+      "type": "string"
+    },
+    "destination_type": {
+      "type": "string",
+      "enum": [
+        "medical",
+        "recovery_meeting",
+        "treatment",
+        "employment",
+        "housing",
+        "food_bank",
+        "other"
+      ]
+    },
+    "requested_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "requested_time": {
+      "type": "string"
+    },
+    "is_recurring": {
+      "type": "boolean",
+      "default": false
+    },
+    "recurrence_pattern": {
+      "type": "string"
+    },
+    "special_needs": {
+      "type": "string",
+      "description": "Wheelchair, mobility aids, etc."
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "pending",
+        "approved",
+        "scheduled",
+        "completed",
+        "cancelled"
+      ],
+      "default": "pending"
+    },
+    "barnabus_referral_sent": {
+      "type": "boolean",
+      "default": false
+    },
+    "barnabus_referral_date": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "coordinator_notes": {
+      "type": "string"
+    },
+    "outcome_notes": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "participant_email",
+    "pickup_address",
+    "destination_address",
+    "requested_date"
+  ]
+}

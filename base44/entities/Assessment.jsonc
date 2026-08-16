@@ -1,0 +1,248 @@
+{
+  "name": "Assessment",
+  "type": "object",
+  "properties": {
+    "participant_id": {
+      "type": "string",
+      "description": "ID of the participant this assessment belongs to"
+    },
+    "assessment_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Date and time when the assessment was conducted"
+    },
+    "assessment_type": {
+      "type": "string",
+      "enum": [
+        "baseline",
+        "quarterly",
+        "exit"
+      ],
+      "description": "Type of assessment (e.g., baseline, quarterly, exit)"
+    },
+    "completed": {
+      "type": "boolean",
+      "default": false,
+      "description": "Indicates if the assessment has been completed"
+    },
+    "completion_time_minutes": {
+      "type": "number",
+      "description": "Time taken to complete the assessment in minutes"
+    },
+    "gold_score": {
+      "type": "number",
+      "minimum": 5,
+      "maximum": 25,
+      "description": "True Colors Gold score"
+    },
+    "green_score": {
+      "type": "number",
+      "minimum": 5,
+      "maximum": 25,
+      "description": "True Colors Green score"
+    },
+    "blue_score": {
+      "type": "number",
+      "minimum": 5,
+      "maximum": 25,
+      "description": "True Colors Blue score"
+    },
+    "orange_score": {
+      "type": "number",
+      "minimum": 5,
+      "maximum": 25,
+      "description": "True Colors Orange score"
+    },
+    "dominant_color": {
+      "type": "string",
+      "enum": [
+        "gold",
+        "green",
+        "blue",
+        "orange"
+      ],
+      "description": "Dominant True Color"
+    },
+    "secondary_color": {
+      "type": "string",
+      "enum": [
+        "gold",
+        "green",
+        "blue",
+        "orange",
+        "none"
+      ],
+      "description": "Secondary True Color"
+    },
+    "energy_score": {
+      "type": "number",
+      "description": "16 Personalities Energy score (negative=Introverted, positive=Extraverted)"
+    },
+    "mind_score": {
+      "type": "number",
+      "description": "16 Personalities Mind score (negative=Observant, positive=Intuitive)"
+    },
+    "nature_score": {
+      "type": "number",
+      "description": "16 Personalities Nature score (negative=Thinking, positive=Feeling)"
+    },
+    "tactics_score": {
+      "type": "number",
+      "description": "16 Personalities Tactics score (negative=Judging, positive=Prospecting)"
+    },
+    "identity_score": {
+      "type": "number",
+      "description": "16 Personalities Identity score (negative=Assertive, positive=Turbulent)"
+    },
+    "personality_type": {
+      "type": "string",
+      "description": "e.g., 'INFJ-T'"
+    },
+    "role": {
+      "type": "string",
+      "enum": [
+        "Analyst",
+        "Diplomat",
+        "Sentinel",
+        "Explorer"
+      ],
+      "description": "16 Personalities Role"
+    },
+    "strategy": {
+      "type": "string",
+      "description": "16 Personalities Strategy (e.g., 'Confident Individualism')"
+    },
+    "strength_1": {
+      "type": "string",
+      "description": "VIA Strengths - Top 7 Signature Strengths"
+    },
+    "strength_2": {
+      "type": "string"
+    },
+    "strength_3": {
+      "type": "string"
+    },
+    "strength_4": {
+      "type": "string"
+    },
+    "strength_5": {
+      "type": "string"
+    },
+    "strength_6": {
+      "type": "string"
+    },
+    "strength_7": {
+      "type": "string"
+    },
+    "enneagram_type": {
+      "type": "number",
+      "minimum": 1,
+      "maximum": 9,
+      "description": "Enneagram Type (1-9)"
+    },
+    "enneagram_wing": {
+      "type": "number",
+      "description": "Enneagram Wing (e.g., 1 or 2 for Type 1)"
+    },
+    "enneagram_center": {
+      "type": "string",
+      "enum": [
+        "Gut",
+        "Heart",
+        "Head"
+      ],
+      "description": "Enneagram Center (Gut, Heart, or Head)"
+    },
+    "social_capital_score": {
+      "type": "number",
+      "minimum": 8,
+      "maximum": 40,
+      "description": "Recovery Capital Social score"
+    },
+    "physical_capital_score": {
+      "type": "number",
+      "minimum": 8,
+      "maximum": 40,
+      "description": "Recovery Capital Physical score"
+    },
+    "human_capital_score": {
+      "type": "number",
+      "minimum": 8,
+      "maximum": 40,
+      "description": "Recovery Capital Human score"
+    },
+    "cultural_capital_score": {
+      "type": "number",
+      "minimum": 8,
+      "maximum": 40,
+      "description": "Recovery Capital Cultural score"
+    },
+    "total_recovery_capital": {
+      "type": "number",
+      "minimum": 32,
+      "maximum": 160,
+      "description": "Total Recovery Capital score"
+    },
+    "readiness_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 15,
+      "description": "Recovery Resilience Readiness score"
+    },
+    "neuro_awareness_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 15,
+      "description": "Recovery Resilience Neuro-Awareness score"
+    },
+    "coping_supports_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 15,
+      "description": "Recovery Resilience Coping Supports score"
+    },
+    "meaning_purpose_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 15,
+      "description": "Recovery Resilience Meaning & Purpose score"
+    },
+    "total_resilience_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 60,
+      "description": "Total Recovery Resilience score"
+    },
+    "crisis_risk_level": {
+      "type": "string",
+      "enum": [
+        "GREEN",
+        "YELLOW",
+        "ORANGE",
+        "RED"
+      ],
+      "description": "Auto-Generated Crisis Risk Profile"
+    },
+    "risk_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Array of identified risk factors"
+    },
+    "protective_factors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "default": [],
+      "description": "Array of identified protective factors"
+    }
+  },
+  "required": [
+    "participant_id",
+    "assessment_type",
+    "assessment_date"
+  ]
+}

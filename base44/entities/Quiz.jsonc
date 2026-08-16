@@ -1,0 +1,91 @@
+{
+  "name": "Quiz",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "neuroplasticity",
+        "peer_coaching",
+        "family_support",
+        "depression",
+        "anxiety",
+        "substance_recovery",
+        "trauma_care",
+        "motivational_interviewing",
+        "act_therapy",
+        "stigma_reduction",
+        "suicide_prevention",
+        "overdose_response",
+        "reentry_challenges"
+      ]
+    },
+    "module": {
+      "type": "string",
+      "enum": [
+        "neuroplasticity",
+        "peer_coaching",
+        "family_hub",
+        "assessment",
+        "general"
+      ]
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correct_index": {
+            "type": "number"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "points_reward": {
+      "type": "number",
+      "default": 30
+    },
+    "badge_reward": {
+      "type": "string"
+    },
+    "passing_score": {
+      "type": "number",
+      "default": 70
+    },
+    "is_active": {
+      "type": "boolean",
+      "default": true
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "beginner",
+        "intermediate",
+        "advanced"
+      ]
+    }
+  },
+  "required": [
+    "title",
+    "category",
+    "questions"
+  ]
+}
